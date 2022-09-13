@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="DTO\Area\lofcrv2y.pzu~" />
+    <None Remove="DTO\Credential\2bc3w0uk.qfy~" />
   </ItemGroup>
 
   <ItemGroup>

@@ -157,7 +157,7 @@ namespace TempleVolunteerAPI.Repository
             glendale.Website = "https://www.glendaletemple.org";
             glendale.Note = "Currently, there are no notes";
             glendale.CreatedBy = "gerryhazelton@gmail.com";
-            glendale.CreatedDate = DateTime.Now;
+            glendale.CreatedDate = DateTime.UtcNow;
             glendale.IsActive = true;
             glendale.IsHidden = false;
 
@@ -177,7 +177,7 @@ namespace TempleVolunteerAPI.Repository
                 Website = "https://www.encinitastemple.org",
                 Note = "Currently, there are no notes",
                 CreatedBy = "gerryhazelton@gmail.com",
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 IsActive = true,
                 IsHidden = false,
             };
@@ -194,7 +194,7 @@ namespace TempleVolunteerAPI.Repository
                 Description = "Admin role has full prviliedges",
                 PropertyId = 1,
                 CreatedBy = "gerryhazelton@gmail.com",
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 IsActive = true,
                 IsHidden = false,
             };
@@ -206,7 +206,7 @@ namespace TempleVolunteerAPI.Repository
                 Description = "Volunteer has limited prviliedges",
                 PropertyId = 1,
                 CreatedBy = "gerryhazelton@gmail.com",
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 IsActive = true,
                 IsHidden = false,
             };
@@ -218,7 +218,7 @@ namespace TempleVolunteerAPI.Repository
                 Description = "Admin role has full prviliedges",
                 PropertyId = 2,
                 CreatedBy = "gerryhazelton@gmail.com",
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 IsActive = true,
                 IsHidden = false,
             };
@@ -230,7 +230,7 @@ namespace TempleVolunteerAPI.Repository
                 Description = "Volunteer has limited prviliedges",
                 PropertyId = 2,
                 CreatedBy = "gerryhazelton@gmail.com",
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 IsActive = true,
                 IsHidden = false,
             };
@@ -270,7 +270,7 @@ namespace TempleVolunteerAPI.Repository
             gerry.Password = "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=";
             gerry.PasswordSalt = "371952==";
             gerry.CreatedBy = "gerryhazelton@gmail.com";
-            gerry.CreatedDate = DateTime.Now;
+            gerry.CreatedDate = DateTime.UtcNow;
 
             modelBuilder.Entity<Staff>().HasData(
                 gerry
@@ -286,7 +286,7 @@ namespace TempleVolunteerAPI.Repository
                     SupplyItemsAllowed = true,
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }
@@ -301,7 +301,7 @@ namespace TempleVolunteerAPI.Repository
                     Note = "There are no notes",
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }
@@ -317,7 +317,7 @@ namespace TempleVolunteerAPI.Repository
                     CompletedDate = DateTime.Now,
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }
@@ -332,7 +332,7 @@ namespace TempleVolunteerAPI.Repository
                     Note = "There are no notes",
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }
@@ -349,7 +349,7 @@ namespace TempleVolunteerAPI.Repository
                     EndDate = DateTime.Now.AddDays(1),
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }
@@ -364,7 +364,7 @@ namespace TempleVolunteerAPI.Repository
                     Note = "There are no notes",
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }
@@ -379,7 +379,7 @@ namespace TempleVolunteerAPI.Repository
                     Note = "There are no notes",
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }
@@ -396,7 +396,7 @@ namespace TempleVolunteerAPI.Repository
                     PropertyId = 1,
                     StaffId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }
@@ -413,7 +413,7 @@ namespace TempleVolunteerAPI.Repository
                     PropertyId = 1,
                     CategoryId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     IsActive = true,
                     IsHidden = false,
                 }

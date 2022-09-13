@@ -11,8 +11,8 @@ namespace TempleVolunteerAPI.Service
         Task<TokenResponse> LoginAsync(LoginRequest request);
         Task<ServiceResponse<Staff>> ForgotPasswordAsync(ForgotPasswordRequest model);
         Task<ServiceResponse<Staff>> ResetPasswordAsync(ResetPasswordRequest model);
-        Task<int> RecordLoginAttempts(string userId);
-        Task<bool> ResetLoginAttempts(string userId);
+        Task<int> RecordLoginAttempts(string userId, int propertyId);
+        Task<bool> ResetLoginAttempts(string userId, int propertyId);
 
     }
 }

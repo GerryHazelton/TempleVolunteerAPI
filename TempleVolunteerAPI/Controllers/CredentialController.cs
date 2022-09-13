@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
-using VolunteerAPI.Domain;
 
 namespace TempleVolunteerAPI.API
 {
@@ -12,88 +12,70 @@ namespace TempleVolunteerAPI.API
     [Route("[controller]")]
     public class CredentialController : ControllerBase
     {
-        private readonly ICredentialService _CredentialService;
+        private readonly ICredentialService _credentialService;
         private readonly IMapper _mapper;
-        private ServiceResponse<IList<CredentialResponse>> _collResponse;
+        private ServiceResponse<IList<CredentialRequest>> _collResponse;
         private ServiceResponse<CredentialResponse> _response;
 
         public CredentialController(ICredentialService CredentialService, IMapper mapper)
         {
-            _CredentialService = CredentialService;
+            _credentialService = CredentialService;
             _mapper = mapper;
-            _collResponse = new ServiceResponse<IList<CredentialResponse>>();
+            _collResponse = new ServiceResponse<IList<CredentialRequest>>();
             _response = new ServiceResponse<CredentialResponse>();
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<CredentialResponse>>> GetAllAsync()
+        public async Task<ServiceResponse<IList<CredentialRequest>>> GetAllAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<CredentialResponse>>(await ReturnCollection());
+            _collResponse.Data = _mapper.Map<IList<CredentialRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<CredentialResponse>> GetByIdAsync(int id)
+        public async Task<ServiceResponse<CredentialResponse>> GetByIdAsync(MiscRequest request)
         {
-            _response.Data = _mapper.Map<CredentialResponse>(await _CredentialService.GetAsync(id));
+            _response.Data = _mapper.Map<CredentialResponse>(await _credentialService.GetAsync(request.GetById, request.PropertyId, request.UserId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
         [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<CredentialResponse>>> PostAsync([FromBody] CredentialResponse request)
+        public async Task<ServiceResponse<IList<CredentialRequest>>> PostAsync([FromBody] CredentialRequest request)
         {
-            if (await _CredentialService.AddAsync(_mapper.Map<Credential>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<CredentialResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _credentialService.AddAsync(_mapper.Map<Credential>(request), request.PropertyId, request.UpdatedBy);
+            _collResponse.Data = _mapper.Map<IList<CredentialRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to create Credential");
-            }
+            return _collResponse;
         }
 
         [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<CredentialResponse>>> PutAsync([FromBody] CredentialResponse request)
+        public async Task<ServiceResponse<IList<CredentialRequest>>> PutAsync([FromBody] CredentialRequest request)
         {
-            if (await _CredentialService.UpdateAsync(_mapper.Map<Credential>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<CredentialResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _credentialService.UpdateAsync(_mapper.Map<Credential>(request), request.PropertyId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<CredentialRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to update Credential");
-            }
+            return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<CredentialResponse>>> DeleteAsync(int id)
+        public async Task<ServiceResponse<IList<CredentialRequest>>> DeleteAsync(MiscRequest request)
         {
-            if (await _CredentialService.DeleteAsync(id))
-            {
-                _collResponse.Data = _mapper.Map<IList<CredentialResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _credentialService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
+            _collResponse.Data = _mapper.Map<IList<CredentialRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to delete Credential");
-            }
+            return _collResponse;
         }
 
-        private async Task<IList<Credential>> ReturnCollection()
+        private async Task<IList<Credential>> ReturnCollection(int propertyId, string userId)
         {
-            return await _CredentialService.GetAllAsync();
+            return await _credentialService.GetAllAsync(propertyId, userId);
         }
     }
 }

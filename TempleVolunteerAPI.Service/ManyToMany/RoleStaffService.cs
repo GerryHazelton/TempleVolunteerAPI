@@ -5,7 +5,7 @@ namespace TempleVolunteerAPI.Service
 {
     public class RoleStaffService : ServiceManyToManyBase<RoleStaff>, IRoleStaffService
     {
-        public RoleStaffService(IUnitOfWork uow, IErrorLogService errorLog) : base(uow, errorLog)
+        public RoleStaffService(IUnitOfWorkManyToMany uow, IErrorLogService errorLog) : base(uow, errorLog)
         {
 
         }

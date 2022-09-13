@@ -1,49 +1,110 @@
-﻿using TempleVolunteerAPI.Domain;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Repository;
 
 namespace TempleVolunteerAPI.Service
 {
     public class ServiceManyToManyBase<T> : IServiceManyToManyBase<T> where T : class
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IUnitOfWorkManyToMany _uow;
         private readonly IErrorLogService _errorLog;
-        public ServiceManyToManyBase(IUnitOfWork uow, IErrorLogService errorLog)
+        public ServiceManyToManyBase(IUnitOfWorkManyToMany uow, IErrorLogService errorLog)
         {
             _uow = uow;
             _errorLog = errorLog;
         }
 
-        public async Task<bool> AddAsync(T entity, string userId)
+        public async Task<T> AddAsync(T entity, int propertyId, string createdBy)
         {
-            var result = await _uow.Repository<T>().AddAsync(entity);
-
-            if (result != null)
+            try
             {
-                return true;
+                return await _uow.RepositoryManyToMany<T>().AddAsync(entity);
             }
+            catch (Exception ex)
+            {
+                await _errorLog.LogError(new ErrorRequest
+                {
+                    FunctionName = "Service: AddAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    PropertyId = propertyId,
+                    CreatedBy = createdBy,
+                    CreatedDate = DateTime.UtcNow
+                });
 
-            return false;
+                throw;
+            }
         }
 
-        public async Task<bool> UpdateAsync(T entity, string userId)
+        public async Task<T> UpdateAsync(T entity, int propertyId, string createdBy)
         {
-            return await _uow.Repository<T>().UpdateAsync(entity);
+            try
+            {
+                return await _uow.RepositoryManyToMany<T>().UpdateAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                await _errorLog.LogError(new ErrorRequest
+                {
+                    FunctionName = "Service: UpdateAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    PropertyId = propertyId,
+                    CreatedBy = createdBy,
+                    CreatedDate = DateTime.UtcNow
+                });
+
+                throw;
+            }
         }
 
-        public async Task<bool> DeleteAsync(int id, string userId)
+        public async Task<bool> DeleteByIdByIdAsync(T entity, int propertyId, string createdBy)
         {
-            T entity = await _uow.Repository<T>().GetByIdAsync(id);
-            return await _uow.Repository<T>().DeleteAsync(entity);
+            try
+            {
+                return await _uow.RepositoryManyToMany<T>().DeleteByIdByIdAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                await _errorLog.LogError(new ErrorRequest
+                {
+                    FunctionName = "Service: DeleteAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    PropertyId = propertyId,
+                    CreatedBy = createdBy,
+                    CreatedDate = DateTime.UtcNow
+                });
+
+                throw;
+            }
+        }
+
+        public async Task<T> GetByIdByIdAsync(T entity, int propertyId, string createdBy)
+        {
+            try
+            {
+                return await _uow.RepositoryManyToMany<T>().GetByIdByIdAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                await _errorLog.LogError(new ErrorRequest
+                {
+                    FunctionName = "Service: DeleteAsync",
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                    PropertyId = propertyId,
+                    CreatedBy = createdBy,
+                    CreatedDate = DateTime.UtcNow
+                });
+
+                throw;
+            }
         }
 
         public async Task ErrorLog(ErrorRequest error)
         {
             await _errorLog.LogError(error);
-        }
-
-        public Task<bool> GetByPropertyIdEventIdAsync(int propertyId, int EventId, string userId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

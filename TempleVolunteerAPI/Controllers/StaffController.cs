@@ -1,10 +1,11 @@
-﻿﻿using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TempleVolunteerAPI.Service;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
+using TempleVolunteerAPI.Service;
 
-namespace TempleVolunteerAPI.Controllers
+namespace TempleVolunteerAPI.API
 {
     //[Authorize]
     [ApiController]
@@ -13,86 +14,68 @@ namespace TempleVolunteerAPI.Controllers
     {
         private readonly IStaffService _staffService;
         private readonly IMapper _mapper;
-        private ServiceResponse<IList<Staff>> _collResponse;
-        private ServiceResponse<Staff> _response;
+        private ServiceResponse<IList<StaffRequest>> _collResponse;
+        private ServiceResponse<StaffResponse> _response;
 
-        public StaffController(IStaffService staffService, IMapper mapper)
+        public StaffController(IStaffService StaffService, IMapper mapper)
         {
-            _staffService = staffService;
+            _staffService = StaffService;
             _mapper = mapper;
-            _collResponse = new ServiceResponse<IList<Staff>>();
-            _response = new ServiceResponse<Staff>();
+            _collResponse = new ServiceResponse<IList<StaffRequest>>();
+            _response = new ServiceResponse<StaffResponse>();
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<Staff>>> GetAllAsync()
+        public async Task<ServiceResponse<IList<StaffRequest>>> GetAllAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<Staff>>(await ReturnCollection());
+            _collResponse.Data = _mapper.Map<IList<StaffRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<Staff>> GetByIdAsync(int id)
+        public async Task<ServiceResponse<StaffResponse>> GetByIdAsync(MiscRequest request)
         {
-            _response.Data = _mapper.Map<Staff>(await _staffService.GetAsync(id));
+            _response.Data = _mapper.Map<StaffResponse>(await _staffService.GetAsync(request.GetById, request.PropertyId, request.UserId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
         [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<Staff>>> PostAsync([FromBody] StaffResponse request)
+        public async Task<ServiceResponse<IList<StaffRequest>>> PostAsync([FromBody] StaffRequest request)
         {
-            if (await _staffService.AddAsync(_mapper.Map<Staff>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<Staff>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _staffService.AddAsync(_mapper.Map<Staff>(request), request.StaffId, request.UpdatedBy);
+            _collResponse.Data = _mapper.Map<IList<StaffRequest>>(await ReturnCollection(request.StaffId, request.CreatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to create Staff");
-            }
+            return _collResponse;
         }
 
         [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<Staff>>> PutAsync([FromBody] StaffResponse request)
+        public async Task<ServiceResponse<IList<StaffRequest>>> PutAsync([FromBody] StaffRequest request)
         {
-            if (await _staffService.UpdateAsync(_mapper.Map<Staff>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<Staff>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _staffService.UpdateAsync(_mapper.Map<Staff>(request), request.StaffId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<StaffRequest>>(await ReturnCollection(request.StaffId, request.UpdatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to update Staff");
-            }
+            return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<Staff>>> DeleteAsync(int id)
+        public async Task<ServiceResponse<IList<StaffRequest>>> DeleteAsync(MiscRequest request)
         {
-            if (await _staffService.DeleteAsync(id))
-            {
-                _collResponse.Data = _mapper.Map<IList<Staff>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _staffService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
+            _collResponse.Data = _mapper.Map<IList<StaffRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to delete Staff");
-            }
+            return _collResponse;
         }
 
-        private async Task<IList<Staff>> ReturnCollection()
+        private async Task<IList<Staff>> ReturnCollection(int StaffId, string userId)
         {
-            return await _staffService.GetAllAsync();
+            return await _staffService.GetAllAsync(StaffId, userId);
         }
     }
 }

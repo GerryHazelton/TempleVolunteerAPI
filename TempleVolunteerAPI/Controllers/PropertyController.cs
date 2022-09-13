@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 
 namespace TempleVolunteerAPI.API
@@ -13,86 +14,68 @@ namespace TempleVolunteerAPI.API
     {
         private readonly IPropertyService _propertyService;
         private readonly IMapper _mapper;
-        private ServiceResponse<IList<PropertyResponse>> _collResponse;
+        private ServiceResponse<IList<PropertyRequest>> _collResponse;
         private ServiceResponse<PropertyResponse> _response;
 
-        public PropertyController(IPropertyService propertyService, IMapper mapper)
+        public PropertyController(IPropertyService PropertyService, IMapper mapper)
         {
-            _propertyService = propertyService;
+            _propertyService = PropertyService;
             _mapper = mapper;
-            _collResponse = new ServiceResponse<IList<PropertyResponse>>();
+            _collResponse = new ServiceResponse<IList<PropertyRequest>>();
             _response = new ServiceResponse<PropertyResponse>();
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<PropertyResponse>>> GetAllAsync()
+        public async Task<ServiceResponse<IList<PropertyRequest>>> GetAllAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<PropertyResponse>>(await ReturnCollection());
+            _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<PropertyResponse>> GetByIdAsync(int id)
+        public async Task<ServiceResponse<PropertyResponse>> GetByIdAsync(MiscRequest request)
         {
-            _response.Data = _mapper.Map<PropertyResponse>(await _propertyService.GetAsync(id));
+            _response.Data = _mapper.Map<PropertyResponse>(await _propertyService.GetAsync(request.GetById, request.PropertyId, request.UserId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
         [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<PropertyResponse>>> PostAsync([FromBody] PropertyRequest request)
+        public async Task<ServiceResponse<IList<PropertyRequest>>> PostAsync([FromBody] PropertyRequest request)
         {
-            if (await _propertyService.AddAsync(_mapper.Map<Property>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<PropertyResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _propertyService.AddAsync(_mapper.Map<Property>(request), request.PropertyId, request.UpdatedBy);
+            _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to create Property");
-            }
+            return _collResponse;
         }
 
         [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<PropertyResponse>>> PutAsync([FromBody] PropertyResponse request)
+        public async Task<ServiceResponse<IList<PropertyRequest>>> PutAsync([FromBody] PropertyRequest request)
         {
-            if (await _propertyService.UpdateAsync(_mapper.Map<Property>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<PropertyResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _propertyService.UpdateAsync(_mapper.Map<Property>(request), request.PropertyId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to update Property");
-            }
+            return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<PropertyResponse>>> DeleteAsync(int id, string userId)
+        public async Task<ServiceResponse<IList<PropertyRequest>>> DeleteAsync(MiscRequest request)
         {
-            if (await _propertyService.DeleteAsync(id))
-            {
-                _collResponse.Data = _mapper.Map<IList<PropertyResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _propertyService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
+            _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to delete Property");
-            }
+            return _collResponse;
         }
 
-        private async Task<IList<Property>> ReturnCollection()
+        private async Task<IList<Property>> ReturnCollection(int propertyId, string userId)
         {
-            return await _propertyService.GetAllAsync();
+            return await _propertyService.GetAllAsync(propertyId, userId);
         }
     }
 }

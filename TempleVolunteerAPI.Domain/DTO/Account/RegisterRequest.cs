@@ -1,7 +1,7 @@
 ﻿
 namespace TempleVolunteerAPI.Domain
 {
-    public class RegisterRequest
+    public class RegisterRequest : Audit
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

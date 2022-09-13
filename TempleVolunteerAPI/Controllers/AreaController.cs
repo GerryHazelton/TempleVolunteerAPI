@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 
 namespace TempleVolunteerAPI.API
@@ -11,88 +12,70 @@ namespace TempleVolunteerAPI.API
     [Route("[controller]")]
     public class AreaController : ControllerBase
     {
-        private readonly IAreaService _AreaService;
+        private readonly IAreaService _areaService;
         private readonly IMapper _mapper;
-        private ServiceResponse<IList<AreaResponse>> _collResponse;
+        private ServiceResponse<IList<AreaRequest>> _collResponse;
         private ServiceResponse<AreaResponse> _response;
 
         public AreaController(IAreaService AreaService, IMapper mapper)
         {
-            _AreaService = AreaService;
+            _areaService = AreaService;
             _mapper = mapper;
-            _collResponse = new ServiceResponse<IList<AreaResponse>>();
+            _collResponse = new ServiceResponse<IList<AreaRequest>>();
             _response = new ServiceResponse<AreaResponse>();
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<AreaResponse>>> GetAllAsync()
+        public async Task<ServiceResponse<IList<AreaRequest>>> GetAllAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<AreaResponse>>(await ReturnCollection());
+            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<AreaResponse>> GetByIdAsync(int id)
+        public async Task<ServiceResponse<AreaResponse>> GetByIdAsync(MiscRequest request)
         {
-            _response.Data = _mapper.Map<AreaResponse>(await _AreaService.GetAsync(id));
+            _response.Data = _mapper.Map<AreaResponse>(await _areaService.GetAsync(request.GetById, request.PropertyId, request.UserId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
         [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<AreaResponse>>> PostAsync([FromBody] AreaResponse request)
+        public async Task<ServiceResponse<IList<AreaRequest>>> PostAsync([FromBody] AreaRequest request)
         {
-            if (await _AreaService.AddAsync(_mapper.Map<Area>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<AreaResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _areaService.AddAsync(_mapper.Map<Area>(request), request.PropertyId, request.UpdatedBy);
+            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to create Area");
-            }
+            return _collResponse;
         }
 
         [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<AreaResponse>>> PutAsync([FromBody] AreaResponse request)
+        public async Task<ServiceResponse<IList<AreaRequest>>> PutAsync([FromBody] AreaRequest request)
         {
-            if (await _AreaService.UpdateAsync(_mapper.Map<Area>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<AreaResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _areaService.UpdateAsync(_mapper.Map<Area>(request), request.PropertyId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to update Area");
-            }
+            return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<AreaResponse>>> DeleteAsync(int id)
+        public async Task<ServiceResponse<IList<AreaRequest>>> DeleteAsync(MiscRequest request)
         {
-            if (await _AreaService.DeleteAsync(id))
-            {
-                _collResponse.Data = _mapper.Map<IList<AreaResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _areaService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
+            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to delete Area");
-            }
+            return _collResponse;
         }
 
-        private async Task<IList<Area>> ReturnCollection()
+        private async Task<IList<Area>> ReturnCollection(int propertyId, string userId)
         {
-            return await _AreaService.GetAllAsync();
+            return await _areaService.GetAllAsync(propertyId, userId);
         }
     }
 }

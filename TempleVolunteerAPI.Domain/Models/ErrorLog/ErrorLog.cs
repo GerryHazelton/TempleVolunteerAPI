@@ -18,12 +18,9 @@ namespace TempleVolunteerAPI.Domain
         public string StackTrace { get; set; }
 
         [StringLength(6)]
-        public string Environment { get; set; }
+        public string? Environment { get; set; }
 
-        #region Dependencies
-        public int PropertyId { get; set; }
-        public virtual Property Property { get; set; }
-        #endregion
+        public int? PropertyId { get; set; }
 
         #region Constructors
         public ErrorLog()

@@ -1,33 +1,34 @@
 ﻿using TempleVolunteerAPI.Common;
 using TempleVolunteerAPI.Domain;
 using System.Linq.Expressions;
+using TempleVolunteerAPI.Domain.DTO;
 
 namespace TempleVolunteerAPI.Repository
 {
     public interface IRepositoryBase<T> where T : class
     {
-        Task<IList<T>> GetAllAsync();
-        Task<T> GetByIdAsync(int id);
-        Task<T> FindAsync(Expression<Func<T, bool>> match);
-        Task<IList<T>> FindAllAsync(Expression<Func<T, bool>> match);
-        Task<bool> AddAsync(T entity);
-        Task<bool> UpdateAsync(T entity);
-        Task<bool> DeleteAsync(T entity);
-        Task<int> CountAync();
+        Task<RepositoryResponse<T>> GetAllAsync();
+        Task<RepositoryResponse<T>> GetByIdAsync(int id);
+        Task<RepositoryResponse<T>> FindAsync(Expression<Func<T, bool>> match);
+        Task<RepositoryResponse<T>> FindAllAsync(Expression<Func<T, bool>> match);
+        Task<RepositoryResponse<T>> AddAsync(T entity);
+        Task<RepositoryResponse<T>> UpdateAsync(T entity);
+        Task<RepositoryResponse<T>> DeleteAsync(T entity);
+        Task<RepositoryResponse<T>> CountAync();
 
-        IEnumerable<T> Filter(
+        Task<RepositoryResponse<T>> Filter(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             string includeProperties = "",
             int? page = null,
             int? pageSize = null);
 
-        Task<IList<T>> FindByAsync(Expression<Func<T, bool>> match);
+        Task<RepositoryResponse<T>> FindByAsync(Expression<Func<T, bool>> match);
 
-        Task<bool> ExistAsync(Expression<Func<T, bool>> match);
-        Task<bool> CustomSqlProcessAsync(T instance, string createdBy);
-        Task<int> RecordLoginAttempts(string userId);
-        Task<bool> ResetLoginAttempts(string userId);
+        Task<RepositoryResponse<T>> ExistAsync(Expression<Func<T, bool>> match);
+        Task<RepositoryResponse<T>> CustomSqlProcessAsync(T instance, string createdBy);
+        Task<RepositoryResponse<T>> RecordLoginAttempts(string userId);
+        Task<RepositoryResponse<T>> ResetLoginAttempts(string userId);
         void LogError(LogErrorParms parms);
     }
 }

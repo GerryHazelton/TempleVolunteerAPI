@@ -1,7 +1,7 @@
 ﻿
 using AutoMapper;
 using TempleVolunteerAPI.Domain;
-using VolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain;
 
 namespace TempleVolunteerAPI.API
 {

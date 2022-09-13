@@ -2,7 +2,6 @@
 {
     public class PropertyRequest : Audit
     {
-        public int PropertyId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public string Address2 { get; set; }

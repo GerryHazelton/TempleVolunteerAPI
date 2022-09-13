@@ -4,10 +4,10 @@ namespace TempleVolunteerAPI.Service
 {
     public interface IServiceManyToManyBase<T>
     {
-        Task<bool> AddAsync(T entity, string userId);
-        Task<bool> UpdateAsync(T entity, string userId);
-        Task<bool> GetByPropertyIdEventIdAsync(int propertyId, int EventId, string userId);
-        Task<bool> DeleteAsync(int id, string userId);
+        Task<T> AddAsync(T entity, int propertyId, string createdBy);
+        Task<T> UpdateAsync(T entity, int propertyId, string createdBy);
+        Task<T> GetByIdByIdAsync(T entity, int propertyId, string createdBy);
+        Task<bool> DeleteByIdByIdAsync(T entity, int propertyId, string createdBy);
         Task ErrorLog(ErrorRequest error);
     }
 }

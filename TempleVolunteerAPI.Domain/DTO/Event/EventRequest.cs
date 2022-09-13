@@ -8,7 +8,6 @@
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string Note { get; set; }
-        public int PropertyId { get; set; }
         public ICollection<EventType>? EventTypes { get; set; }
  
         public EventRequest()

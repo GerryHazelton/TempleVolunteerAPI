@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 
 namespace TempleVolunteerAPI.API
@@ -11,88 +12,70 @@ namespace TempleVolunteerAPI.API
     [Route("[controller]")]
     public class SupplyItemController : ControllerBase
     {
-        private readonly ISupplyItemService _SupplyItemService;
+        private readonly ISupplyItemService _supplyItemService;
         private readonly IMapper _mapper;
-        private ServiceResponse<IList<SupplyItemResponse>> _collResponse;
+        private ServiceResponse<IList<SupplyItemRequest>> _collResponse;
         private ServiceResponse<SupplyItemResponse> _response;
 
         public SupplyItemController(ISupplyItemService SupplyItemService, IMapper mapper)
         {
-            _SupplyItemService = SupplyItemService;
+            _supplyItemService = SupplyItemService;
             _mapper = mapper;
-            _collResponse = new ServiceResponse<IList<SupplyItemResponse>>();
+            _collResponse = new ServiceResponse<IList<SupplyItemRequest>>();
             _response = new ServiceResponse<SupplyItemResponse>();
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<SupplyItemResponse>>> GetAllAsync()
+        public async Task<ServiceResponse<IList<SupplyItemRequest>>> GetAllAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<SupplyItemResponse>>(await ReturnCollection());
+            _collResponse.Data = _mapper.Map<IList<SupplyItemRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<SupplyItemResponse>> GetByIdAsync(int id)
+        public async Task<ServiceResponse<SupplyItemResponse>> GetByIdAsync(MiscRequest request)
         {
-            _response.Data = _mapper.Map<SupplyItemResponse>(await _SupplyItemService.GetAsync(id));
+            _response.Data = _mapper.Map<SupplyItemResponse>(await _supplyItemService.GetAsync(request.GetById, request.PropertyId, request.UserId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
         [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<SupplyItemResponse>>> PostAsync([FromBody] SupplyItemResponse request)
+        public async Task<ServiceResponse<IList<SupplyItemRequest>>> PostAsync([FromBody] SupplyItemRequest request)
         {
-            if (await _SupplyItemService.AddAsync(_mapper.Map<SupplyItem>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<SupplyItemResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _supplyItemService.AddAsync(_mapper.Map<SupplyItem>(request), request.SupplyItemId, request.UpdatedBy);
+            _collResponse.Data = _mapper.Map<IList<SupplyItemRequest>>(await ReturnCollection(request.SupplyItemId, request.CreatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to create SupplyItem");
-            }
+            return _collResponse;
         }
 
         [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<SupplyItemResponse>>> PutAsync([FromBody] SupplyItemResponse request)
+        public async Task<ServiceResponse<IList<SupplyItemRequest>>> PutAsync([FromBody] SupplyItemRequest request)
         {
-            if (await _SupplyItemService.UpdateAsync(_mapper.Map<SupplyItem>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<SupplyItemResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _supplyItemService.UpdateAsync(_mapper.Map<SupplyItem>(request), request.SupplyItemId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<SupplyItemRequest>>(await ReturnCollection(request.SupplyItemId, request.UpdatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to update SupplyItem");
-            }
+            return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<SupplyItemResponse>>> DeleteAsync(int id)
+        public async Task<ServiceResponse<IList<SupplyItemRequest>>> DeleteAsync(MiscRequest request)
         {
-            if (await _SupplyItemService.DeleteAsync(id))
-            {
-                _collResponse.Data = _mapper.Map<IList<SupplyItemResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _supplyItemService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
+            _collResponse.Data = _mapper.Map<IList<SupplyItemRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to delete SupplyItem");
-            }
+            return _collResponse;
         }
 
-        private async Task<IList<SupplyItem>> ReturnCollection()
+        private async Task<IList<SupplyItem>> ReturnCollection(int SupplyItemId, string userId)
         {
-            return await _SupplyItemService.GetAllAsync();
+            return await _supplyItemService.GetAllAsync(SupplyItemId, userId);
         }
     }
 }

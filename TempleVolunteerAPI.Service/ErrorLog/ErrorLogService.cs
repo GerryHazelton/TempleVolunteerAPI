@@ -28,7 +28,7 @@ namespace TempleVolunteerAPI.Service
                 errorEntry.CreatedBy = error.CreatedBy;
                 errorEntry.CreatedDate = error.CreatedDate;
 
-                await _uow.Repository<Domain.ErrorLog>().AddAsync(errorEntry);
+                await _uow.Repository<ErrorLog>().AddAsync(errorEntry);
             }
             catch(Exception ex2)
             {

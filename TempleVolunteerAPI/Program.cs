@@ -67,7 +67,11 @@ builder.Services.AddTransient(typeof(IRoleStaffRepository), typeof(RoleStaffRepo
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+builder.Services.AddTransient<IUnitOfWorkManyToMany, UnitOfWorkManyToMany>();
+builder.Services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+builder.Services.AddTransient(typeof(IRepositoryManyToManyBase<>), typeof(RepositoryManyToManyBase<>));
+builder.Services.AddTransient(typeof(IServiceBase<>), typeof(ServiceBase<>));
+builder.Services.AddTransient(typeof(IServiceManyToManyBase<>), typeof(ServiceManyToManyBase<>));
 #endregion
 
 var sharedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Mataji22Mataji33Mataji44Mataji55Mataji66Mataji77Mataji88Mataji99Mataji00"));

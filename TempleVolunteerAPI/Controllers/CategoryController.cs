@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 
 namespace TempleVolunteerAPI.API
@@ -13,86 +14,68 @@ namespace TempleVolunteerAPI.API
     {
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapper;
-        private ServiceResponse<IList<CategoryResponse>> _collResponse;
+        private ServiceResponse<IList<CategoryRequest>> _collResponse;
         private ServiceResponse<CategoryResponse> _response;
 
         public CategoryController(ICategoryService CategoryService, IMapper mapper)
         {
             _categoryService = CategoryService;
             _mapper = mapper;
-            _collResponse = new ServiceResponse<IList<CategoryResponse>>();
+            _collResponse = new ServiceResponse<IList<CategoryRequest>>();
             _response = new ServiceResponse<CategoryResponse>();
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<CategoryResponse>>> GetAllAsync()
+        public async Task<ServiceResponse<IList<CategoryRequest>>> GetAllAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<CategoryResponse>>(await ReturnCollection());
+            _collResponse.Data = _mapper.Map<IList<CategoryRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<CategoryResponse>> GetByIdAsync(int id)
+        public async Task<ServiceResponse<CategoryResponse>> GetByIdAsync(MiscRequest request)
         {
-            _response.Data = _mapper.Map<CategoryResponse>(await _categoryService.GetAsync(id));
+            _response.Data = _mapper.Map<CategoryResponse>(await _categoryService.GetAsync(request.GetById, request.PropertyId, request.UserId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
         [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<CategoryResponse>>> PostAsync([FromBody] CategoryResponse request)
+        public async Task<ServiceResponse<IList<CategoryRequest>>> PostAsync([FromBody] CategoryRequest request)
         {
-            if (await _categoryService.AddAsync(_mapper.Map<Category>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<CategoryResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _categoryService.AddAsync(_mapper.Map<Category>(request), request.PropertyId, request.UpdatedBy);
+            _collResponse.Data = _mapper.Map<IList<CategoryRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to create Category");
-            }
+            return _collResponse;
         }
 
         [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<CategoryResponse>>> PutAsync([FromBody] CategoryResponse request)
+        public async Task<ServiceResponse<IList<CategoryRequest>>> PutAsync([FromBody] CategoryRequest request)
         {
-            if (await _categoryService.UpdateAsync(_mapper.Map<Category>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<CategoryResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _categoryService.UpdateAsync(_mapper.Map<Category>(request), request.PropertyId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<CategoryRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to update Category");
-            }
+            return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<CategoryResponse>>> DeleteAsync(int id)
+        public async Task<ServiceResponse<IList<CategoryRequest>>> DeleteAsync(MiscRequest request)
         {
-            if (await _categoryService.DeleteAsync(id))
-            {
-                _collResponse.Data = _mapper.Map<IList<CategoryResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _categoryService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
+            _collResponse.Data = _mapper.Map<IList<CategoryRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to delete Category");
-            }
+            return _collResponse;
         }
 
-        private async Task<IList<Category>> ReturnCollection()
+        private async Task<IList<Category>> ReturnCollection(int propertyId, string userId)
         {
-            return await _categoryService.GetAllAsync();
+            return await _categoryService.GetAllAsync(propertyId, userId);
         }
     }
 }

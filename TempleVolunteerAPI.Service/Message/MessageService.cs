@@ -1,4 +1,5 @@
 ﻿using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Repository;
 
 namespace TempleVolunteerAPI.Service
@@ -7,28 +8,34 @@ namespace TempleVolunteerAPI.Service
     {
         private readonly IUnitOfWork _uow;
         private readonly IErrorLogService _errorLog;
+        RepositoryResponse<Message> _repositoryResponse;
 
         public MessageService(IUnitOfWork uow, IErrorLogService errorLog)
         {
             _uow = uow;
             _errorLog = errorLog;
+            _repositoryResponse = new RepositoryResponse<Message>();
         }
 
         public async Task<bool> AddAsync(Message message)
         {
-            return await _uow.Repository<Message>().AddAsync(message);
+            _repositoryResponse = await _uow.Repository<Message>().AddAsync(message);
+
+            return _repositoryResponse.Result;
         }
 
         public async Task<IList<Message>> GetAllAsync()
         {
-            return await _uow.Repository<Message>().GetAllAsync();
+            _repositoryResponse = await _uow.Repository<Message>().GetAllAsync();
+
+            return _repositoryResponse.Entities;
         }
 
         public async Task<List<Message>> GetAllByIdAsync(string userId)
         {
-            List<Message> messages = (List<Message>)await _uow.Repository<Message>().GetAllAsync();
+            _repositoryResponse = await _uow.Repository<Message>().GetAllAsync();
 
-            return messages.Where(x => x.From == userId).ToList();
+            return _repositoryResponse.Entities.Where(x => x.From == userId).ToList(); ;
         }
     }
 }

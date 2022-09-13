@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 
 namespace TempleVolunteerAPI.API
@@ -13,86 +14,68 @@ namespace TempleVolunteerAPI.API
     {
         private readonly IEventTaskService _eventTaskService;
         private readonly IMapper _mapper;
-        private ServiceResponse<IList<EventTaskResponse>> _collResponse;
+        private ServiceResponse<IList<EventTaskRequest>> _collResponse;
         private ServiceResponse<EventTaskResponse> _response;
 
-        public EventTaskController(IEventTaskService eventTaskService, IMapper mapper)
+        public EventTaskController(IEventTaskService EventTaskService, IMapper mapper)
         {
-            _eventTaskService = eventTaskService;
+            _eventTaskService = EventTaskService;
             _mapper = mapper;
-            _collResponse = new ServiceResponse<IList<EventTaskResponse>>();
+            _collResponse = new ServiceResponse<IList<EventTaskRequest>>();
             _response = new ServiceResponse<EventTaskResponse>();
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<EventTaskResponse>>> GetAllAsync()
+        public async Task<ServiceResponse<IList<EventTaskRequest>>> GetAllAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<EventTaskResponse>>(await ReturnCollection());
+            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<EventTaskResponse>> GetByIdAsync(int id)
+        public async Task<ServiceResponse<EventTaskResponse>> GetByIdAsync(MiscRequest request)
         {
-            _response.Data = _mapper.Map<EventTaskResponse>(await _eventTaskService.GetAsync(id));
+            _response.Data = _mapper.Map<EventTaskResponse>(await _eventTaskService.GetAsync(request.GetById, request.PropertyId, request.UserId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
         [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<EventTaskResponse>>> PostAsync([FromBody] EventTaskResponse request)
+        public async Task<ServiceResponse<IList<EventTaskRequest>>> PostAsync([FromBody] EventTaskRequest request)
         {
-            if (await _eventTaskService.AddAsync(_mapper.Map<EventTask>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<EventTaskResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _eventTaskService.AddAsync(_mapper.Map<EventTask>(request), request.PropertyId, request.UpdatedBy);
+            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to create Event");
-            }
+            return _collResponse;
         }
 
         [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<EventTaskResponse>>> PutAsync([FromBody] EventTaskResponse request)
+        public async Task<ServiceResponse<IList<EventTaskRequest>>> PutAsync([FromBody] EventTaskRequest request)
         {
-            if (await _eventTaskService.UpdateAsync(_mapper.Map<EventTask>(request)))
-            {
-                _collResponse.Data = _mapper.Map<IList<EventTaskResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _eventTaskService.UpdateAsync(_mapper.Map<EventTask>(request), request.PropertyId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to update Event");
-            }
+            return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<EventTaskResponse>>> DeleteAsync(int id)
+        public async Task<ServiceResponse<IList<EventTaskRequest>>> DeleteAsync(MiscRequest request)
         {
-            if (await _eventTaskService.DeleteAsync(id))
-            {
-                _collResponse.Data = _mapper.Map<IList<EventTaskResponse>>(await ReturnCollection());
-                _collResponse.Success = _collResponse.Data != null ? true : false;
+            await _eventTaskService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
+            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
-                return _collResponse;
-            }
-            else
-            {
-                throw new Exception("Unable to delete Event");
-            }
+            return _collResponse;
         }
 
-        private async Task<IList<EventTask>> ReturnCollection()
+        private async Task<IList<EventTask>> ReturnCollection(int propertyId, string userId)
         {
-            return await _eventTaskService.GetAllAsync();
+            return await _eventTaskService.GetAllAsync(propertyId, userId);
         }
     }
 }

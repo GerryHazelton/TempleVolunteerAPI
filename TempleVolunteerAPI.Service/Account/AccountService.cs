@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 using TempleVolunteerAPI.Common;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Repository;
 
 namespace TempleVolunteerAPI.Service
@@ -15,6 +16,8 @@ namespace TempleVolunteerAPI.Service
         private readonly IEmailService _emailService;
         private readonly IErrorLogService _errorLogService;
         private readonly ITokenService _tokenService;
+        private ServiceResponse<Staff> _response;
+        private RepositoryResponse<Staff> _repositoryResponse;
 
         public AccountService(
             IUnitOfWork uow,
@@ -22,7 +25,8 @@ namespace TempleVolunteerAPI.Service
             IOptions<AppSettings> appSettings,
             IEmailService emailService,
             IErrorLogService errorLogService,
-            ITokenService tokenService
+            TokenService tokenService
+            
             )
         {
             _uow = uow;
@@ -31,78 +35,96 @@ namespace TempleVolunteerAPI.Service
             _emailService = emailService;
             _errorLogService = errorLogService;
             _tokenService = tokenService;
+            _response = new ServiceResponse<Staff>();
+            _repositoryResponse = new RepositoryResponse<Staff>();
         }
 
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
         {
             RegisterResponse response = new RegisterResponse();
     
-            try
-            {
-                var existingUser = await _uow.Repository<Staff>().FindAsync(user => user.EmailAddress == request.EmailAddress);
+            _repositoryResponse = await _uow.Repository<Staff>().FindAsync(user => user.EmailAddress == request.EmailAddress);
 
-                if (existingUser != null)
-                {
-                    return new RegisterResponse
-                    {
-                        Success = false,
-                        Message = "User already exists.",
-                    };
-                }
-
-                var salt = Helper.GetSecureSalt();
-                var passwordHash = Helper.HashUsingPbkdf2(request.Password, salt);
-
-                Staff staff = new Staff(request.EmailAddress);
-                staff.FirstName = request.FirstName;
-                staff.LastName = request.LastName;
-                staff.Address = request.Address;
-                staff.Address2 = request.Address2;
-                staff.City = request.City;
-                staff.State = request.State;
-                staff.PostalCode = request.PostalCode;
-                staff.Country = request.Country;
-                staff.PhoneNumber = request.PhoneNumber;
-                staff.EmailAddress = request.EmailAddress;
-                staff.PhoneNumber = request.EmailAddress;
-                //staff.RoleId = request.RoleId;
-                staff.Gender = request.EmailAddress;
-                staff.FirstAid = request.FirstAid;
-                staff.CPR = request.CPR;
-                staff.Kriyaban = request.Kriyaban;
-                staff.LessonStudent = request.LessonStudent;
-                staff.AcceptTerms = request.AcceptTerms;
-                staff.CreatedDate = DateTime.Now;
-                staff.Password = passwordHash;
-                staff.PasswordSalt = Convert.ToBase64String(salt);
-
-                bool addSuccess = await _uow.Repository<Staff>().AddAsync(staff);
-
-                if (addSuccess)
-                {
-                    await _emailService.SendVerificationEmail(staff);
-                    return new RegisterResponse { Success = true };
-                }
-
-                return new RegisterResponse
-                {
-                    Success = false,
-                    Message = "Unable to register.",
-                };
-            }
-            catch (Exception ex)
+            if (_repositoryResponse.Error != null)
             {
                 await _errorLogService.LogError(new ErrorRequest
                 {
                     FunctionName = "RegisterAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
                     PropertyId = 0,
-                    CreatedBy = request.EmailAddress
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
                 });
 
                 response.Success = false;
-                response.Message = "Internal exception thrown.";
+                response.Message = "Unable to register.";
+                return response;
+            }
+
+            if (_repositoryResponse.Entity != null)
+            {
+                return new RegisterResponse
+                {
+                    Success = false,
+                    Message = "User already exists.",
+                };
+            }
+
+            var salt = Helper.GetSecureSalt();
+            var passwordHash = Helper.HashUsingPbkdf2(request.Password, salt);
+
+            Staff staff = new Staff(request.EmailAddress);
+            staff.FirstName = request.FirstName;
+            staff.LastName = request.LastName;
+            staff.Address = request.Address;
+            staff.Address2 = request.Address2;
+            staff.City = request.City;
+            staff.State = request.State;
+            staff.PostalCode = request.PostalCode;
+            staff.Country = request.Country;
+            staff.PhoneNumber = request.PhoneNumber;
+            staff.EmailAddress = request.EmailAddress;
+            staff.PhoneNumber = request.EmailAddress;
+            //staff.RoleId = request.RoleId;
+            staff.Gender = request.EmailAddress;
+            staff.FirstAid = request.FirstAid;
+            staff.CPR = request.CPR;
+            staff.Kriyaban = request.Kriyaban;
+            staff.LessonStudent = request.LessonStudent;
+            staff.AcceptTerms = request.AcceptTerms;
+            staff.CreatedDate = DateTime.UtcNow;
+            staff.Password = passwordHash;
+            staff.PasswordSalt = Convert.ToBase64String(salt);
+
+            _repositoryResponse = await _uow.Repository<Staff>().AddAsync(staff);
+
+            if (_repositoryResponse.Error != null)
+            {
+                await _errorLogService.LogError(new ErrorRequest
+                {
+                    FunctionName = "RegisterAsync",
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = 0,
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
+                });
+
+                response.Success = false;
+                response.Message = "Unable to register.";
+                return response;
+            }
+
+            if (_repositoryResponse.Entity != null)
+            {
+                await _emailService.SendEmail(staff, 0, EnumHelper.EmailTypeEnum.RegisterEmail);
+                return new RegisterResponse { Success = true, Message = "Registration successful." };
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "Registration unsuccessful.";
                 return response;
             }
         }
@@ -111,324 +133,359 @@ namespace TempleVolunteerAPI.Service
         {
             TokenResponse response = new TokenResponse();
 
-            try
-            {
-                var staff = _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == request.EmailAddress && x.IsActive && x.IsVerified).Result;
+            _repositoryResponse = _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == request.EmailAddress && x.IsActive && x.IsVerified).Result;
 
-                if (staff == null)
-                {
-                    return new TokenResponse
-                    {
-                        Success = false,
-                        Message = "User is not found.",
-                    };
-                }
-
-                var propertyStaff = _uow.Repository<PropertyStaff>().FindAsync(x => x.PropertyId == request.PropertyId && x.StaffId == staff.StaffId).Result;
-
-                if (propertyStaff == null)
-                {
-                    return new TokenResponse
-                    {
-                        Success = false,
-                        Message = "User is not found.",
-                    };
-                }
-
-                var passwordHash = Helper.HashUsingPbkdf2(request.Password, Convert.FromBase64String(staff.PasswordSalt));
-
-                if (staff.Password != passwordHash)
-                {
-                    return new TokenResponse
-                    {
-                        Success = false,
-                        Message = "User is not found.",
-                    };
-                }
-
-                var token = await Task.Run(() => _tokenService.GenerateTokensAsync(staff.StaffId));
-                var property = _uow.Repository<Property>().FindAsync(x => x.PropertyId == request.PropertyId).Result;
-                var roleStaff = _uow.Repository<RoleStaff>().FindAsync(x => x.PropertyId == request.PropertyId && x.StaffId == staff.StaffId).Result;
-                var role = _uow.Repository<Role>().FindAsync(x => x.RoleId == roleStaff.RoleId).Result;
-
-                return new TokenResponse
-                {
-                    Success = true,
-                    AccessToken = token.Item1,
-                    RefreshToken = token.Item2,
-                    FirstName = staff.FirstName,
-                    LastName = staff.LastName,
-                    IsAdmin = role.Name == "Admin" ? true : false,
-                    StaffId = staff.StaffId,
-                    PropertyId = request.PropertyId,
-                    PropertyName = property.Name
-                };
-            }
-            catch (Exception ex)
+            if (_repositoryResponse.Error != null)
             {
                 await _errorLogService.LogError(new ErrorRequest
                 {
-                    FunctionName = "AuthenticateAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    PropertyId = 0,
-                    CreatedBy = request.EmailAddress
+                    FunctionName = "LoginAsync",
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = request.PropertyId,
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
                 });
 
                 response.Success = false;
-                response.Message = "Internal exception thrown.";
+                response.Message = "Unable to login.";
                 return response;
             }
+
+            if (_repositoryResponse.Entity == null)
+            {
+                return new TokenResponse
+                {
+                    Success = false,
+                    Message = "User is not found.",
+                };
+            }
+
+            var propertyStaff = _uow.Repository<PropertyStaff>().FindAsync(x => x.PropertyId == request.PropertyId && x.StaffId == _repositoryResponse.Entity.StaffId).Result;
+
+            if (propertyStaff == null)
+            {
+                return new TokenResponse
+                {
+                    Success = false,
+                    Message = "User is not found.",
+                };
+            }
+
+            var passwordHash = Helper.HashUsingPbkdf2(request.Password, Convert.FromBase64String(_repositoryResponse.Entity.PasswordSalt));
+
+            if (_repositoryResponse.Entity.Password != passwordHash)
+            {
+                return new TokenResponse
+                {
+                    Success = false,
+                    Message = "User is not found.",
+                };
+            }
+
+            var token = await Task.Run(() => _tokenService.GenerateTokensAsync(_repositoryResponse.Entity.StaffId));
+            var property = _uow.Repository<Property>().FindAsync(x => x.PropertyId == request.PropertyId).Result;
+            var roleStaff = _uow.Repository<RoleStaff>().FindAsync(x => x.PropertyId == request.PropertyId && x.StaffId == _repositoryResponse.Entity.StaffId).Result;
+            var role = _uow.Repository<Role>().FindAsync(x => x.RoleId == roleStaff.Entity.RoleId).Result;
+
+            return new TokenResponse
+            {
+                Success = true,
+                AccessToken = token.Item1,
+                RefreshToken = token.Item2,
+                FirstName = _repositoryResponse.Entity.FirstName,
+                LastName = _repositoryResponse.Entity.LastName,
+                IsAdmin = role.Entity.Name == "Admin" ? true : false,
+                StaffId = _repositoryResponse.Entity.StaffId,
+                PropertyId = request.PropertyId,
+                PropertyName = property.Entity.Name
+            };
         }
 
-        public async Task<ServiceResponse<Staff>> VerifyEmailAddressAsync(string emailAddress, string token)
+        public async Task<ServiceResponse<Staff>> VerifyEmailAddressAsync(VerifyEmailAddressRequest request)
         {
             ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-            try
+            Staff? staff = null;
+
+            _repositoryResponse = await _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == request.EmailAddress);
+
+            if (_repositoryResponse.Error != null)
             {
-                Staff? staff = null;
-
-                if (!String.IsNullOrEmpty(token))
+                await _errorLogService.LogError(new ErrorRequest
                 {
-                    staff = await _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == emailAddress);
-                }
-                else
-                {
-                    staff = await _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == emailAddress);
-                }
+                    FunctionName = "VerifyEmailAddressAsync",
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = request.PropertyId,
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
+                });
 
-                if (staff.IsVerified)
-                {
-                    response.Message = "Email successfully verified.";
-                    response.Success = true;
+                response.Success = false;
+                response.Message = "Unable to verify email address.";
+                return response;
+            }
 
-                    return response;
-                }
-
-                if (staff == null)
-                {
-                    response.Message = "Email verification failed.";
-                    response.Success = false;
-
-                    return response;
-                }
-
-                staff.VerifiedDate = DateTime.UtcNow;
-                staff.IsVerified = true;
-                staff.IsActive = true;
-                staff.EmailConfirmed = true;
-
-                await _uow.Repository<Staff>().UpdateAsync(staff);
-
+            if (_repositoryResponse.Entity.IsVerified)
+            {
                 response.Message = "Email successfully verified.";
                 response.Success = true;
 
                 return response;
             }
-            catch (Exception ex)
+
+            if (_repositoryResponse.Entity == null)
+            {
+                response.Message = "Email verification failed.";
+                response.Success = false;
+
+                return response;
+            }
+
+            staff.VerifiedDate = DateTime.UtcNow;
+            staff.IsVerified = true;
+            staff.IsActive = true;
+            staff.EmailConfirmed = true;
+
+            _repositoryResponse = await _uow.Repository<Staff>().UpdateAsync(staff);
+
+            if (_repositoryResponse.Error != null)
             {
                 await _errorLogService.LogError(new ErrorRequest
                 {
                     FunctionName = "VerifyEmailAddressAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    PropertyId = 0,
-                    CreatedBy = emailAddress
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = request.PropertyId,
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
                 });
 
                 response.Success = false;
-                response.Message = "Internal exception thrown.";
+                response.Message = "Unable to verify email address.";
                 return response;
             }
+
+            response.Message = "Email successfully verified.";
+            response.Success = true;
+
+            return response;
+
         }
 
         public async Task<ServiceResponse<Staff>> ForgotPasswordAsync(ForgotPasswordRequest request)
         {
             ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-            try
-            {
-                Staff staff = await _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == request.EmailAddress && x.PostalCode == request.PostalCode);
+            _repositoryResponse = await _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == request.EmailAddress && x.PostalCode == request.PostalCode);
 
-                if (staff == null)
-                {
-                    response.Message = "User not found.";
-                    response.Success = false;
-
-                    return response;
-                }
-
-                var propertyStaff = _uow.Repository<PropertyStaff>().FindAsync(x => x.PropertyId == request.PropertyId && x.StaffId == staff.StaffId).Result;
-
-                if (propertyStaff == null)
-                {
-                    response.Message = "User not found.";
-                    response.Success = false;
-
-                    return response;
-                }
-
-                staff.UpdatedBy = request.EmailAddress;
-                staff.UpdatedDate = DateTime.UtcNow;
-
-                await _uow.Repository<Staff>().UpdateAsync(staff);
-                bool result = await _emailService.SendPasswordResetEmail(staff);
-
-                if (result)
-                {
-                    response.Message = "Email successfully sent.";
-                    response.Success = true;
-                }
-                else
-                {
-                    response.Message = "User not found.";
-                    response.Success = false;
-                }
-
-                return response;
-            }
-            catch (Exception ex)
+            if (_repositoryResponse.Error != null)
             {
                 await _errorLogService.LogError(new ErrorRequest
                 {
                     FunctionName = "ForgotPasswordAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    PropertyId = 0,
-                    CreatedBy = request.EmailAddress
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = request.PropertyId,
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
                 });
 
                 response.Success = false;
-                response.Message = "Internal exception thrown.";
+                response.Message = "Unable to verify email address.";
                 return response;
             }
+
+            if (_repositoryResponse.Entity == null)
+            {
+                response.Message = "User not found.";
+                response.Success = false;
+
+                return response;
+            }
+
+            var propertyStaff = _uow.Repository<PropertyStaff>().FindAsync(x => x.PropertyId == request.PropertyId && x.StaffId == _repositoryResponse.Entity.StaffId).Result;
+
+            if (propertyStaff == null)
+            {
+                response.Message = "User not found.";
+                response.Success = false;
+
+                return response;
+            }
+
+            _repositoryResponse.Entity.UpdatedBy = request.EmailAddress;
+            _repositoryResponse.Entity.UpdatedDate = DateTime.UtcNow;
+
+            _repositoryResponse = await _uow.Repository<Staff>().UpdateAsync(_repositoryResponse.Entity);
+
+            if (_repositoryResponse.Error != null)
+            {
+                await _errorLogService.LogError(new ErrorRequest
+                {
+                    FunctionName = "ForgotPasswordAsync",
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = request.PropertyId,
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
+                });
+
+                response.Success = false;
+                response.Message = "Unable to verify email address.";
+                return response;
+            }
+
+            await _emailService.SendEmail(_repositoryResponse.Entity, request.PropertyId, EnumHelper.EmailTypeEnum.ResetPassword);
+
+            response.Message = "Email successfully sent.";
+            response.Success = true;
+
+            return response;
         }
 
         public async Task<ServiceResponse<Staff>> ResetPasswordAsync(ResetPasswordRequest request)
         {
             ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-            try
-            {
-                var staff = await _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == request.EmailAddress);
+            var _repositoryResponse = await _uow.Repository<Staff>().FindAsync(x => x.EmailAddress == request.EmailAddress);
 
-                if (staff == null)
-                {
-                    response.Message = "User not found.";
-                    response.Success = false;
-
-                    return response;
-                }
-
-                var passwordHash = Helper.HashUsingPbkdf2(request.OldPassword, Convert.FromBase64String(staff.PasswordSalt));
-
-                if (staff.Password != passwordHash)
-                {
-                    response.Message = "Old password is incorrect.";
-                    response.Success = false;
-
-                    return response;
-                }
-
-                staff.UpdatedDate = DateTime.UtcNow;
-                staff.UpdatedBy = request.EmailAddress;
-                staff.Password = Helper.GetPasswordHash(request.NewPassword, request.EmailAddress);
-                staff.PasswordReset = DateTime.UtcNow;
-
-                await _uow.Repository<Staff>().UpdateAsync(staff);
-
-                response.Message = "Password successfully reset.";
-                response.Success = true;
-
-                return response;
-            }
-            catch (Exception ex)
+            if (_repositoryResponse.Error != null)
             {
                 await _errorLogService.LogError(new ErrorRequest
                 {
                     FunctionName = "ResetPasswordAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    PropertyId = 0,
-                    CreatedBy = request.EmailAddress
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = request.PropertyId,
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
                 });
 
                 response.Success = false;
-                response.Message = "Internal exception thrown.";
+                response.Message = "Unable to reset password.";
                 return response;
             }
+
+            if (_repositoryResponse.Entity == null)
+            {
+                response.Message = "User not found.";
+                response.Success = false;
+
+                return response;
+            }
+
+            var passwordHash = Helper.HashUsingPbkdf2(request.OldPassword, Convert.FromBase64String(_repositoryResponse.Entity.PasswordSalt));
+
+            if (_repositoryResponse.Entity.Password != passwordHash)
+            {
+                response.Message = "Old password is incorrect.";
+                response.Success = false;
+
+                return response;
+            }
+
+            _repositoryResponse.Entity.UpdatedDate = DateTime.UtcNow;
+            _repositoryResponse.Entity.UpdatedBy = request.EmailAddress;
+            _repositoryResponse.Entity.Password = Helper.GetPasswordHash(request.NewPassword, request.EmailAddress);
+            _repositoryResponse.Entity.PasswordReset = DateTime.UtcNow;
+
+            _repositoryResponse = await _uow.Repository<Staff>().UpdateAsync(_repositoryResponse.Entity);
+
+            if (_repositoryResponse.Error != null)
+            {
+                await _errorLogService.LogError(new ErrorRequest
+                {
+                    FunctionName = "ResetPasswordAsync",
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = request.PropertyId,
+                    CreatedBy = request.EmailAddress,
+                    CreatedDate = DateTime.UtcNow
+                });
+
+                response.Success = false;
+                response.Message = "Unable to reset password.";
+                return response;
+            }
+
+            response.Message = "Password successfully reset.";
+            response.Success = true;
+
+            return response;
+
         }
 
         #region Helpers
-        private async Task<Staff> GetStaffAsync(int id, string userId)
+        private async Task<ServiceResponse<Staff>> GetStaffAsync(int id, string userId, int propertyId)
         {
-            try
-            {
-                Staff staff = await _uow.Repository<Staff>().FindAsync(x => x.StaffId == id);
+            ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-                if (staff == null)
-                {
-                    throw new KeyNotFoundException("Staff not found (Service: GetStaffAsync)");
-                }
+            _repositoryResponse = await _uow.Repository<Staff>().FindAsync(x => x.StaffId == id);
 
-                return staff;
-            }
-            catch (Exception ex)
+            if (_repositoryResponse.Error != null)
             {
                 await _errorLogService.LogError(new ErrorRequest
                 {
-                    FunctionName = "GetStaffAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    PropertyId = 0,
-                    CreatedBy = userId
+                    FunctionName = "ResetPasswordAsync",
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = propertyId,
+                    CreatedBy = userId,
+                    CreatedDate = DateTime.UtcNow
                 });
 
-                throw;
+                response.Success = false;
+                response.Message = "Unable to reset password.";
+                return response;
             }
+
+            response.Success = true;
+            response.Message = "GetStaff successful.";
+            response.Data = _repositoryResponse.Entity;
+            return response;
         }
 
-        public async Task<int> RecordLoginAttempts(string userId)
+        public async Task<int> RecordLoginAttempts(string userId, int propertyId)
         {
-            try
-            {
-                return await _uow.Repository<Staff>().RecordLoginAttempts(userId);
-            }
-            catch (Exception ex)
+            _repositoryResponse = await _uow.Repository<Staff>().RecordLoginAttempts(userId);
+
+            if (_repositoryResponse.Error != null)
             {
                 await _errorLogService.LogError(new ErrorRequest
                 {
                     FunctionName = "GetStaffAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    PropertyId = 0,
-                    CreatedBy = userId
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = propertyId,
+                    CreatedBy = userId,
+                    CreatedDate = DateTime.UtcNow
                 });
-
-                throw;
             }
+
+            return _repositoryResponse.Count;
         }
 
-        public async Task<bool> ResetLoginAttempts(string userId)
+        public async Task<bool> ResetLoginAttempts(string userId, int propertyId)
         {
-            try
-            {
-                return await _uow.Repository<Staff>().ResetLoginAttempts(userId);
-            }
-            catch (Exception ex)
+            _repositoryResponse = await _uow.Repository<Staff>().ResetLoginAttempts(userId);
+
+            if (_repositoryResponse.Error != null)
             {
                 await _errorLogService.LogError(new ErrorRequest
                 {
                     FunctionName = "GetStaffAsync",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    PropertyId = 0,
-                    CreatedBy = userId
+                    ErrorMessage = _repositoryResponse.Error.Message,
+                    StackTrace = _repositoryResponse.Error.StackTrace,
+                    PropertyId = propertyId,
+                    CreatedBy = userId,
+                    CreatedDate = DateTime.UtcNow
                 });
-
-                throw;
             }
+
+            return _repositoryResponse.Result;
+
         }
         #endregion
     }

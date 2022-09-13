@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 
 namespace TempleVolunteerAPI.API
@@ -99,9 +100,9 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpGet("GetAllPropertiesAsync")]
-        public async Task<ServiceResponse<IList<Property>>> GetAllPropertiesAsync()
+        public async Task<ServiceResponse<IList<Property>>> GetAllPropertiesAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<Property>>(await _propertyService.GetAllAsync());
+            _collResponse.Data = _mapper.Map<IList<Property>>(await _propertyService.GetAllAsync(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;

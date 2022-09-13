@@ -7,6 +7,5 @@
         public string From { get; set; }
         public string Subject { get; set; }
         public string MessageSent { get; set; }
-        public int PropertyId { get; set; }
     }
 }

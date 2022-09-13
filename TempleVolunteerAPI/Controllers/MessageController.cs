@@ -39,7 +39,7 @@ namespace TempleVolunteerAPI.Controllers
             message.To = request.To;
             message.MessageSent = request.MessageSent;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-            await _emailService.Send(request.To, request.Subject, request.MessageSent, request.From);
+            await _emailService.Send(request.To, request.Subject, request.MessageSent, request.From, request.PropertyId);
             await _messageService.AddAsync(message);
 
             response.Success = true;
