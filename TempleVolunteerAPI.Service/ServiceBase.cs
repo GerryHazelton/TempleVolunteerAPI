@@ -1,4 +1,5 @@
-﻿using TempleVolunteerAPI.Domain;
+﻿using TempleVolunteerAPI.Common;
+using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Repository;
 
@@ -120,7 +121,17 @@ namespace TempleVolunteerAPI.Service
 
         public async Task ErrorLog(ErrorRequest error)
         {
-            await _errorLog.LogError(error);
+            ErrorLog entity = new ErrorLog()
+            {
+                FunctionName = error.FunctionName,
+                ErrorMessage = error.ErrorMessage,
+                StackTrace = error.StackTrace,
+                PropertyId = error.PropertyId,
+                CreatedBy = error.CreatedBy,
+                CreatedDate = error.CreatedDate
+            };
+
+            var result = await _uow.Repository<ErrorLog>().AddAsync(entity);
         }
     }
 }

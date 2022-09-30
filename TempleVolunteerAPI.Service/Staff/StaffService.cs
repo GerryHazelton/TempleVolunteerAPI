@@ -11,17 +11,20 @@ namespace TempleVolunteerAPI.Service
         private readonly IUnitOfWork _uow;
         private readonly IEmailService _emailService;
         RepositoryResponse<Staff> _repositoryResponse;
+        private readonly IStaffRepository _staffRepository;
 
-        public StaffService(IUnitOfWork uow, IErrorLogService errorLog, IEmailService emailService) : base(uow, errorLog)
+
+        public StaffService(IUnitOfWork uow, IErrorLogService errorLog, IEmailService emailService, IStaffRepository staffRepository) : base(uow, errorLog)
         {
             this._uow = uow;
             this._emailService = emailService;
             _repositoryResponse = new RepositoryResponse<Staff>();
+            _staffRepository = staffRepository;
         }
 
         public async Task<bool> CustomUpdateAsync(Staff entity, string userId)
         {
-            _repositoryResponse = await _uow.Repository<Staff>().CustomSqlProcessAsync(entity, userId);
+            _repositoryResponse = await _staffRepository.CustomSqlProcessAsync(entity);
 
             return _repositoryResponse.Result;
         }

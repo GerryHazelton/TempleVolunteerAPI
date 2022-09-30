@@ -15,14 +15,14 @@ namespace TempleVolunteerAPI.API
         private readonly IStaffService _staffService;
         private readonly IMapper _mapper;
         private ServiceResponse<IList<StaffRequest>> _collResponse;
-        private ServiceResponse<StaffResponse> _response;
+        private ServiceResponse<StaffRequest> _response;
 
         public StaffController(IStaffService StaffService, IMapper mapper)
         {
             _staffService = StaffService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<StaffRequest>>();
-            _response = new ServiceResponse<StaffResponse>();
+            _response = new ServiceResponse<StaffRequest>();
         }
 
         [HttpGet("GetAllAsync")]
@@ -34,10 +34,10 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<StaffResponse>> GetByIdAsync(MiscRequest request)
+        [HttpPost("GetByIdAsync")]
+        public async Task<ServiceResponse<StaffRequest>> GetByIdAsync([FromBody] MiscRequest request)
         {
-            _response.Data = _mapper.Map<StaffResponse>(await _staffService.GetAsync(request.GetById, request.PropertyId, request.UserId));
+            _response.Data = _mapper.Map<StaffRequest>(await _staffService.GetAsync(request.GetById, request.PropertyId, request.UserId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -64,7 +64,7 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<StaffRequest>>> DeleteAsync(MiscRequest request)
+        public async Task<ServiceResponse<IList<StaffRequest>>> DeleteAsync([FromBody] MiscRequest request)
         {
             await _staffService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<StaffRequest>>(await ReturnCollection(request.PropertyId, request.UserId));

@@ -57,10 +57,40 @@ namespace TempleVolunteerAPI.API
             return response;
         }
 
+        [HttpPut("MyProfileAsync")]
+        public async Task<MyProfileResponse> MyProfileAsync([FromBody] MyProfileRequest request)
+        {
+            RepositoryResponse<MyProfileRequest> repositoryResponse = await _accountService.MyProfileAsync(request);
+            MyProfileResponse response = new MyProfileResponse();
+
+            if (repositoryResponse.Entity != null)
+            {
+                response.Staff = repositoryResponse.Entity;
+                response.Success = true;
+                response.Message = "Profile successfully updated.";
+            }
+            else
+            {
+                response.Error = repositoryResponse.Error;
+                response.Success = false;
+                response.Message = "Profile unable to be updated.";
+            }
+
+            return response;
+        }
+
         [HttpPost("ForgotPasswordAsync")]
         public async Task<ServiceResponse<Staff>> ForgotPasswordAsync([FromBody] ForgotPasswordRequest request)
         {
             ServiceResponse<Staff> response = await _accountService.ForgotPasswordAsync(request);
+
+            return response;
+        }
+
+        [HttpPost("ResetForgottenPasswordAsync")]
+        public async Task<ServiceResponse<Staff>> ResetForgottenPasswordAsync([FromBody] ResetForgottenPasswordRequest request)
+        {
+            ServiceResponse<Staff> response = await _accountService.ResetForgotenPasswordAsync(request);
 
             return response;
         }
@@ -72,7 +102,6 @@ namespace TempleVolunteerAPI.API
 
             return response;
         }
-
 
         [HttpPost]
         [Route("refresh_token")]
@@ -94,12 +123,12 @@ namespace TempleVolunteerAPI.API
                 return UnprocessableEntity(validateRefreshTokenResponse);
             }
 
-            var tokenResponse = await _tokenService.GenerateTokensAsync(validateRefreshTokenResponse.UserId);
+            var tokenResponse = await _tokenService.GenerateTokensAsync(validateRefreshTokenResponse.UserId, validateRefreshTokenResponse.PropertyId);
 
             return Ok(new { AccessToken = tokenResponse.Item1, Refreshtoken = tokenResponse.Item2 });
         }
 
-        [HttpGet("GetAllPropertiesAsync")]
+        [HttpPost("GetAllPropertiesAsync")]
         public async Task<ServiceResponse<IList<Property>>> GetAllPropertiesAsync([FromBody] MiscRequest request)
         {
             _collResponse.Data = _mapper.Map<IList<Property>>(await _propertyService.GetAllAsync(request.PropertyId, request.UserId));

@@ -7,5 +7,6 @@
         public string FunctionName { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
+        public int PropertyId { get; set; }
     }
 }

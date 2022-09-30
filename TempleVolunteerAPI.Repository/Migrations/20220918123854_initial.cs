@@ -5,10 +5,33 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TempleVolunteerAPI.Repository.Migrations
 {
-    public partial class init : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ErrorLog",
+                columns: table => new
+                {
+                    ErrorLogId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FunctionName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    ErrorMessage = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    StackTrace = table.Column<string>(type: "nvarchar(3000)", maxLength: 3000, nullable: false),
+                    Environment = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
+                    PropertyId = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsHidden = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ErrorLog", x => x.ErrorLogId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Properties",
                 columns: table => new
@@ -27,9 +50,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     EmailAddress = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
                     Website = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     Note = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -75,12 +98,13 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     VerifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsVerified = table.Column<bool>(type: "bit", nullable: false),
                     PasswordReset = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsHidden = table.Column<bool>(type: "bit", nullable: false)
+                    IsHidden = table.Column<bool>(type: "bit", nullable: false),
+                    PropertyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,9 +122,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SupplyItemsAllowed = table.Column<bool>(type: "bit", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -126,9 +150,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     Note = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -158,9 +182,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -188,9 +212,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     DocumentFileName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     DocumentImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -200,35 +224,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     table.PrimaryKey("PK_Documents", x => x.DocumentId);
                     table.ForeignKey(
                         name: "FK_Documents_Properties_PropertyId",
-                        column: x => x.PropertyId,
-                        principalTable: "Properties",
-                        principalColumn: "PropertyId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ErrorLog",
-                columns: table => new
-                {
-                    ErrorLogId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FunctionName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    ErrorMessage = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    StackTrace = table.Column<string>(type: "nvarchar(3000)", maxLength: 3000, nullable: false),
-                    Environment = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
-                    PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsHidden = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ErrorLog", x => x.ErrorLogId);
-                    table.ForeignKey(
-                        name: "FK_ErrorLog_Properties_PropertyId",
                         column: x => x.PropertyId,
                         principalTable: "Properties",
                         principalColumn: "PropertyId",
@@ -248,9 +243,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Indefinite = table.Column<bool>(type: "bit", nullable: false),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -276,9 +271,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     Note = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -304,9 +299,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     Note = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -334,9 +329,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     MessageSent = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     StaffId = table.Column<int>(type: "int", nullable: false),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -362,9 +357,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     Note = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -415,8 +410,8 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     TokenSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StaffId = table.Column<int>(type: "int", nullable: false),
-                    PropertyId = table.Column<int>(type: "int", nullable: true)
+                    PropertyId = table.Column<int>(type: "int", nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -425,13 +420,14 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         name: "FK_RefreshTokens_Properties_PropertyId",
                         column: x => x.PropertyId,
                         principalTable: "Properties",
-                        principalColumn: "PropertyId");
+                        principalColumn: "PropertyId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RefreshTokens_Staff_StaffId",
                         column: x => x.StaffId,
                         principalTable: "Staff",
                         principalColumn: "StaffId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -449,9 +445,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SupplyItemImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     PropertyId = table.Column<int>(type: "int", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false)
@@ -626,76 +622,70 @@ namespace TempleVolunteerAPI.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "Properties",
                 columns: new[] { "PropertyId", "Address", "Address2", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "FaxNumber", "IsActive", "IsHidden", "Name", "Note", "PhoneNumber", "PostalCode", "State", "UpdatedBy", "UpdatedDate", "Website" },
-                values: new object[] { 1, "123 Main Street", "Suite 45", "Glendale", "US", "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7033), "Glendale@Srf.com", "333-333-3333", true, false, "Glendale Temple", "Currently, there are no notes", "222-222-2222", "91001", "CA", null, null, "https://www.glendaletemple.org" });
-
-            migrationBuilder.InsertData(
-                table: "Properties",
-                columns: new[] { "PropertyId", "Address", "Address2", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "FaxNumber", "IsActive", "IsHidden", "Name", "Note", "PhoneNumber", "PostalCode", "State", "UpdatedBy", "UpdatedDate", "Website" },
-                values: new object[] { 2, "456 Main Street", "Suite 65", "Encinitas", "US", "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7070), "Encinitas@Srf.com", "666-666-6666", true, false, "Encinitas Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.encinitastemple.org" });
+                values: new object[,]
+                {
+                    { 1, "123 Main Street", "Suite 45", "Glendale", "US", "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4779), "Glendale@Srf.com", "333-333-3333", true, false, "Glendale Temple", "Currently, there are no notes", "222-222-2222", "91001", "CA", null, null, "https://www.glendaletemple.org" },
+                    { 2, "456 Main Street", "Suite 65", "Encinitas", "US", "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4784), "Encinitas@Srf.com", "666-666-6666", true, false, "Encinitas Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.encinitastemple.org" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Staff",
-                columns: new[] { "StaffId", "AcceptTerms", "Address", "Address2", "CPR", "CanSendMessages", "CanViewDocuments", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "EmailConfirmed", "FirstAid", "FirstName", "Gender", "IsActive", "IsHidden", "IsLockedOut", "IsVerified", "Kriyaban", "LastName", "LessonStudent", "LoginAttempts", "Note", "Password", "PasswordReset", "PasswordSalt", "PhoneNumber", "PostalCode", "RememberMe", "StaffFileName", "StaffImage", "State", "UpdatedBy", "UpdatedDate", "VerifiedDate" },
-                values: new object[] { 1, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7301), "gerryhazelton@gmail.com", false, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=", null, "371952==", "760-444-4444", "92009", true, null, null, "CA", null, null, new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7295) });
+                columns: new[] { "StaffId", "AcceptTerms", "Address", "Address2", "CPR", "CanSendMessages", "CanViewDocuments", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "EmailConfirmed", "FirstAid", "FirstName", "Gender", "IsActive", "IsHidden", "IsLockedOut", "IsVerified", "Kriyaban", "LastName", "LessonStudent", "LoginAttempts", "Note", "Password", "PasswordReset", "PasswordSalt", "PhoneNumber", "PostalCode", "PropertyId", "RememberMe", "StaffFileName", "StaffImage", "State", "UpdatedBy", "UpdatedDate", "VerifiedDate" },
+                values: new object[,]
+                {
+                    { 1, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5319), "gerryhazelton@gmail.com", true, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=", null, "371952==", "760-444-4444", "92009", 2, true, null, null, "CA", null, null, new DateTime(2022, 9, 18, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5316) },
+                    { 2, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5330), "gerryhazelton@gmail.com", false, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=", null, "371952==", "760-444-4444", "92009", 0, true, null, null, "CA", null, null, new DateTime(2022, 9, 18, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5327) }
+                });
 
             migrationBuilder.InsertData(
                 table: "Areas",
                 columns: new[] { "AreaId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "SupplyItemsAllowed", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7329), "This is the main temple area", true, false, "Main Temple", "There are no notes", 1, true, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5389), "This is the main temple area", true, false, "Main Temple", "There are no notes", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7346), "This is a garden tool category", true, false, "Garden Tool", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5409), "This is a garden tool category", true, false, "Garden Tool", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Credentials",
                 columns: new[] { "CredentialId", "CompletedDate", "CreatedBy", "CreatedDate", "CredentialFileName", "CredentialImage", "Description", "ExpireDate", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7361), "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7364), null, null, "CRP Certification", null, true, false, "CPR", "There are no notes", 1, null, null });
+                values: new object[] { 1, new DateTime(2022, 9, 18, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5424), "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5426), null, null, "CRP Certification", null, true, false, "CPR", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Documents",
                 columns: new[] { "DocumentId", "CreatedBy", "CreatedDate", "Description", "DocumentFileName", "DocumentImage", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7380), "A list of events for the year", null, null, true, false, "Annual Event List", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5442), "A list of events for the year", null, null, true, false, "Annual Event List", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "EventTasks",
                 columns: new[] { "EventTaskId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7415), "Setting up tables", true, false, "Table setup", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5479), "Setting up tables", true, false, "Table setup", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "EventTypes",
                 columns: new[] { "EventTypeId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7430), "Birthday event", true, false, "Birthday", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5495), "Birthday event", true, false, "Birthday", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Events",
                 columns: new[] { "EventId", "CreatedBy", "CreatedDate", "Description", "EndDate", "Indefinite", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "StartDate", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7400), "Master's birthday celebration", new DateTime(2022, 9, 4, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7397), false, true, false, "Master's Birthday", "There are no notes", 1, new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7395), null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5464), "Master's birthday celebration", new DateTime(2022, 9, 19, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5461), false, true, false, "Master's Birthday", "There are no notes", 1, new DateTime(2022, 9, 18, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5459), null, null });
 
             migrationBuilder.InsertData(
                 table: "Messages",
                 columns: new[] { "MessageId", "CreatedBy", "CreatedDate", "From", "IsActive", "IsHidden", "MessageSent", "PropertyId", "StaffId", "Subject", "To", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7445), "gerryhazelton@gmail.com", true, false, "This is my message", 1, 1, "Hello", "janedoe@gmail.com", null, null });
-
-            migrationBuilder.InsertData(
-                table: "PropertyStaff",
-                columns: new[] { "PropertyId", "StaffId" },
-                values: new object[,]
-                {
-                    { 1, 1 },
-                    { 2, 1 }
-                });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5651), "gerryhazelton@gmail.com", true, false, "This is my message", 1, 1, "Hello", "janedoe@gmail.com", null, null });
 
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "RoleId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7250), "Admin role has full prviliedges", true, false, "Admin", null, 1, null, null },
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7254), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 1, null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7257), "Admin role has full prviliedges", true, false, "Admin", null, 2, null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7259), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 2, null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4977), "Admin role has full prviliedges", true, false, "Admin", null, 1, null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4980), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 1, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4983), "Admin role has full prviliedges", true, false, "Admin", null, 2, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4985), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 2, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -721,12 +711,16 @@ namespace TempleVolunteerAPI.Repository.Migrations
             migrationBuilder.InsertData(
                 table: "RoleStaff",
                 columns: new[] { "RoleId", "StaffId", "PropertyId" },
-                values: new object[] { 1, 1, 1 });
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 4, 2, 2 }
+                });
 
             migrationBuilder.InsertData(
                 table: "SupplyItems",
                 columns: new[] { "SupplyItemId", "BinNumber", "CategoryId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "Quantity", "SupplyItemFileName", "SupplyItemImage", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "23A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 3, 6, 27, 24, 693, DateTimeKind.Local).AddTicks(7464), "Flathead shovel", true, false, "Shovel", null, 1, 5, null, null, null, null });
+                values: new object[] { 1, "23A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5670), "Flathead shovel", true, false, "Shovel", null, 1, 5, null, null, null, null });
 
             migrationBuilder.InsertData(
                 table: "AreaSupplyItem",
@@ -771,11 +765,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Documents_PropertyId",
                 table: "Documents",
-                column: "PropertyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ErrorLog_PropertyId",
-                table: "ErrorLog",
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(

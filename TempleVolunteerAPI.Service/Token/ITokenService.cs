@@ -9,8 +9,8 @@ namespace TempleVolunteerAPI.Service
 {
     public interface ITokenService
     {
-        Task<Tuple<string, string>> GenerateTokensAsync(int userId);
+        Task<Tuple<string, string>> GenerateTokensAsync(int userId, int propertyId);
         Task<ValidateRefreshTokenResponse> ValidateRefreshTokenAsync(RefreshTokenRequest refreshTokenRequest);
-        Task<bool> RemoveRefreshTokenAsync(Staff staff);
+        Task<bool> RemoveRefreshTokenAsync(Staff staff, int propertyId);
     }
 }

@@ -19,9 +19,9 @@ namespace TempleVolunteerAPI.Service
             _dbContext = dbContext;
         }
 
-        public async Task<Tuple<string, string>> GenerateTokensAsync(int userId)
+        public async Task<Tuple<string, string>> GenerateTokensAsync(int userId, int propertyId)
         {
-            var accessToken = await GenerateAccessToken(userId);
+            var accessToken = await GenerateAccessToken(userId, propertyId);
             var refreshToken = await GenerateRefreshToken();
             var userRecord = await _dbContext.Staff.Include(o => o.RefreshTokens).FirstOrDefaultAsync(e => e.StaffId == userId);
 
@@ -36,7 +36,7 @@ namespace TempleVolunteerAPI.Service
 
             if (userRecord.RefreshTokens != null && userRecord.RefreshTokens.Any())
             {
-                await RemoveRefreshTokenAsync(userRecord);
+                await RemoveRefreshTokenAsync(userRecord, propertyId);
 
             }
             userRecord.RefreshTokens?.Add(new RefreshToken
@@ -44,6 +44,7 @@ namespace TempleVolunteerAPI.Service
                 ExpiryDate = DateTime.UtcNow.AddDays(30),
                 CreateDate = DateTime.Now,
                 UserId = userId,
+                PropertyId = propertyId,
                 TokenHash = refreshTokenHashed,
                 TokenSalt = Convert.ToBase64String(salt)
 
@@ -56,9 +57,9 @@ namespace TempleVolunteerAPI.Service
             return token;
         }
 
-        public async Task<bool> RemoveRefreshTokenAsync(Staff staff)
+        public async Task<bool> RemoveRefreshTokenAsync(Staff staff, int propertyId)
         {
-            var userRecord = await _dbContext.Staff.Include(o => o.RefreshTokens).FirstOrDefaultAsync(e => e.StaffId == staff.StaffId);
+            var userRecord = await _dbContext.Staff.Include(o => o.RefreshTokens).FirstOrDefaultAsync(e => e.StaffId == staff.StaffId && e.PropertyId == propertyId);
 
             if (userRecord == null)
             {
@@ -77,9 +78,10 @@ namespace TempleVolunteerAPI.Service
 
         public async Task<ValidateRefreshTokenResponse> ValidateRefreshTokenAsync(RefreshTokenRequest refreshTokenRequest)
         {
-            var refreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == refreshTokenRequest.UserId);
+            var refreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == refreshTokenRequest.UserId && o.PropertyId == refreshTokenRequest.PropertyId);
 
             var response = new ValidateRefreshTokenResponse();
+
             if (refreshToken == null)
             {
                 response.Success = false;
@@ -108,17 +110,19 @@ namespace TempleVolunteerAPI.Service
 
             response.Success = true;
             response.UserId = refreshToken.UserId;
+            response.PropertyId = refreshToken.PropertyId;
 
             return response;
         }
 
-        private static async Task<string> GenerateAccessToken(int userId)
+        private static async Task<string> GenerateAccessToken(int userId, int propertyId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Convert.FromBase64String("Mataji22Mataji33Mataji44Mataji55Mataji66Mataji77Mataji88Mataji99Mataji00");
 
             var claimsIdentity = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.SerialNumber, propertyId.ToString()),
             });
 
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);

@@ -30,7 +30,7 @@ namespace TempleVolunteerAPI.Repository
         public virtual DbSet<AreaSupplyItem> AreaSupplyItem { get; set; }
         public virtual DbSet<CredentialStaff> CredentialStaff { get; set; }
         public virtual DbSet<EventEventType> EventEventType { get; set; }
-        public virtual DbSet<PropertyStaff> PropertyStaff { get; set; }
+        //public virtual DbSet<PropertyStaff> PropertyStaff { get; set; }
         public virtual DbSet<RoleStaff> RoleStaff { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,12 +44,14 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<AreaEventTask>()
                 .HasOne(x => x.Area)
                 .WithMany()
-                .HasForeignKey(x => x.AreaId);
+                .HasForeignKey(x => x.AreaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<AreaEventTask>()
                 .HasOne(x => x.EventTask)
                 .WithMany()
-                .HasForeignKey(x => x.EventTaskId);
+                .HasForeignKey(x => x.EventTaskId)
+                .OnDelete(DeleteBehavior.Restrict);
             #endregion
 
             #region Area EventType
@@ -59,12 +61,14 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<AreaEventType>()
                 .HasOne(x => x.Area)
                 .WithMany()
-                .HasForeignKey(x => x.AreaId);
+                .HasForeignKey(x => x.AreaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<AreaEventType>()
                 .HasOne(x => x.EventType)
                 .WithMany()
-                .HasForeignKey(x => x.EventTypeId);
+                .HasForeignKey(x => x.EventTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
             #endregion
 
             #region Area SupplyItem
@@ -74,12 +78,14 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<AreaSupplyItem>()
                 .HasOne(x => x.Area)
                 .WithMany()
-                .HasForeignKey(x => x.AreaId);
+                .HasForeignKey(x => x.AreaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<AreaSupplyItem>()
                 .HasOne(x => x.SupplyItem)
                 .WithMany()
-                .HasForeignKey(x => x.SupplyItemId);
+                .HasForeignKey(x => x.SupplyItemId)
+                .OnDelete(DeleteBehavior.Restrict);
             #endregion
 
             #region Credential Staff
@@ -89,12 +95,14 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<CredentialStaff>()
                 .HasOne(x => x.Credential)
                 .WithMany()
-                .HasForeignKey(x => x.CredentialId);
+                .HasForeignKey(x => x.CredentialId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CredentialStaff>()
                 .HasOne(x => x.Staff)
                 .WithMany()
-                .HasForeignKey(x => x.StaffId);
+                .HasForeignKey(x => x.StaffId)
+                .OnDelete(DeleteBehavior.Restrict);
             #endregion
 
             #region Event EventType
@@ -104,28 +112,30 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<EventEventType>()
                 .HasOne(x => x.Event)
                 .WithMany()
-                .HasForeignKey(x => x.EventId);
+                .HasForeignKey(x => x.EventId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<EventEventType>()
                 .HasOne(x => x.EventType)
                 .WithMany()
-                .HasForeignKey(x => x.EventTypeId);
+                .HasForeignKey(x => x.EventTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
             #endregion
 
-            #region Property Staff
-            modelBuilder.Entity<PropertyStaff>()
-            .HasKey(x => new { x.PropertyId, x.StaffId });
+            //#region Property Staff
+            //modelBuilder.Entity<PropertyStaff>()
+            //.HasKey(x => new { x.PropertyId, x.StaffId });
 
-            modelBuilder.Entity<PropertyStaff>()
-                .HasOne(x => x.Property)
-                .WithMany()
-                .HasForeignKey(x => x.PropertyId);
+            //modelBuilder.Entity<PropertyStaff>()
+            //    .HasOne(x => x.Property)
+            //    .WithMany()
+            //    .HasForeignKey(x => x.PropertyId);
 
-            modelBuilder.Entity<PropertyStaff>()
-                .HasOne(x => x.Staff)
-                .WithMany()
-                .HasForeignKey(x => x.StaffId);
-            #endregion
+            //modelBuilder.Entity<PropertyStaff>()
+            //    .HasOne(x => x.Staff)
+            //    .WithMany()
+            //    .HasForeignKey(x => x.StaffId);
+            //#endregion
 
             #region Role Staff
             modelBuilder.Entity<RoleStaff>()
@@ -134,12 +144,14 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<RoleStaff>()
                 .HasOne(x => x.Role)
                 .WithMany()
-                .HasForeignKey(x => x.RoleId);
+                .HasForeignKey(x => x.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<RoleStaff>()
                 .HasOne(x => x.Staff)
                 .WithMany()
-                .HasForeignKey(x => x.StaffId);
+                .HasForeignKey(x => x.StaffId)
+                .OnDelete(DeleteBehavior.Restrict);
             #endregion
 
             Property glendale = new Property("gerryhazelton@gmail.com");
@@ -261,6 +273,7 @@ namespace TempleVolunteerAPI.Repository
             gerry.LessonStudent = true;
             gerry.AcceptTerms = true;
             gerry.CanSendMessages = true;
+            gerry.EmailConfirmed = true;
             gerry.IsVerified = true;
             gerry.IsActive = true;
             gerry.VerifiedDate = DateTime.Now;
@@ -269,11 +282,44 @@ namespace TempleVolunteerAPI.Repository
             gerry.LoginAttempts = 0;
             gerry.Password = "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=";
             gerry.PasswordSalt = "371952==";
+            gerry.PropertyId = 1;
             gerry.CreatedBy = "gerryhazelton@gmail.com";
             gerry.CreatedDate = DateTime.UtcNow;
 
+            Staff gerry2 = new Staff("gerryhazelton@gmail.com");
+            gerry2.StaffId = 2;
+            gerry2.FirstName = "Gerry";
+            gerry2.LastName = "Hazelton";
+            gerry2.Address = "123 Main Street";
+            gerry2.Address2 = "Apt. B";
+            gerry2.City = "Carlsbad";
+            gerry2.State = "CA";
+            gerry2.PostalCode = "92009";
+            gerry2.Country = "US";
+            gerry2.EmailAddress = "gerryhazelton@gmail.com";
+            gerry2.PhoneNumber = "760-444-4444";
+            gerry2.Gender = "Male";
+            gerry2.FirstAid = true;
+            gerry2.CPR = true;
+            gerry2.Kriyaban = true;
+            gerry2.LessonStudent = true;
+            gerry2.AcceptTerms = true;
+            gerry2.CanSendMessages = true;
+            gerry.EmailConfirmed = true;
+            gerry2.IsVerified = true;
+            gerry2.IsActive = true;
+            gerry2.VerifiedDate = DateTime.Now;
+            gerry2.RememberMe = true;
+            gerry2.IsLockedOut = false;
+            gerry2.LoginAttempts = 0;
+            gerry2.Password = "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=";
+            gerry2.PasswordSalt = "371952==";
+            gerry.PropertyId = 2;
+            gerry2.CreatedBy = "gerryhazelton@gmail.com";
+            gerry2.CreatedDate = DateTime.UtcNow;
+
             modelBuilder.Entity<Staff>().HasData(
-                gerry
+                gerry, gerry2
             );
 
             modelBuilder.Entity<Area>().HasData(
@@ -493,10 +539,10 @@ namespace TempleVolunteerAPI.Repository
                 join => join.ToTable("PropertyStaff")
             );
 
-            modelBuilder.Entity<PropertyStaff>().HasData(
-                new PropertyStaff() { PropertyId = 1, StaffId = 1 },
-                new PropertyStaff() { PropertyId = 2, StaffId = 1 }
-            );
+            //modelBuilder.Entity<PropertyStaff>().HasData(
+            //    new PropertyStaff() { PropertyId = 1, StaffId = 1 },
+            //    new PropertyStaff() { PropertyId = 2, StaffId = 2 }
+            //);
 
             modelBuilder.Entity<Staff>()
                 .HasMany(left => left.Roles)
@@ -508,7 +554,8 @@ namespace TempleVolunteerAPI.Repository
             );
 
             modelBuilder.Entity<RoleStaff>().HasData(
-                new RoleStaff() { RoleId = 1, StaffId = 1, PropertyId = 1 }
+                new RoleStaff() { RoleId = 1, StaffId = 1, PropertyId = 1 },
+                new RoleStaff() { RoleId = 4, StaffId = 2, PropertyId = 2 }
             );
         }
     }

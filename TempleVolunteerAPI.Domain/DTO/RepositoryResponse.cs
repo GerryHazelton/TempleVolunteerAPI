@@ -19,5 +19,10 @@ namespace TempleVolunteerAPI.Domain.DTO
         {
             Entities = new List<T>();
         }
+
+        public static implicit operator RepositoryResponse<T>(Staff v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

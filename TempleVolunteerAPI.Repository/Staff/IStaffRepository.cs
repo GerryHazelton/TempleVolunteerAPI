@@ -1,10 +1,12 @@
 ﻿using TempleVolunteerAPI.Domain;
+using TempleVolunteerAPI.Domain.DTO;
 
 namespace TempleVolunteerAPI.Repository
 {
     public interface IStaffRepository : IRepositoryBase<Staff>
     {
-        public Task<Staff> CustomUpdateAsync(Staff updated);
+        Task<RepositoryResponse<Staff>> CustomSqlProcessAsync(Staff request);
+        Task<RepositoryResponse<MyProfileRequest>> CustomMyProfileUpdateAsync(MyProfileRequest request);
     }
 }
 

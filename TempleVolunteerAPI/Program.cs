@@ -28,8 +28,7 @@ builder.Services.AddSession(options =>
 });
 
 #region Services injection
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
+builder.Services.AddTransient(typeof(IEmailService), typeof(EmailService));
 builder.Services.AddTransient(typeof(IAreaService), typeof(AreaService));
 builder.Services.AddTransient(typeof(ICredentialService), typeof(CredentialService));
 builder.Services.AddTransient(typeof(IDocumentService), typeof(DocumentService));
@@ -44,10 +43,10 @@ builder.Services.AddTransient(typeof(ISupplyItemService), typeof(SupplyItemServi
 builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
 builder.Services.AddTransient(typeof(IPropertyStaffService), typeof(PropertyStaffService));
 builder.Services.AddTransient(typeof(IRoleStaffService), typeof(RoleStaffService));
+builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 #endregion
 
 #region Repositories injection
-builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));
 builder.Services.AddTransient(typeof(IAreaRepository), typeof(AreaRepository));
 builder.Services.AddTransient(typeof(ICredentialRepository), typeof(CredentialRepository));
 builder.Services.AddTransient(typeof(IDocumentRepository), typeof(DocumentRepository));
@@ -61,6 +60,7 @@ builder.Services.AddTransient(typeof(IStaffRepository), typeof(StaffRepository))
 builder.Services.AddTransient(typeof(ISupplyItemRepository), typeof(SupplyItemRepository));
 builder.Services.AddTransient(typeof(IPropertyStaffRepository), typeof(PropertyStaffRepository));
 builder.Services.AddTransient(typeof(IRoleStaffRepository), typeof(RoleStaffRepository));
+builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));
 #endregion
 
 #region Misc injection

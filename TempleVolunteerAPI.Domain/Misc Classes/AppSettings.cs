@@ -13,5 +13,6 @@
         public string UriLocal { get; set; }
         public string UriHiranyaloka { get; set; }
         public string UriProduction { get; set; }
+        public string UriClientLocal { get; set; }
     }
 }

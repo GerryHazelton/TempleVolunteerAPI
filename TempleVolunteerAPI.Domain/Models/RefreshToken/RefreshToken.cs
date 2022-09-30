@@ -13,6 +13,7 @@ namespace TempleVolunteerAPI.Domain
         public string TokenSalt { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ExpiryDate { get; set; }
+        public int PropertyId { get; set; }
 
         #region Dependencies
         public int StaffId { get; set; }

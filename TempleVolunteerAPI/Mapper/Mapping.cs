@@ -64,8 +64,14 @@ namespace TempleVolunteerAPI.API
             CreateMap<Staff, StaffResponse>();
             CreateMap<StaffResponse, Staff>();
 
+            CreateMap<Staff, StaffRequest>();
+            CreateMap<StaffRequest, Staff>();
+
             CreateMap<Staff, RegisterResponse>();
             CreateMap<RegisterResponse, Staff>();
+
+            CreateMap<Staff, MyProfileRequest>();
+            CreateMap<MyProfileRequest, Staff>();
             #endregion
 
             #region SupplyItem

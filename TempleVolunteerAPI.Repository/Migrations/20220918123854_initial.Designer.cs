@@ -12,8 +12,8 @@ using TempleVolunteerAPI.Repository;
 namespace TempleVolunteerAPI.Repository.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20220910153058_updatedErrorLog")]
-    partial class updatedErrorLog
+    [Migration("20220918123854_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,11 +33,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AreaId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -66,8 +64,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -83,7 +80,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             AreaId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9272),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5389),
                             Description = "This is the main temple area",
                             IsActive = true,
                             IsHidden = false,
@@ -181,11 +178,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -211,8 +206,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -228,7 +222,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9291),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5409),
                             Description = "This is a garden tool category",
                             IsActive = true,
                             IsHidden = false,
@@ -250,11 +244,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CredentialFileName")
@@ -290,8 +282,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -306,9 +297,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         new
                         {
                             CredentialId = 1,
-                            CompletedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9307),
+                            CompletedDate = new DateTime(2022, 9, 18, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5424),
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9310),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5426),
                             Description = "CRP Certification",
                             IsActive = true,
                             IsHidden = false,
@@ -353,11 +344,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -390,8 +379,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -407,7 +395,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             DocumentId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9324),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5442),
                             Description = "A list of events for the year",
                             IsActive = true,
                             IsHidden = false,
@@ -426,11 +414,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ErrorLogId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Environment")
@@ -453,7 +439,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<bool>("IsHidden")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<string>("StackTrace")
@@ -462,15 +448,12 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("nvarchar(3000)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ErrorLogId");
-
-                    b.HasIndex("PropertyId");
 
                     b.ToTable("ErrorLog");
                 });
@@ -484,11 +467,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -523,8 +504,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -540,16 +520,16 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9346),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5464),
                             Description = "Master's birthday celebration",
-                            EndDate = new DateTime(2022, 9, 11, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9343),
+                            EndDate = new DateTime(2022, 9, 19, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5461),
                             Indefinite = false,
                             IsActive = true,
                             IsHidden = false,
                             Name = "Master's Birthday",
                             Note = "There are no notes",
                             PropertyId = 1,
-                            StartDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9340)
+                            StartDate = new DateTime(2022, 9, 18, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5459)
                         });
                 });
 
@@ -588,11 +568,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventTaskId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -618,8 +596,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -635,7 +612,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTaskId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9360),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5479),
                             Description = "Setting up tables",
                             IsActive = true,
                             IsHidden = false,
@@ -654,11 +631,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventTypeId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -684,8 +659,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -701,7 +675,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTypeId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9375),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5495),
                             Description = "Birthday event",
                             IsActive = true,
                             IsHidden = false,
@@ -720,11 +694,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("From")
@@ -760,8 +732,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("nvarchar(75)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -777,7 +748,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             MessageId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9391),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5651),
                             From = "gerryhazelton@gmail.com",
                             IsActive = true,
                             IsHidden = false,
@@ -817,11 +788,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmailAddress")
@@ -863,8 +832,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("nvarchar(2)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -886,7 +854,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Glendale",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9014),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4779),
                             EmailAddress = "Glendale@Srf.com",
                             FaxNumber = "333-333-3333",
                             IsActive = true,
@@ -906,7 +874,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Encinitas",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9052),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4784),
                             EmailAddress = "Encinitas@Srf.com",
                             FaxNumber = "666-666-6666",
                             IsActive = true,
@@ -933,18 +901,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasIndex("StaffId");
 
                     b.ToTable("PropertyStaff", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            PropertyId = 1,
-                            StaffId = 1
-                        },
-                        new
-                        {
-                            PropertyId = 2,
-                            StaffId = 1
-                        });
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.RefreshToken", b =>
@@ -961,7 +917,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PropertyId")
+                    b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<int>("StaffId")
@@ -996,11 +952,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"), 1L, 1);
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -1026,8 +980,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -1043,7 +996,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9197),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4977),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1054,7 +1007,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9201),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4980),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1065,7 +1018,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9203),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4983),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1076,7 +1029,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9206),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(4985),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1108,6 +1061,12 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             RoleId = 1,
                             StaffId = 1,
                             PropertyId = 1
+                        },
+                        new
+                        {
+                            RoleId = 4,
+                            StaffId = 2,
+                            PropertyId = 2
                         });
                 });
 
@@ -1151,11 +1110,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EmailAddress")
@@ -1229,6 +1186,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("RememberMe")
                         .HasColumnType("bit");
 
@@ -1244,8 +1204,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("nvarchar(2)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -1270,7 +1229,42 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Carlsbad",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9242),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5319),
+                            EmailAddress = "gerryhazelton@gmail.com",
+                            EmailConfirmed = true,
+                            FirstAid = true,
+                            FirstName = "Gerry",
+                            Gender = "Male",
+                            IsActive = true,
+                            IsHidden = false,
+                            IsLockedOut = false,
+                            IsVerified = true,
+                            Kriyaban = true,
+                            LastName = "Hazelton",
+                            LessonStudent = true,
+                            LoginAttempts = 0,
+                            Password = "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=",
+                            PasswordSalt = "371952==",
+                            PhoneNumber = "760-444-4444",
+                            PostalCode = "92009",
+                            PropertyId = 2,
+                            RememberMe = true,
+                            State = "CA",
+                            VerifiedDate = new DateTime(2022, 9, 18, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5316)
+                        },
+                        new
+                        {
+                            StaffId = 2,
+                            AcceptTerms = true,
+                            Address = "123 Main Street",
+                            Address2 = "Apt. B",
+                            CPR = true,
+                            CanSendMessages = true,
+                            CanViewDocuments = false,
+                            City = "Carlsbad",
+                            Country = "US",
+                            CreatedBy = "gerryhazelton@gmail.com",
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5330),
                             EmailAddress = "gerryhazelton@gmail.com",
                             EmailConfirmed = false,
                             FirstAid = true,
@@ -1288,9 +1282,10 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             PasswordSalt = "371952==",
                             PhoneNumber = "760-444-4444",
                             PostalCode = "92009",
+                            PropertyId = 0,
                             RememberMe = true,
                             State = "CA",
-                            VerifiedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9235)
+                            VerifiedDate = new DateTime(2022, 9, 18, 5, 38, 53, 419, DateTimeKind.Local).AddTicks(5327)
                         });
                 });
 
@@ -1310,11 +1305,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -1350,8 +1343,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -1371,7 +1363,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "23A",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 9, 10, 8, 30, 57, 260, DateTimeKind.Local).AddTicks(9410),
+                            CreatedDate = new DateTime(2022, 9, 18, 12, 38, 53, 419, DateTimeKind.Utc).AddTicks(5670),
                             Description = "Flathead shovel",
                             IsActive = true,
                             IsHidden = false,
@@ -1403,7 +1395,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasOne("TempleVolunteerAPI.Domain.EventTask", "EventTask")
                         .WithMany()
                         .HasForeignKey("EventTaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Area");
@@ -1422,7 +1414,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasOne("TempleVolunteerAPI.Domain.EventType", "EventType")
                         .WithMany()
                         .HasForeignKey("EventTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Area");
@@ -1441,7 +1433,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasOne("TempleVolunteerAPI.Domain.SupplyItem", "SupplyItem")
                         .WithMany()
                         .HasForeignKey("SupplyItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Area");
@@ -1482,7 +1474,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasOne("TempleVolunteerAPI.Domain.Staff", "Staff")
                         .WithMany()
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Credential");
@@ -1494,17 +1486,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
                         .WithMany("Documents")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Property");
-                });
-
-            modelBuilder.Entity("TempleVolunteerAPI.Domain.ErrorLog", b =>
-                {
-                    b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
-                        .WithMany()
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1534,7 +1515,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasOne("TempleVolunteerAPI.Domain.EventType", "EventType")
                         .WithMany()
                         .HasForeignKey("EventTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Event");
@@ -1598,7 +1579,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Property", null)
                         .WithMany("RefreshTokens")
-                        .HasForeignKey("PropertyId");
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TempleVolunteerAPI.Domain.Staff", "Staff")
                         .WithMany("RefreshTokens")
@@ -1631,7 +1614,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasOne("TempleVolunteerAPI.Domain.Staff", "Staff")
                         .WithMany()
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Role");

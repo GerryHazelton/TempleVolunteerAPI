@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using System.Text;
 using TempleVolunteerAPI.Domain.DTO;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Diagnostics;
 
 namespace TempleVolunteerAPI.Repository
 {
@@ -208,69 +210,14 @@ namespace TempleVolunteerAPI.Repository
             return _repositoryResponse;
         }
 
-        public async Task<RepositoryResponse<T>> CustomSqlProcessAsync(T instance, string userId)
+        public async Task<RepositoryResponse<T>> LogError(T entity)
         {
             try
             {
-                if (instance is Staff)
-                {
-                    Staff update = (Staff)(object)instance;
-                    StringBuilder sbSql = new StringBuilder("UPDATE Staff SET ");
-                    Staff updateStaff = await _context.Staff.FindAsync(update.StaffId);
 
-                    if (!updateStaff.FirstName.ToLower().Trim().Equals(update.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", update.FirstName);
-                    if (!updateStaff.LastName.ToLower().Trim().Equals(update.LastName.ToLower().Trim())) sbSql.AppendFormat("LastName = '{0}', ", update.LastName);
-                    if (!updateStaff.Address.ToLower().Trim().Equals(update.Address.ToLower().Trim())) sbSql.AppendFormat("Address = '{0}', ", update.Address);
-                    if (updateStaff.Address2 == null && updateStaff.Address2 != update.Address2) sbSql.AppendFormat("Address2 = '{0}', ", update.Address2);
-                    if (updateStaff.Address2 != null && !updateStaff.Address2.Equals(update.Address2)) sbSql.AppendFormat("Address2 = '{0}', ", update.Address2);
-                    if (!updateStaff.City.ToLower().Trim().Equals(update.City.ToLower().Trim())) sbSql.AppendFormat("City = '{0}', ", update.City);
-                    if (!updateStaff.State.ToLower().Trim().Equals(update.State.ToLower().Trim())) sbSql.AppendFormat("State = '{0}', ", update.State);
-                    if (!updateStaff.PostalCode.ToLower().Trim().Equals(update.PostalCode.ToLower().Trim())) sbSql.AppendFormat("PostalCode = '{0}', ", update.PostalCode);
-                    if (!updateStaff.Country.ToLower().Trim().Equals(update.Country.ToLower().Trim())) sbSql.AppendFormat("Country = '{0}', ", update.Country);
-                    if (!updateStaff.Gender.ToLower().Trim().Equals(update.Gender.ToLower().Trim())) sbSql.AppendFormat("Gender = '{0}', ", update.Gender);
-                    //if (!updateStaff.Role.Equals(update.Role)) sbSql.AppendFormat("Role = '{0}', ", update.Role);
-                    if (!updateStaff.EmailAddress.ToLower().Trim().Equals(update.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", update.EmailAddress);
-                    if (!updateStaff.PhoneNumber.ToLower().Trim().Equals(update.PhoneNumber.ToLower().Trim())) sbSql.AppendFormat("PhoneNumber = '{0}', ", update.PhoneNumber);
-                    if (!updateStaff.FirstAid.Equals(update.FirstAid)) sbSql.AppendFormat("FirstAid = {0}, ", update.FirstAid == true ? 1 : 0);
-                    if (!updateStaff.CPR.Equals(update.CPR)) sbSql.AppendFormat("CPR = {0}, ", update.CPR == true ? 1 : 0);
-                    if (!updateStaff.Kriyaban.Equals(update.Kriyaban)) sbSql.AppendFormat("Kriyaban = {0}, ", update.Kriyaban == true ? 1 : 0);
-                    if (!updateStaff.LessonStudent.Equals(update.LessonStudent)) sbSql.AppendFormat("LessonStudent = {0}, ", update.LessonStudent == true ? 1 : 0);
-                    if (updateStaff.Note == null && updateStaff.Note != update.Note) sbSql.AppendFormat("Notes = '{0}', ", update.Note);
-                    if (updateStaff.Note != null && !updateStaff.Note.Equals(update.Note)) sbSql.AppendFormat("Notes = '{0}', ", update.Note);
-                    if (updateStaff.StaffFileName == null && updateStaff.StaffFileName != update.StaffFileName) sbSql.AppendFormat("StaffFileName = '{0}', ", update.StaffFileName);
-
-                    if (updateStaff.StaffImage != null && updateStaff.StaffImage != update.StaffImage)
-                    {
-
-                        string base64 = Convert.ToBase64String(update.StaffImage, 0, update.StaffImage.Length);
-
-                        byte[]? imageBytes = Convert.FromBase64String(base64);
-
-
-                        sbSql.AppendFormat("StaffImage = CONVERT(VARBINARY(MAX), '{0}'), ", base64);
-                    }
-                    
-                    if (!updateStaff.RememberMe.Equals(update.RememberMe)) sbSql.AppendFormat("RememberMe = {0}, ", update.RememberMe);
-                    
-                    if (update.UnlockUser)
-                    {
-                        sbSql.AppendFormat("IsLockedOut = {0}, ", 0);
-                        sbSql.AppendFormat("LoginAttempts = {0}, ", 0);
-                    }
-
-                    if (!updateStaff.LoginAttempts.Equals(update.LoginAttempts)) sbSql.AppendFormat("LoginAttempts = {0}, ", update.LoginAttempts);
-                    if (!updateStaff.IsActive.Equals(update.IsActive)) sbSql.AppendFormat("IsActive = {0}, ", update.IsActive);
-                    if (!updateStaff.IsVerified.Equals(update.IsVerified)) sbSql.AppendFormat("IsVerified = {0}, ", update.IsVerified);
-
-                    if (sbSql.ToString().TrimEnd().Length == 16)
-                    {
-                        _repositoryResponse.Result = true;
-                    }
-                    
-                    sbSql = new StringBuilder(sbSql.ToString().Substring(0, sbSql.ToString().Length - 2));
-                    sbSql.AppendFormat(" WHERE StaffId = {0}", update.StaffId);
-                    await _context.Database.ExecuteSqlRawAsync(sbSql.ToString());
-                }
+                _context.Set<T>().Add(entity);
+                await _unitOfWork.CommitAsync();
+                _repositoryResponse.Entity = entity;
             }
             catch (Exception ex)
             {
@@ -280,16 +227,11 @@ namespace TempleVolunteerAPI.Repository
             return _repositoryResponse;
         }
 
-        public void LogError(LogErrorParms parms)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<RepositoryResponse<T>> RecordLoginAttempts(string userId)
+        public async Task<RepositoryResponse<T>> RecordLoginAttempts(string userId, int propertyId)
         {
             try
             {
-                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId);
+                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId && x.PropertyId == propertyId);
                 
                 if (staff == null)
                 {
@@ -319,11 +261,11 @@ namespace TempleVolunteerAPI.Repository
             return _repositoryResponse;
         }
 
-        public async Task<RepositoryResponse<T>> ResetLoginAttempts(string userId)
+        public async Task<RepositoryResponse<T>> ResetLoginAttempts(string userId, int propertyId)
         {
             try
             {
-                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId);
+                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId && x.PropertyId == propertyId);
                 staff.LoginAttempts = 0;
                 staff.IsLockedOut = false;
                 _context.Set<Staff>().Attach(staff);
@@ -339,6 +281,16 @@ namespace TempleVolunteerAPI.Repository
             }
 
             return _repositoryResponse;
+        }
+
+        public Task<Staff> CustomUpdateAsync(Staff request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<RepositoryResponse<T>> LogError(LogErrorParms parms)
+        {
+            throw new NotImplementedException();
         }
     }
 }
