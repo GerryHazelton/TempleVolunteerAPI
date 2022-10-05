@@ -30,37 +30,42 @@ namespace TempleVolunteerAPI.Repository
             {
                 Staff update = request;
                 StringBuilder sbSql = new StringBuilder("UPDATE Staff SET ");
-                Staff updateStaff = await _context.Staff.FindAsync(update.StaffId);
+                Staff originalStaff = await _context.Staff.FindAsync(update.StaffId);
 
-                if (!updateStaff.FirstName.ToLower().Trim().Equals(update.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", update.FirstName);
-                if (!updateStaff.LastName.ToLower().Trim().Equals(update.LastName.ToLower().Trim())) sbSql.AppendFormat("LastName = '{0}', ", update.LastName);
-                if (!updateStaff.Address.ToLower().Trim().Equals(update.Address.ToLower().Trim())) sbSql.AppendFormat("Address = '{0}', ", update.Address);
-                if (updateStaff.Address2 == null && updateStaff.Address2 != update.Address2) sbSql.AppendFormat("Address2 = '{0}', ", update.Address2);
-                if (updateStaff.Address2 != null && !updateStaff.Address2.Equals(update.Address2)) sbSql.AppendFormat("Address2 = '{0}', ", update.Address2);
-                if (!updateStaff.City.ToLower().Trim().Equals(update.City.ToLower().Trim())) sbSql.AppendFormat("City = '{0}', ", update.City);
-                if (!updateStaff.State.ToLower().Trim().Equals(update.State.ToLower().Trim())) sbSql.AppendFormat("State = '{0}', ", update.State);
-                if (!updateStaff.PostalCode.ToLower().Trim().Equals(update.PostalCode.ToLower().Trim())) sbSql.AppendFormat("PostalCode = '{0}', ", update.PostalCode);
-                if (!updateStaff.Country.ToLower().Trim().Equals(update.Country.ToLower().Trim())) sbSql.AppendFormat("Country = '{0}', ", update.Country);
-                if (!updateStaff.Gender.ToLower().Trim().Equals(update.Gender.ToLower().Trim())) sbSql.AppendFormat("Gender = '{0}', ", update.Gender);
-                //if (!updateStaff.Role.Equals(update.Role)) sbSql.AppendFormat("Role = '{0}', ", update.Role);
-                if (!updateStaff.EmailAddress.ToLower().Trim().Equals(update.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", update.EmailAddress);
-                if (!updateStaff.PhoneNumber.ToLower().Trim().Equals(update.PhoneNumber.ToLower().Trim())) sbSql.AppendFormat("PhoneNumber = '{0}', ", update.PhoneNumber);
-                if (!updateStaff.FirstAid.Equals(update.FirstAid)) sbSql.AppendFormat("FirstAid = {0}, ", update.FirstAid == true ? 1 : 0);
-                if (!updateStaff.CPR.Equals(update.CPR)) sbSql.AppendFormat("CPR = {0}, ", update.CPR == true ? 1 : 0);
-                if (!updateStaff.Kriyaban.Equals(update.Kriyaban)) sbSql.AppendFormat("Kriyaban = {0}, ", update.Kriyaban == true ? 1 : 0);
-                if (!updateStaff.LessonStudent.Equals(update.LessonStudent)) sbSql.AppendFormat("LessonStudent = {0}, ", update.LessonStudent == true ? 1 : 0);
-                if (updateStaff.Note == null && updateStaff.Note != update.Note) sbSql.AppendFormat("Notes = '{0}', ", update.Note);
-                if (updateStaff.Note != null && !updateStaff.Note.Equals(update.Note)) sbSql.AppendFormat("Notes = '{0}', ", update.Note);
-                if (updateStaff.StaffFileName == null && updateStaff.StaffFileName != update.StaffFileName) sbSql.AppendFormat("StaffFileName = '{0}', ", update.StaffFileName);
+                if (!originalStaff.FirstName.ToLower().Trim().Equals(update.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", update.FirstName);
+                if (!originalStaff.LastName.ToLower().Trim().Equals(update.LastName.ToLower().Trim())) sbSql.AppendFormat("LastName = '{0}', ", update.LastName);
+                if (!originalStaff.Address.ToLower().Trim().Equals(update.Address.ToLower().Trim())) sbSql.AppendFormat("Address = '{0}', ", update.Address);
+                if (originalStaff.Address2 == null && originalStaff.Address2 != update.Address2) sbSql.AppendFormat("Address2 = '{0}', ", update.Address2);
+                if (originalStaff.Address2 != null && !originalStaff.Address2.Equals(update.Address2)) sbSql.AppendFormat("Address2 = '{0}', ", update.Address2);
+                if (!originalStaff.City.ToLower().Trim().Equals(update.City.ToLower().Trim())) sbSql.AppendFormat("City = '{0}', ", update.City);
+                if (!originalStaff.State.ToLower().Trim().Equals(update.State.ToLower().Trim())) sbSql.AppendFormat("State = '{0}', ", update.State);
+                if (!originalStaff.PostalCode.ToLower().Trim().Equals(update.PostalCode.ToLower().Trim())) sbSql.AppendFormat("PostalCode = '{0}', ", update.PostalCode);
+                if (!originalStaff.Country.ToLower().Trim().Equals(update.Country.ToLower().Trim())) sbSql.AppendFormat("Country = '{0}', ", update.Country);
+                if (!originalStaff.Gender.ToLower().Trim().Equals(update.Gender.ToLower().Trim())) sbSql.AppendFormat("Gender = '{0}', ", update.Gender);
+                //if (!originalStaff.Role.Equals(update.Role)) sbSql.AppendFormat("Role = '{0}', ", update.Role);
+                if (!originalStaff.EmailAddress.ToLower().Trim().Equals(update.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", update.EmailAddress);
+                if (!originalStaff.PhoneNumber.ToLower().Trim().Equals(update.PhoneNumber.ToLower().Trim())) sbSql.AppendFormat("PhoneNumber = '{0}', ", update.PhoneNumber);
+                if (!originalStaff.FirstAid.Equals(update.FirstAid)) sbSql.AppendFormat("FirstAid = {0}, ", update.FirstAid == true ? 1 : 0);
+                if (!originalStaff.CPR.Equals(update.CPR)) sbSql.AppendFormat("CPR = {0}, ", update.CPR == true ? 1 : 0);
+                if (!originalStaff.Kriyaban.Equals(update.Kriyaban)) sbSql.AppendFormat("Kriyaban = {0}, ", update.Kriyaban == true ? 1 : 0);
+                if (!originalStaff.LessonStudent.Equals(update.LessonStudent)) sbSql.AppendFormat("LessonStudent = {0}, ", update.LessonStudent == true ? 1 : 0);
+                if (originalStaff.Note == null && originalStaff.Note != update.Note) sbSql.AppendFormat("Notes = '{0}', ", update.Note);
+                if (originalStaff.Note != null && !originalStaff.Note.Equals(update.Note)) sbSql.AppendFormat("Notes = '{0}', ", update.Note);
+                if (originalStaff.StaffFileName == null && originalStaff.StaffFileName != update.StaffFileName) sbSql.AppendFormat("StaffFileName = '{0}', ", update.StaffFileName);
 
-                if (updateStaff.StaffImage != null && updateStaff.StaffImage != update.StaffImage)
+                if (request.StaffImage != null && originalStaff.StaffImage != null)
                 {
-                    string base64 = Convert.ToBase64String(update.StaffImage, 0, update.StaffImage.Length);
-                    byte[]? imageBytes = Convert.FromBase64String(base64);
-                    sbSql.AppendFormat("StaffImage = CONVERT(VARBINARY(MAX), '{0}'), ", base64);
+                    if (!request.StaffImage.Equals(originalStaff.StaffImage))
+                    {
+                        sbSql.AppendFormat("StaffImage = '{0}', ", request.StaffImage);
+                    }
+                }
+                else if (request.StaffImage != null && originalStaff.StaffImage == null)
+                {
+                    sbSql.AppendFormat("StaffImage = '{0}', ", request.StaffImage);
                 }
 
-                if (!updateStaff.RememberMe.Equals(update.RememberMe)) sbSql.AppendFormat("RememberMe = {0}, ", update.RememberMe);
+                if (!originalStaff.RememberMe.Equals(update.RememberMe)) sbSql.AppendFormat("RememberMe = {0}, ", update.RememberMe);
 
                 if (update.UnlockUser)
                 {
@@ -68,9 +73,9 @@ namespace TempleVolunteerAPI.Repository
                     sbSql.AppendFormat("LoginAttempts = {0}, ", 0);
                 }
 
-                if (!updateStaff.LoginAttempts.Equals(update.LoginAttempts)) sbSql.AppendFormat("LoginAttempts = {0}, ", update.LoginAttempts);
-                if (!updateStaff.IsActive.Equals(update.IsActive)) sbSql.AppendFormat("IsActive = {0}, ", update.IsActive);
-                if (!updateStaff.IsVerified.Equals(update.IsVerified)) sbSql.AppendFormat("IsVerified = {0}, ", update.IsVerified);
+                if (!originalStaff.LoginAttempts.Equals(update.LoginAttempts)) sbSql.AppendFormat("LoginAttempts = {0}, ", update.LoginAttempts);
+                if (!originalStaff.IsActive.Equals(update.IsActive)) sbSql.AppendFormat("IsActive = {0}, ", update.IsActive);
+                if (!originalStaff.IsVerified.Equals(update.IsVerified)) sbSql.AppendFormat("IsVerified = {0}, ", update.IsVerified);
 
                 if (sbSql.ToString().TrimEnd().Length == 16)
                 {
@@ -122,15 +127,15 @@ namespace TempleVolunteerAPI.Repository
                 sbSql.AppendFormat("UpdatedBy = '{0}', ", request.UpdatedBy);
                 sbSql.AppendFormat("UpdatedDate = '{0}', ", request.UpdatedDate);
 
-                if (!String.IsNullOrEmpty(request.StaffFileName) && !String.IsNullOrEmpty(originalStaff.StaffFileName))
+                if (!String.IsNullOrEmpty(request.StaffImageFileName) && !String.IsNullOrEmpty(originalStaff.StaffFileName))
                 {
-                    if (!request.StaffFileName.Equals(originalStaff.StaffFileName))
+                    if (!request.StaffImageFileName.Equals(originalStaff.StaffFileName))
                     {
-                        sbSql.AppendFormat("StaffFileName = '{0}', ", request.StaffFileName);
+                        sbSql.AppendFormat("StaffFileName = '{0}', ", request.StaffImageFileName);
                     }
-                } else if (!String.IsNullOrEmpty(request.StaffFileName) && String.IsNullOrEmpty(originalStaff.StaffFileName))
+                } else if (!String.IsNullOrEmpty(request.StaffImageFileName) && String.IsNullOrEmpty(originalStaff.StaffFileName))
                 {
-                    sbSql.AppendFormat("StaffFileName = '{0}', ", request.StaffFileName);
+                    sbSql.AppendFormat("StaffFileName = '{0}', ", request.StaffImageFileName);
                 } else
                 {
                     sbSql.AppendFormat("StaffFileName = '{0}', ", DBNull.Value);
@@ -140,16 +145,12 @@ namespace TempleVolunteerAPI.Repository
                 {
                     if (!request.StaffImage.Equals(originalStaff.StaffImage))
                     {
-                        string base64 = Convert.ToBase64String(request.StaffImage, 0, request.StaffImage.Length);
-                        byte[]? imageBytes = Convert.FromBase64String(base64);
-                        sbSql.AppendFormat("StaffImage = CONVERT(VARBINARY(MAX), '{0}'), ", base64);
+                        sbSql.AppendFormat("StaffImage = '{0}', ", request.StaffImage);
                     }
                 }
                 else if (request.StaffImage != null && originalStaff.StaffImage == null)
                 {
-                    string base64 = Convert.ToBase64String(request.StaffImage, 0, request.StaffImage.Length);
-                    byte[]? imageBytes = Convert.FromBase64String(base64);
-                    sbSql.AppendFormat("StaffImage = CONVERT(VARBINARY(MAX), '{0}'), ", base64);
+                    sbSql.AppendFormat("StaffImage = '{0}', ", request.StaffImage);
                 }
 
                 sbSql = new StringBuilder(sbSql.ToString().Substring(0, sbSql.ToString().Length - 2));

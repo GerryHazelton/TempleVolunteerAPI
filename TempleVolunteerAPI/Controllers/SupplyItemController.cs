@@ -26,18 +26,25 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<SupplyItemRequest>>> GetAllAsync([FromBody] MiscRequest request)
+        public async Task<ServiceResponse<IList<SupplyItemRequest>>> GetAllAsync(int propertyId, string userId)
         {
-            _collResponse.Data = _mapper.Map<IList<SupplyItemRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
+            try
+            {
+                _collResponse.Data = _mapper.Map<IList<SupplyItemRequest>>(await ReturnCollection(propertyId, userId));
+                _collResponse.Success = _collResponse.Data != null ? true : false;
+            }
+            catch(Exception ex)
+            {
+
+            }
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<SupplyItemResponse>> GetByIdAsync(MiscRequest request)
+        public async Task<ServiceResponse<SupplyItemResponse>> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<SupplyItemResponse>(await _supplyItemService.GetAsync(request.GetById, request.PropertyId, request.UserId));
+            _response.Data = _mapper.Map<SupplyItemResponse>(await _supplyItemService.GetAsync(id, propertyId, userId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;

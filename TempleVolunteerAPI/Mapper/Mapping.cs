@@ -11,72 +11,72 @@ namespace TempleVolunteerAPI.API
         {
 
             #region Area
-            CreateMap<Area, AreaResponse>();
-            CreateMap<AreaResponse, Area>();
+            CreateMap<Area, AreaRequest>();
+            CreateMap<AreaRequest, Area>();
             #endregion
 
             #region Category
-            CreateMap<Category, CategoryResponse>();
-            CreateMap<CategoryResponse, Category>();
+            CreateMap<Category, CategoryRequest>();
+            CreateMap<CategoryRequest, Category>();
             #endregion
 
             #region Credential
-            CreateMap<Credential, CredentialResponse>();
-            CreateMap<CredentialResponse, Credential>();
+            CreateMap<Credential, CredentialRequest>();
+            CreateMap<CredentialRequest, Credential>();
             #endregion
 
             #region Document
-            CreateMap<Document, DocumentResponse>();
-            CreateMap<DocumentResponse, Document>();
+            CreateMap<Document, DocumentRequest>();
+            CreateMap<DocumentRequest, Document>();
             #endregion
 
             #region Event
-            CreateMap<Event, EventResponse>();
-            CreateMap<EventResponse, Event>();
+            CreateMap<Event, EventRequest>();
+            CreateMap<EventRequest, Event>();
             #endregion
 
             #region EventTask
-            CreateMap<EventTask, EventTaskResponse>();
-            CreateMap<EventTaskResponse, EventTask>();
+            CreateMap<EventTask, EventTaskRequest>();
+            CreateMap<EventTaskRequest, EventTask>();
             #endregion
 
             #region EventType
-            CreateMap<EventType, EventTypeResponse>();
-            CreateMap<EventTypeResponse, EventType>();
+            CreateMap<EventType, EventTypeRequest>();
+            CreateMap<EventTypeRequest, EventType>();
             #endregion
 
             #region Message
-            CreateMap<Message, MessageResponse>();
-            CreateMap<MessageResponse, Message>();
+            CreateMap<Message, MessageRequest>();
+            CreateMap<MessageRequest, Message>();
             #endregion
 
             #region Property
-            CreateMap<Property, PropertyResponse>();
-            CreateMap<PropertyResponse, Property>();
+            CreateMap<Property, PropertyRequest>();
+            CreateMap<PropertyRequest, Property>();
             #endregion
 
             #region Role
-            CreateMap<Role, RoleResponse>();
-            CreateMap<RoleResponse, Role>();
+            CreateMap<Role, RoleRequest>();
+            CreateMap<RoleRequest, Role>();
             #endregion
 
             #region Staff
-            CreateMap<Staff, StaffResponse>();
-            CreateMap<StaffResponse, Staff>();
+            CreateMap<Staff, StaffRequest>();
+            CreateMap<StaffRequest, Staff>();
 
             CreateMap<Staff, StaffRequest>();
             CreateMap<StaffRequest, Staff>();
 
-            CreateMap<Staff, RegisterResponse>();
-            CreateMap<RegisterResponse, Staff>();
+            CreateMap<Staff, RegisterRequest>();
+            CreateMap<RegisterRequest, Staff>();
 
             CreateMap<Staff, MyProfileRequest>();
             CreateMap<MyProfileRequest, Staff>();
             #endregion
 
             #region SupplyItem
-            CreateMap<SupplyItem, SupplyItemResponse>();
-            CreateMap<SupplyItemResponse, SupplyItem>();
+            CreateMap<SupplyItem, SupplyItemRequest>();
+            CreateMap<SupplyItemRequest, SupplyItem>();
             #endregion
         }
     }

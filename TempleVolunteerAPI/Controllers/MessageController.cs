@@ -49,7 +49,7 @@ namespace TempleVolunteerAPI.Controllers
         }
 
         [HttpGet("GetAllMessagesByIdAsync")]
-        public async Task<ServiceResponse<IList<Message>>> GetAllMessagesByIdAsync(string userId)
+        public async Task<ServiceResponse<IList<Message>>> GetAllMessagesByIdAsync(int id, int propertyId, string userId)
         {
             ServiceResponse<IList<Message>> response = new ServiceResponse<IList<Message>>();
 
@@ -61,7 +61,7 @@ namespace TempleVolunteerAPI.Controllers
         }
 
         [HttpGet("GetAllMessagesAsync")]
-        public async Task<ServiceResponse<IList<Message>>> GetAllMessagesAsync()
+        public async Task<ServiceResponse<IList<Message>>> GetAllMessagesAsync(int propertyId, string userId)
         {
             ServiceResponse<IList<Message>> response = new ServiceResponse<IList<Message>>();
 

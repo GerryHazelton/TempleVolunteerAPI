@@ -26,18 +26,18 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<EventRequest>>> GetAllAsync([FromBody] MiscRequest request)
+        public async Task<ServiceResponse<IList<EventRequest>>> GetAllAsync(int propertyId, string userId)
         {
-            _collResponse.Data = _mapper.Map<IList<EventRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            _collResponse.Data = _mapper.Map<IList<EventRequest>>(await ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<EventResponse>> GetByIdAsync(MiscRequest request)
+        public async Task<ServiceResponse<EventResponse>> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<EventResponse>(await _eventService.GetAsync(request.GetById, request.PropertyId, request.UserId));
+            _response.Data = _mapper.Map<EventResponse>(await _eventService.GetAsync(id, propertyId, userId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
