@@ -44,7 +44,7 @@ namespace TempleVolunteerAPI.API
         [HttpGet("GetByIdAsync")]
         public async Task<ServiceResponse<SupplyItemResponse>> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<SupplyItemResponse>(await _supplyItemService.GetAsync(id, propertyId, userId));
+            _response.Data = _mapper.Map<SupplyItemResponse>(await _supplyItemService.GetByIdAsync(id, propertyId, userId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;

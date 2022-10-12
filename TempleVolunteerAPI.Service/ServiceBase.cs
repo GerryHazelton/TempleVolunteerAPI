@@ -18,7 +18,7 @@ namespace TempleVolunteerAPI.Service
             _repositoryResponse = new RepositoryResponse<T>();
         }
 
-        public async Task<IList<T>> GetAllAsync(int propertyId, string createdBy)
+        public virtual async Task<IList<T>> GetAllAsync(int propertyId, string createdBy)
         {
             _repositoryResponse = await _uow.Repository<T>().GetAllAsync();
 
@@ -38,7 +38,7 @@ namespace TempleVolunteerAPI.Service
             return _repositoryResponse.Entities;
         }
 
-        public async Task<T> GetAsync(int id, int propertyId, string createdBy)
+        public async Task<T> GetByIdAsync(int id, int propertyId, string createdBy)
         {
             _repositoryResponse = await _uow.Repository<T>().GetByIdAsync(id);
 

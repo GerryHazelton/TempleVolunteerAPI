@@ -28,7 +28,7 @@ namespace TempleVolunteerAPI.Domain
         public byte[]? SupplyItemImage { get; set; }
 
         #region Dependencies
-        public virtual ICollection<Area> Areas { get; set; }
+        public ICollection<AreaSupplyItem> AreasSupplyItems { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public int PropertyId { get; set; }
@@ -43,9 +43,9 @@ namespace TempleVolunteerAPI.Domain
         public SupplyItem(string createdBy)
             : base(createdBy)
         {
-            this.Areas = new HashSet<Area>();
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
+            this.AreasSupplyItems = new List<AreaSupplyItem>();
         }
         #endregion
     }

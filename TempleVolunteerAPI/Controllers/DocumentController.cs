@@ -37,7 +37,7 @@ namespace TempleVolunteerAPI.API
         [HttpGet("GetByIdAsync")]
         public async Task<ServiceResponse<DocumentResponse>> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<DocumentResponse>(await _documentService.GetAsync(id, propertyId, userId));
+            _response.Data = _mapper.Map<DocumentResponse>(await _documentService.GetByIdAsync(id, propertyId, userId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;

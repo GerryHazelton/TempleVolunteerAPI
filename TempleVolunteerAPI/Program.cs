@@ -6,12 +6,20 @@ using System.Text;
 using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Repository;
 using SRFSDP.Api.Repository;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("SQLConn");
-builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableSensitiveDataLogging(true);
+}
+);
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -30,6 +38,7 @@ builder.Services.AddSession(options =>
 #region Services injection
 builder.Services.AddTransient(typeof(IEmailService), typeof(EmailService));
 builder.Services.AddTransient(typeof(IAreaService), typeof(AreaService));
+builder.Services.AddTransient(typeof(IAreaSupplyItemService), typeof(AreaSupplyItemService));
 builder.Services.AddTransient(typeof(ICredentialService), typeof(CredentialService));
 builder.Services.AddTransient(typeof(IDocumentService), typeof(DocumentService));
 builder.Services.AddTransient(typeof(IErrorLogService), typeof(ErrorLogService));
@@ -41,13 +50,14 @@ builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
 builder.Services.AddTransient(typeof(IStaffService), typeof(StaffService));
 builder.Services.AddTransient(typeof(ISupplyItemService), typeof(SupplyItemService));
 builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
-builder.Services.AddTransient(typeof(IPropertyStaffService), typeof(PropertyStaffService));
+//builder.Services.AddTransient(typeof(IPropertyStaffService), typeof(PropertyStaffService));
 builder.Services.AddTransient(typeof(IRoleStaffService), typeof(RoleStaffService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 #endregion
 
 #region Repositories injection
 builder.Services.AddTransient(typeof(IAreaRepository), typeof(AreaRepository));
+builder.Services.AddTransient(typeof(IAreaSupplyItemRepository), typeof(AreaSupplyItemRepository));
 builder.Services.AddTransient(typeof(ICredentialRepository), typeof(CredentialRepository));
 builder.Services.AddTransient(typeof(IDocumentRepository), typeof(DocumentRepository));
 builder.Services.AddTransient(typeof(IErrorLogRepository), typeof(ErrorLogRepository));
@@ -58,7 +68,7 @@ builder.Services.AddTransient(typeof(IPropertyRepository), typeof(PropertyReposi
 builder.Services.AddTransient(typeof(IRoleRepository), typeof(RoleRepository));
 builder.Services.AddTransient(typeof(IStaffRepository), typeof(StaffRepository));
 builder.Services.AddTransient(typeof(ISupplyItemRepository), typeof(SupplyItemRepository));
-builder.Services.AddTransient(typeof(IPropertyStaffRepository), typeof(PropertyStaffRepository));
+//builder.Services.AddTransient(typeof(IPropertyStaffRepository), typeof(PropertyStaffRepository));
 builder.Services.AddTransient(typeof(IRoleStaffRepository), typeof(RoleStaffRepository));
 builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));
 #endregion

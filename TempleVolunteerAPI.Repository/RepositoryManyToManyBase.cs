@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TempleVolunteerAPI.Domain;
 using System.Text;
+using TempleVolunteerAPI.Domain.DTO;
+using System.Linq.Expressions;
+using TempleVolunteerAPI.Common;
 
 namespace TempleVolunteerAPI.Repository
 {
@@ -8,101 +11,284 @@ namespace TempleVolunteerAPI.Repository
     {
         private readonly ApplicationDBContext _context;
         private readonly IUnitOfWork _unitOfWork;
+        private RepositoryResponse<T> _repositoryResponse;
 
         public RepositoryManyToManyBase(ApplicationDBContext context)
         {
             _context = context;
             _unitOfWork = new UnitOfWork(context);
+            _repositoryResponse = new RepositoryResponse<T>();
         }
 
-        public async Task<T> AddAsync(T entity)
+        public async Task<RepositoryResponse<T>> GetAllAsync()
         {
-            if (entity == null)
+            try
             {
-                return entity;
+                _repositoryResponse.Entities = await _context.Set<T>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
             }
 
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> GetByIdAsync(int id)
+        {
+            try
+            {
+                _repositoryResponse.Entity = await _context.Set<T>().FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> FindAsync(Expression<Func<T, bool>> match)
+        {
+            try
+            {
+                _repositoryResponse.Entity = await _context.Set<T>().SingleOrDefaultAsync(match);
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> FindAllAsync(Expression<Func<T, bool>> match)
+        {
+            try
+            {
+                _repositoryResponse.Entities = await _context.Set<T>().Where(match).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> AddAsync(T entity)
+        {
             try
             {
                 _context.Set<T>().Add(entity);
                 await _unitOfWork.CommitAsync();
-
-                return entity;
+                _repositoryResponse.Entity = entity;
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                _repositoryResponse.Error = ex;
             }
+
+            return _repositoryResponse;
         }
 
-        public async Task<T> UpdateAsync(T entity)
+        public async Task<RepositoryResponse<T>> UpdateAsync(T entity)
         {
-            if (entity == null)
-            {
-                return entity;
-            }
-
             try
             {
                 _context.Set<T>().Attach(entity);
                 _context.Entry(entity).State = EntityState.Modified;
                 await _unitOfWork.CommitAsync();
-
-                return entity;
+                _repositoryResponse.Entity = entity;
             }
-            catch 
+            catch (Exception ex)
             {
-                return null;
+                _repositoryResponse.Error = ex;
             }
+
+            return _repositoryResponse;
         }
 
-        public async Task<T> GetByIdByIdAsync(T entity)
+        public async Task<RepositoryResponse<T>> DeleteAsync(T entity)
         {
-            if (entity == null)
-            {
-                return entity;
-            }
-
             try
             {
-                if (entity is PropertyStaff)
-                {
-                    PropertyStaff ps = entity as PropertyStaff;
-                    return (T)_context.Set<PropertyStaff>().Where(x => x.PropertyId == ps.PropertyId && x.StaffId == ps.StaffId);
-                }
-
-                return entity;
+                _context.Set<T>().Remove(entity);
+                await _unitOfWork.CommitAsync();
+                _repositoryResponse.Entity = entity;
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                _repositoryResponse.Error = ex;
             }
+
+            return _repositoryResponse;
         }
 
-        public async Task<bool> DeleteByIdByIdAsync(T entity)
+        public async Task<RepositoryResponse<T>> Filter(
+                Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "", int? page = null, int? pageSize = null)
         {
-            if (entity == null)
-            {
-                return false;
-            }
-
-            StringBuilder sbSql = new StringBuilder();
-
             try
             {
-                if (entity is PropertyStaff)
+                IQueryable<T> query = _context.Set<T>();
+
+                if (filter != null)
                 {
-                    PropertyStaff ps = entity as PropertyStaff;
-                    sbSql.AppendFormat("DELETE FROM PropertyStaff WHERE PropertyId = {0} AND StaffId = {1}", ps.PropertyId, ps.StaffId);
-                    await _context.Database.ExecuteSqlRawAsync(sbSql.ToString());
+                    query = query.Where(filter);
                 }
 
-                return true;
+                if (orderBy != null)
+                {
+                    query = orderBy(query);
+                }
+
+                if (includeProperties != null)
+                {
+                    foreach (var includeProperty in includeProperties.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        query = query.Include(includeProperty);
+                    }
+                }
+
+                if (page != null && pageSize != null)
+                {
+                    query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+                }
+
+                _repositoryResponse.Entities = query.ToList();
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                _repositoryResponse.Error = ex;
             }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> ExistAsync(Expression<Func<T, bool>> match)
+        {
+            try
+            {
+                _repositoryResponse.Result = await _context.Set<T>().Where(match).FirstOrDefaultAsync() == null ? false : true;
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> CountAync()
+        {
+            try
+            {
+                _repositoryResponse.Count = await _context.Set<T>().CountAsync();
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> FindByAsync(Expression<Func<T, bool>> match)
+        {
+            try
+            {
+                _repositoryResponse.Entities = await _context.Set<T>().Where(match).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> LogError(T entity)
+        {
+            try
+            {
+
+                _context.Set<T>().Add(entity);
+                await _unitOfWork.CommitAsync();
+                _repositoryResponse.Entity = entity;
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> RecordLoginAttempts(string userId, int propertyId)
+        {
+            try
+            {
+                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId && x.PropertyId == propertyId);
+                
+                if (staff == null)
+                {
+                    _repositoryResponse.Error = new Exception("RecordLoginAttempts: User not found.");
+                    return _repositoryResponse;
+                }
+
+                staff.LoginAttempts = staff.LoginAttempts + 1;
+
+                if (staff.LoginAttempts > 3)
+                {
+                    staff.IsLockedOut = true;
+                }
+
+                _context.Set<Staff>().Attach(staff);
+                _context.Entry(staff).State = EntityState.Modified;
+                _context.Update(staff);
+                await _unitOfWork.CommitAsync();
+
+                _repositoryResponse.Count = staff.LoginAttempts;
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public async Task<RepositoryResponse<T>> ResetLoginAttempts(string userId, int propertyId)
+        {
+            try
+            {
+                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId && x.PropertyId == propertyId);
+                staff.LoginAttempts = 0;
+                staff.IsLockedOut = false;
+                _context.Set<Staff>().Attach(staff);
+                _context.Entry(staff).State = EntityState.Modified;
+                _context.Update(staff);
+                await _unitOfWork.CommitAsync();
+
+                _repositoryResponse.Result = true;
+            }
+            catch (Exception ex)
+            {
+                _repositoryResponse.Error = ex;
+            }
+
+            return _repositoryResponse;
+        }
+
+        public Task<Staff> CustomUpdateAsync(Staff request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<RepositoryResponse<T>> LogError(LogErrorParms parms)
+        {
+            throw new NotImplementedException();
         }
     }
 }
+

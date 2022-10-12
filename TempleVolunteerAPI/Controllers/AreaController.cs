@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
@@ -41,7 +43,7 @@ namespace TempleVolunteerAPI.API
         [HttpGet("GetByIdAsync")]
         public async Task<ServiceResponse<AreaResponse>> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<AreaResponse>(await _areaService.GetAsync(id, propertyId, userId));
+            _response.Data = _mapper.Map<AreaResponse>(await _areaService.GetByIdAsync(id, propertyId, userId));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -50,19 +52,14 @@ namespace TempleVolunteerAPI.API
         [HttpPost("PostAsync")]
         public async Task<ServiceResponse<IList<AreaRequest>>> PostAsync([FromBody] AreaRequest request)
         {
+            Area area = _mapper.Map<Area>(request);
+
             if (request.SupplyItemIds.Length > 0)
             {
-                IList<SupplyItem> supplyItems = await _supplyItemService.GetAllAsync(request.PropertyId, request.CreatedBy);
-                Area area = _mapper.Map<Area>(request);
-
-                foreach (int supplyItem in request.SupplyItemIds)
-                {
-                    area.SupplyItems.Add((SupplyItemRequest)items.Where(x => x.SupplyItemId == item).FirstOrDefault());
-                }
+                area.AreasSupplyItems = await GetAreaSupplyItems(request.SupplyItemIds, request.PropertyId, request.CreatedBy);
             }
 
-
-            await _areaService.AddAsync(_mapper.Map<Area>(request), request.PropertyId, request.UpdatedBy);
+            await _areaService.AddAsync(area, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
@@ -72,6 +69,21 @@ namespace TempleVolunteerAPI.API
         [HttpPut("PutAsync")]
         public async Task<ServiceResponse<IList<AreaRequest>>> PutAsync([FromBody] AreaRequest request)
         {
+            Area area = await _areaService.GetByIdAsync(request.AreaId, request.PropertyId, request.UpdatedBy);
+
+            IList<AreaSupplyItem> areasSupplyItems = await _areaSupplyItemService.FindAllAsync(x=>x.AreaId == area.AreaId);
+            
+            if (areasSupplyItems.Count > 0)
+            {
+                area.AreasSupplyItems = areasSupplyItems;
+                area.AreasSupplyItems.Clear();
+            }
+
+            if (request.SupplyItemIds.Length > 0)
+            {
+                area.AreasSupplyItems = await GetAreaSupplyItems(request.SupplyItemIds, request.PropertyId, request.UpdatedBy);
+            }
+
             await _areaService.UpdateAsync(_mapper.Map<Area>(request), request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
             _collResponse.Success = _collResponse.Data != null ? true : false;
@@ -87,6 +99,22 @@ namespace TempleVolunteerAPI.API
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
+        }
+
+        private async Task<IList<AreaSupplyItem>> GetAreaSupplyItems(int[] supplyItemIds, int propertyId, string userId)
+        {
+            SupplyItem supplyItem;
+            AreaSupplyItem addAreaSupplyItem;
+            IList<AreaSupplyItem> areasSupplyItems = new List<AreaSupplyItem>();
+
+            foreach (int supplyItemId in supplyItemIds)
+            {
+                supplyItem = await _supplyItemService.GetByIdAsync(supplyItemId, propertyId, userId);
+                addAreaSupplyItem = new AreaSupplyItem { SupplyItem = supplyItem, SupplyItemId = supplyItem.SupplyItemId };
+                areasSupplyItems.Add(addAreaSupplyItem);
+            }
+
+            return areasSupplyItems;
         }
 
         private async Task<IList<Area>> ReturnCollection(int propertyId, string userId)

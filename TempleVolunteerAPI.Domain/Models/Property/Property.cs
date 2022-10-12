@@ -67,18 +67,18 @@ namespace TempleVolunteerAPI.Domain
         public Property(string createdBy) :
             base(createdBy)
         {
-            this.Areas = new HashSet<Area>();
-            this.Categories = new HashSet<Category>();
-            this.Credentials = new HashSet<Credential>();
-            this.Documents = new HashSet<Document>();
-            this.Events = new HashSet<Event>();
-            this.EventTypes = new HashSet<EventType>();
-            this.Messages = new HashSet<Message>();
-            this.RefreshTokens = new HashSet<RefreshToken>();
-            this.Roles = new HashSet<Role>();
-            this.Staff = new HashSet<Staff>();
-            this.SupplyItems = new HashSet<SupplyItem>();
-            this.EventTasks = new HashSet<EventTask>();
+            this.Areas = new List<Area>();
+            this.Categories = new List<Category>();
+            this.Credentials = new List<Credential>();
+            this.Documents = new List<Document>();
+            this.Events = new List<Event>();
+            this.EventTypes = new List<EventType>();
+            this.Messages = new List<Message>();
+            this.RefreshTokens = new List<RefreshToken>();
+            this.Roles = new List<Role>();
+            this.Staff = new List<Staff>();
+            this.SupplyItems = new List<SupplyItem>();
+            this.EventTasks = new List<EventTask>();
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
         }

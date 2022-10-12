@@ -3,7 +3,7 @@ using TempleVolunteerAPI.Repository;
 
 namespace SRFSDP.Api.Repository
 {
-    public interface IPropertyStaffRepository : IRepositoryManyToManyBase<PropertyStaff>
+    public interface IAreaSupplyItemRepository : IRepositoryManyToManyBase<AreaSupplyItem>
     {
     }
 }

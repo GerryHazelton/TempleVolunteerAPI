@@ -18,8 +18,8 @@ namespace TempleVolunteerAPI.Domain
         public string? Note { get; set; }
 
         #region Dependencies
-        public virtual ICollection<Area> Areas { get; set; }
-        public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<AreaEventType> AreasEventTypes { get; set; }
+        public virtual ICollection<EventEventType> EventsEventTypes { get; set; }
         public int PropertyId { get; set; }
         public virtual Property Property { get; set; }
         #endregion
@@ -32,10 +32,10 @@ namespace TempleVolunteerAPI.Domain
         public EventType(string createdBy)
             : base(createdBy)
         {
-            this.Areas = new HashSet<Area>();
+            this.AreasEventTypes = new List<AreaEventType>();
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
-            this.Events = new HashSet<Event>();
+            this.EventsEventTypes = new HashSet<EventEventType>();
         }
         #endregion
     }

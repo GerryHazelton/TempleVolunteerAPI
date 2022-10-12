@@ -6,7 +6,6 @@ namespace TempleVolunteerAPI.Domain
     public class Area : Audit
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        
         public int AreaId { get; set; }
         
         [StringLength(50)]
@@ -21,11 +20,11 @@ namespace TempleVolunteerAPI.Domain
         public string? Note { get; set; }
 
         #region Dependencies
-        public virtual ICollection<EventTask> EventTasks { get; set; }
-        public virtual ICollection<EventType> EventTypes { get; set; }
+        public ICollection<AreaEventTask> AreasEventTasks { get; set; }
+        public ICollection<AreaEventType> AreaEventTypes { get; set; }
         public int PropertyId { get; set; }
         public virtual Property Property { get; set; }
-        public virtual ICollection<SupplyItem> SupplyItems { get; set; }
+        public ICollection<AreaSupplyItem> AreasSupplyItems { get; set; }
         #endregion
 
         #region Constructors
@@ -38,9 +37,9 @@ namespace TempleVolunteerAPI.Domain
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
-            this.EventTasks = new HashSet<EventTask>();
-            this.EventTypes = new HashSet<EventType>();
-            this.SupplyItems = new HashSet<SupplyItem>();
+            this.AreasEventTasks = new List<AreaEventTask>();
+            this.AreaEventTypes = new List<AreaEventType>();
+            this.AreasSupplyItems = new List<AreaSupplyItem>();
         }
         #endregion
     }
