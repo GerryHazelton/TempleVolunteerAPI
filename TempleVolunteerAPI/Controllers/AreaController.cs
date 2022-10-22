@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
+using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.API
 {
@@ -20,6 +21,7 @@ namespace TempleVolunteerAPI.API
         private readonly IMapper _mapper;
         private ServiceResponse<IList<AreaRequest>> _collResponse;
         private ServiceResponse<AreaResponse> _response;
+        private bool _result;
 
         public AreaController(IAreaService AreaService, IMapper mapper, IAreaSupplyItemService areaSupplyItemService, ISupplyItemService supplyItemService)
         {
@@ -31,77 +33,72 @@ namespace TempleVolunteerAPI.API
             _supplyItemService = supplyItemService;
         }
 
-        [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<AreaRequest>>> GetAllAsync(int propertyId, string userId)
+        [HttpGet("GetAll")]
+        public ServiceResponse<IList<AreaRequest>> GetAll(int propertyId, string userId)
         {
-            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(propertyId, userId));
+            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
-        [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<AreaResponse>> GetByIdAsync(int id, int propertyId, string userId)
+        [HttpGet("GetById")]
+        public ServiceResponse<AreaResponse> GetById(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<AreaResponse>(await _areaService.GetByIdAsync(id, propertyId, userId));
+            _response.Data = _mapper.Map<AreaResponse>(_areaService.FindByCondition(x=>x.AreaId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.None));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
-        [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<AreaRequest>>> PostAsync([FromBody] AreaRequest request)
+        [HttpPost("Post")]
+        public ServiceResponse<IList<AreaRequest>> Post([FromBody] AreaRequest request)
         {
             Area area = _mapper.Map<Area>(request);
 
             if (request.SupplyItemIds.Length > 0)
             {
-                area.AreasSupplyItems = await GetAreaSupplyItems(request.SupplyItemIds, request.PropertyId, request.CreatedBy);
+                area.SupplyItems = GetSupplyItems(request.SupplyItemIds, request.PropertyId, request.CreatedBy);
             }
 
-            await _areaService.AddAsync(area, request.PropertyId, request.CreatedBy);
-            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
+            _result = _areaService.Create(area, request.PropertyId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(request.PropertyId, request.CreatedBy));
+            _collResponse.Success = _result;
 
             return _collResponse;
         }
 
-        [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<AreaRequest>>> PutAsync([FromBody] AreaRequest request)
+        [HttpPut("Put")]
+        public ServiceResponse<IList<AreaRequest>> Put([FromBody] AreaRequest request)
         {
-            Area area = await _areaService.GetByIdAsync(request.AreaId, request.PropertyId, request.UpdatedBy);
-
-            IList<AreaSupplyItem> areasSupplyItems = await _areaSupplyItemService.FindAllAsync(x=>x.AreaId == area.AreaId);
-            
-            if (areasSupplyItems.Count > 0)
-            {
-                area.AreasSupplyItems = areasSupplyItems;
-                area.AreasSupplyItems.Clear();
-            }
+            Area area = (Area)_areaService.FindByCondition(x => x.AreaId == request.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.AreaSupplyItem);
+            area.SupplyItems.Clear();
 
             if (request.SupplyItemIds.Length > 0)
             {
-                area.AreasSupplyItems = await GetAreaSupplyItems(request.SupplyItemIds, request.PropertyId, request.UpdatedBy);
+                area.SupplyItems = GetSupplyItems(request.SupplyItemIds, request.PropertyId, request.UpdatedBy);
             }
 
-            await _areaService.UpdateAsync(_mapper.Map<Area>(request), request.PropertyId, request.CreatedBy);
-            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
+            _result = _areaService.Update(_mapper.Map<Area>(request), request.PropertyId, request.CreatedBy);
+            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(request.PropertyId, request.UpdatedBy));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
-        [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<AreaRequest>>> DeleteAsync(MiscRequest request)
+        [HttpDelete("Delete")]
+        public ServiceResponse<IList<AreaRequest>> Delete(MiscRequest request)
         {
-            await _areaService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
-            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
+            Area area = (Area)_areaService.FindByCondition(x => x.AreaId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.None);
+
+            _result = _areaService.Delete(area, request.PropertyId, request.UserId);
+            _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
-        private async Task<IList<AreaSupplyItem>> GetAreaSupplyItems(int[] supplyItemIds, int propertyId, string userId)
+        private IList<AreaSupplyItem> GetSupplyItems(int[] supplyItemIds, int propertyId, string userId)
         {
             SupplyItem supplyItem;
             AreaSupplyItem addAreaSupplyItem;
@@ -109,7 +106,7 @@ namespace TempleVolunteerAPI.API
 
             foreach (int supplyItemId in supplyItemIds)
             {
-                supplyItem = await _supplyItemService.GetByIdAsync(supplyItemId, propertyId, userId);
+                supplyItem = _supplyItemService.FindByCondition(x=>x.SupplyItemId == supplyItemId, propertyId, userId, WithDetails.None).FirstOrDefault();
                 addAreaSupplyItem = new AreaSupplyItem { SupplyItem = supplyItem, SupplyItemId = supplyItem.SupplyItemId };
                 areasSupplyItems.Add(addAreaSupplyItem);
             }
@@ -117,9 +114,9 @@ namespace TempleVolunteerAPI.API
             return areasSupplyItems;
         }
 
-        private async Task<IList<Area>> ReturnCollection(int propertyId, string userId)
+        private IList<Area> ReturnCollection(int propertyId, string userId)
         {
-            return await _areaService.GetAllAsync(propertyId, userId);
+            return _areaService.FindAll(propertyId, userId).ToList();
         }
     }
 }

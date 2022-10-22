@@ -1,6 +1,6 @@
 ﻿namespace TempleVolunteerAPI.Repository
 {
-    public interface IUnitOfWorkManyToMany : IDisposable
+    public interface IRepositoryWrapperManyToMany : IDisposable
     {
         IRepositoryManyToManyBase<T> RepositoryManyToMany<T>() where T : class;
         Task<int> CommitAsync();

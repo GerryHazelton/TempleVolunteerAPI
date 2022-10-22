@@ -5,6 +5,7 @@ using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 using TempleVolunteerAPI.Domain.DTO;
 using AutoMapper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Linq.Expressions;
 
 namespace TempleVolunteerAPI.Repository
 {
@@ -165,6 +166,70 @@ namespace TempleVolunteerAPI.Repository
             }
 
             return _myProfileRepositoryResponse;
+        }
+
+        public async Task RecordLoginAttempts(string userId, int propertyId)
+        {
+            try
+            {
+                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId && x.PropertyId == propertyId);
+                staff.LoginAttempts++;
+                _context.Set<Staff>().Attach(staff);
+                _context.Entry(staff).State = EntityState.Modified;
+                _context.Update(staff);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task ResetLoginAttempts(string userId, int propertyId)
+        {
+            try
+            {
+                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId && x.PropertyId == propertyId);
+                staff.LoginAttempts = 0;
+                _context.Set<Staff>().Attach(staff);
+                _context.Entry(staff).State = EntityState.Modified;
+                _context.Update(staff);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<IEnumerable<Staff>> GetAllStaffAsync(int propertyId, string userId)
+        {
+            return await FindAll(propertyId, userId)
+               .OrderBy(x => x.LastName)
+               .ToListAsync();
+        }
+
+        public async Task<Staff> GetStaffByMatchAsync(Expression<Func<Staff, bool>> match, int propertyId, string userId)
+        {
+            return await FindByCondition(match, propertyId, userId).FirstOrDefaultAsync();
+        }
+
+        public async Task<Staff> GetStaffWithDetailsAsync(Expression<Func<Staff, bool>> match, int propertyId, string userId)
+        {
+            return await FindByCondition(match, propertyId, userId).Include(x=>x.Roles).FirstOrDefaultAsync();
+        }
+
+        public bool CreateStaff(Staff staff, int propertyId, string userId)
+        {
+            return Create(staff, propertyId, userId);
+        }
+
+        public bool UpdateStaff(Staff staff, int propertyId, string userId)
+        {
+            return Update(staff, propertyId, userId);
+        }
+
+        public bool DeleteStaff(Staff staff, int propertyId, string userId)
+        {
+            return Delete(staff, propertyId, userId);
         }
     }
 }

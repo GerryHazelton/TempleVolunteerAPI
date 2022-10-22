@@ -17,5 +17,17 @@ namespace TempleVolunteerAPI.Common
             VerifyEmail
         }
 
+        public enum WithDetails
+        {
+            AreaEventTask,
+            AreaEventType,
+            AreaSupplyItem,
+            CredentialStaff,
+            EventEventType,
+            None,
+            PropertyStaff,
+            RefreshTokenStaff,
+            RoleStaff
+        }
     }
 }

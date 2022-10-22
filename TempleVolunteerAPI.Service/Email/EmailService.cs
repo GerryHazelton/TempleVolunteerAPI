@@ -11,16 +11,14 @@ namespace TempleVolunteerAPI.Service
     public class EmailService : IEmailService
     {
         private readonly AppSettings _appSettings;
-        private readonly IErrorLogService _errorLogService;
         private string _uri;
         private string _fromEmail;
         private string _smtpPwd;
         StringBuilder _message;
 
-        public EmailService(IOptions<AppSettings> appSettings, IErrorLogService errorLogService)
+        public EmailService(IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
-            _errorLogService = errorLogService;
 
             _uri = _appSettings.UriClientLocal; // _appSettings.UriLocal;
             //_uri = _appSettings.UriHiranyaloka;
@@ -87,16 +85,6 @@ namespace TempleVolunteerAPI.Service
             }
             catch (Exception ex)
             {
-                await _errorLogService.LogError(new ErrorRequest
-                {
-                    FunctionName = "SendVerificationEmail",
-                    ErrorMessage = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    PropertyId = propertyId,
-                    CreatedBy = request.EmailAddress,
-                    CreatedDate = DateTime.UtcNow
-                });
-
                 throw new AppException("Unable to send verification email (Service: SendVerificationEmail)");
             }
         }

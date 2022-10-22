@@ -70,10 +70,12 @@ namespace TempleVolunteerAPI.Domain
         public DateTime? PasswordReset { get; set; }
 
         #region Dependencies
-        public virtual ICollection<Credential> Credentials { get; set; }
-        public virtual ICollection<Property> Properties { get; set; }
+        public virtual ICollection<CredentialStaff> Credentials { get; set; }
+        [ForeignKey(nameof(Property))]
+        public int? PropertyId { get; set; }
+        public Property? Property { get; set; }
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<RoleStaff> Roles { get; set; }
         #endregion
 
         #region Constructor
@@ -86,10 +88,9 @@ namespace TempleVolunteerAPI.Domain
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
-            this.Credentials = new HashSet<Credential>();
+            this.Credentials = new HashSet<CredentialStaff>();
             this.RefreshTokens = new HashSet<RefreshToken>();
-            this.Roles = new HashSet<Role>();
-            this.Properties = new HashSet<Property>();
+            this.Roles = new HashSet<RoleStaff>();
         }
         #endregion
     }

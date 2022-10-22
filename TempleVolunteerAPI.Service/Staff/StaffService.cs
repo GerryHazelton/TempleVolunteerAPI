@@ -3,18 +3,19 @@ using TempleVolunteerAPI.Common;
 using TempleVolunteerAPI.Repository;
 using TempleVolunteerAPI.Service;
 using TempleVolunteerAPI.Domain.DTO;
+using System.Linq.Expressions;
+using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Service
 {
-    public class StaffService : ServiceBase<Staff>, IStaffService
+    public class StaffService : IStaffService
     {
-        private readonly IUnitOfWork _uow;
+        private readonly IRepositoryWrapper _uow;
         private readonly IEmailService _emailService;
         RepositoryResponse<Staff> _repositoryResponse;
         private readonly IStaffRepository _staffRepository;
 
-
-        public StaffService(IUnitOfWork uow, IErrorLogService errorLog, IEmailService emailService, IStaffRepository staffRepository) : base(uow, errorLog)
+        public StaffService(IRepositoryWrapper uow, IEmailService emailService, IStaffRepository staffRepository)
         {
             this._uow = uow;
             this._emailService = emailService;
@@ -22,11 +23,34 @@ namespace TempleVolunteerAPI.Service
             _staffRepository = staffRepository;
         }
 
-        public async Task<bool> CustomUpdateAsync(Staff entity, string userId)
+        public Task<bool> CustomUpdateAsync(Staff entity, string userId)
         {
-            _repositoryResponse = await _staffRepository.CustomSqlProcessAsync(entity);
+            throw new NotImplementedException();
+        }
 
-            return _repositoryResponse.Result;
+        public IQueryable<Staff> FindAll(int propertyId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Staff> FindByCondition(Expression<Func<Staff, bool>> match, int propertyId, string userId, WithDetails details)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Create(Staff entity, int propertyId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Update(Staff entity, int propertyId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Delete(Staff entity, int propertyId, string userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

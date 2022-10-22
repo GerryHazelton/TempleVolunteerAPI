@@ -1,6 +1,6 @@
 ﻿namespace TempleVolunteerAPI.Repository
 {
-    public class UnitOfWorkManyToMany : IDisposable, IUnitOfWorkManyToMany
+    public class RespositoryWrapperManyToMany : IDisposable, IRepositoryWrapperManyToMany
     {
         private readonly ApplicationDBContext _dbContext;
         private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
@@ -11,7 +11,7 @@
             set { Repositories = value; }
         }
 
-        public UnitOfWorkManyToMany(ApplicationDBContext dbContext)
+        public RespositoryWrapperManyToMany(ApplicationDBContext dbContext)
         {
             _dbContext = dbContext;
         }

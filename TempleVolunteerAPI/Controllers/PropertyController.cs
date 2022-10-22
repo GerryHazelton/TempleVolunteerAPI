@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
+using static TempleVolunteerAPI.Common.EnumHelper;
+using Property = TempleVolunteerAPI.Domain.Property;
 
 namespace TempleVolunteerAPI.API
 {
@@ -16,6 +20,7 @@ namespace TempleVolunteerAPI.API
         private readonly IMapper _mapper;
         private ServiceResponse<IList<PropertyRequest>> _collResponse;
         private ServiceResponse<PropertyResponse> _response;
+        private bool _result;
 
         public PropertyController(IPropertyService PropertyService, IMapper mapper)
         {
@@ -37,7 +42,7 @@ namespace TempleVolunteerAPI.API
         [HttpGet("GetByIdAsync")]
         public async Task<ServiceResponse<PropertyResponse>> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<PropertyResponse>(await _propertyService.GetByIdAsync(id, propertyId, userId));
+            _response.Data = _mapper.Map<PropertyResponse>(_propertyService.FindByCondition(x => x.PropertyId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.None));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -46,9 +51,11 @@ namespace TempleVolunteerAPI.API
         [HttpPost("PostAsync")]
         public async Task<ServiceResponse<IList<PropertyRequest>>> PostAsync([FromBody] PropertyRequest request)
         {
-            await _propertyService.AddAsync(_mapper.Map<Property>(request), request.PropertyId, request.UpdatedBy);
+            Property property = _mapper.Map<Property>(request);
+
+            _result = _propertyService.Create(property, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
+            _collResponse.Success = _result;
 
             return _collResponse;
         }
@@ -56,7 +63,9 @@ namespace TempleVolunteerAPI.API
         [HttpPut("PutAsync")]
         public async Task<ServiceResponse<IList<PropertyRequest>>> PutAsync([FromBody] PropertyRequest request)
         {
-            await _propertyService.UpdateAsync(_mapper.Map<Property>(request), request.PropertyId, request.CreatedBy);
+            Property property = (Property)_propertyService.FindByCondition(x => x.PropertyId == request.PropertyId, request.PropertyId, request.UpdatedBy, WithDetails.None);
+
+            _result = _propertyService.Update(_mapper.Map<Property>(request), request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
@@ -66,7 +75,9 @@ namespace TempleVolunteerAPI.API
         [HttpDelete("DeleteAsync")]
         public async Task<ServiceResponse<IList<PropertyRequest>>> DeleteAsync(MiscRequest request)
         {
-            await _propertyService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
+            Property property = (Property)_propertyService.FindByCondition(x => x.PropertyId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.None);
+
+            _result = _propertyService.Delete(property, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
@@ -75,7 +86,7 @@ namespace TempleVolunteerAPI.API
 
         private async Task<IList<Property>> ReturnCollection(int propertyId, string userId)
         {
-            return await _propertyService.GetAllAsync(propertyId, userId);
+            return (IList<Property>)_propertyService.FindAll(propertyId, userId);
         }
     }
 }

@@ -32,11 +32,11 @@ namespace TempleVolunteerAPI.Repository
         public virtual DbSet<AreaEventTask> AreasEventTasks { get; set; }
         public virtual DbSet<AreaEventType> AreasEventTypes { get; set; }
         public virtual DbSet<AreaSupplyItem> AreasSupplyItems { get; set; }
-        public virtual DbSet<CredentialStaff> CredentialsStaff { get; set; }
-        public virtual DbSet<EventEventType> EventsEventTypes { get; set; }
-        public virtual DbSet<PropertyStaff> PropertiesStaff { get; set; }
-        public virtual DbSet<RefreshTokenStaff> RefreshTokensStaff { get; set; }
-        public virtual DbSet<RoleStaff> RolesStaff { get; set; }
+        //public virtual DbSet<CredentialStaff> CredentialsStaff { get; set; }
+        //public virtual DbSet<EventEventType> EventsEventTypes { get; set; }
+        //public virtual DbSet<PropertyStaff> PropertiesStaff { get; set; }
+        //public virtual DbSet<RefreshTokenStaff> RefreshTokensStaff { get; set; }
+        //public virtual DbSet<RoleStaff> RolesStaff { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,51 +60,99 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<AreaEventTask>().ToTable("AreasEventTasks");
             modelBuilder.Entity<AreaEventType>().ToTable("AreasEventTypes");
             modelBuilder.Entity<AreaSupplyItem>().ToTable("AreasSupplyItems");
-            modelBuilder.Entity<CredentialStaff>().ToTable("CredentialsStaff");
-            modelBuilder.Entity<EventEventType>().ToTable("EventsEventTypes");
-            modelBuilder.Entity<PropertyStaff>().ToTable("PropertiesStaff");
-            modelBuilder.Entity<RefreshTokenStaff>().ToTable("RefreshTokensStaff");
-            modelBuilder.Entity<RoleStaff>().ToTable("RolesStaff");
+            //modelBuilder.Entity<CredentialStaff>().ToTable("CredentialsStaff");
+            //modelBuilder.Entity<EventEventType>().ToTable("EventsEventTypes");
+            //modelBuilder.Entity<PropertyStaff>().ToTable("PropertiesStaff");
+            //modelBuilder.Entity<RefreshTokenStaff>().ToTable("RefreshTokensStaff");
+            //modelBuilder.Entity<RoleStaff>().ToTable("RolesStaff");
 
-            #region Area EventTask
-            modelBuilder.Entity<AreaEventTask>()
-            .HasKey(x => new { x.AreaId, x.EventTaskId });
-            #endregion
+            //#region Area EventTask
+            //modelBuilder.Entity<AreaEventTask>()
+            //.HasKey(x => new { x.AreaId, x.EventTaskId });
+            //#endregion
 
-            #region Area EventType
-            modelBuilder.Entity<AreaEventType>()
-            .HasKey(x => new { x.AreaId, x.EventTypeId });
-            #endregion
+            //#region Area EventType
+            //modelBuilder.Entity<AreaEventType>()
+            //.HasKey(x => new { x.AreaId, x.EventTypeId });
+            //#endregion
 
-            #region Area SupplyItem
-            modelBuilder.Entity<AreaSupplyItem>()
-            .HasKey(x => new { x.AreaId, x.SupplyItemId });
-            #endregion
+            //#region Area SupplyItem
+            //modelBuilder.Entity<AreaSupplyItem>()
+            //.HasKey(x => new { x.AreaId, x.SupplyItemId });
+            //#endregion
 
-            #region Credential Staff
-            modelBuilder.Entity<CredentialStaff>()
-            .HasKey(x => new { x.CredentialId, x.StaffId });
-            #endregion
+            modelBuilder.Entity<AreaEventTask>().HasKey(x => new { x.AreaId, x.EventTaskId });
+            modelBuilder.Entity<AreaEventTask>().HasOne(x => x.EventTask)
+                                                  .WithMany(x => x.Areas)
+                                                  .HasForeignKey(x => x.EventTaskId);
+            modelBuilder.Entity<AreaEventTask>().HasOne(x => x.Area)
+                                                  .WithMany(x => x.EventTasks)
+                                                  .HasForeignKey(x => x.AreaId);
 
-            #region Event EventType
-            modelBuilder.Entity<EventEventType>()
-            .HasKey(x => new { x.EventId, x.EventTypeId });
-            #endregion
+            modelBuilder.Entity<AreaEventType>().HasKey(x => new { x.AreaId, x.EventTypeId });
+            modelBuilder.Entity<AreaEventType>().HasOne(x => x.EventType)
+                                                  .WithMany(x => x.Areas)
+                                                  .HasForeignKey(x => x.EventTypeId);
+            modelBuilder.Entity<AreaEventType>().HasOne(x => x.Area)
+                                                  .WithMany(x => x.EventTypes)
+                                                  .HasForeignKey(x => x.AreaId);
 
-            #region Property Staff
-            modelBuilder.Entity<PropertyStaff>()
-            .HasKey(x => new { x.PropertyId, x.StaffId });
-            #endregion
+            modelBuilder.Entity<AreaSupplyItem>().HasKey(x => new { x.AreaId, x.SupplyItemId });
+            modelBuilder.Entity<AreaSupplyItem>().HasOne(x => x.SupplyItem)
+                                                  .WithMany(x => x.Areas)
+                                                  .HasForeignKey(x => x.SupplyItemId);
+            modelBuilder.Entity<AreaSupplyItem>().HasOne(x => x.Area)
+                                                  .WithMany(x => x.SupplyItems)
+                                                  .HasForeignKey(x => x.AreaId);
 
-            #region RefreshToken Staff
-            modelBuilder.Entity<RefreshTokenStaff>()
-            .HasKey(x => new { x.RefreshTokenId, x.StaffId });
-            #endregion
+            modelBuilder.Entity<CredentialStaff>().HasKey(x => new { x.CredentialId, x.StaffId });
+            modelBuilder.Entity<CredentialStaff>().HasOne(x => x.Staff)
+                                                  .WithMany(x => x.Credentials)
+                                                  .HasForeignKey(x => x.StaffId);
+            modelBuilder.Entity<CredentialStaff>().HasOne(x => x.Credential)
+                                                  .WithMany(x => x.Staff)
+                                                  .HasForeignKey(x => x.CredentialId);
 
-            #region Role Staff
-            modelBuilder.Entity<RoleStaff>()
-            .HasKey(x => new { x.RoleId, x.StaffId });
-            #endregion
+            modelBuilder.Entity<EventEventType>().HasKey(x => new { x.EventId, x.EventTypeId });
+            modelBuilder.Entity<EventEventType>().HasOne(x => x.EventType)
+                                                  .WithMany(x => x.Events)
+                                                  .HasForeignKey(x => x.EventTypeId);
+            modelBuilder.Entity<EventEventType>().HasOne(x => x.Event)
+                                                  .WithMany(x => x.EventTypes)
+                                                  .HasForeignKey(x => x.EventId);
+
+            modelBuilder.Entity<RoleStaff>().HasKey(x => new { x.RoleId, x.StaffId });
+            modelBuilder.Entity<RoleStaff>().HasOne(x => x.Staff)
+                                                  .WithMany(x => x.Roles)
+                                                  .HasForeignKey(x => x.StaffId);
+            modelBuilder.Entity<RoleStaff>().HasOne(x => x.Role)
+                                                  .WithMany(x => x.Staff)
+                                                  .HasForeignKey(x => x.RoleId);
+
+            //#region Credential Staff
+            //modelBuilder.Entity<CredentialStaff>()
+            //.HasKey(x => new { x.CredentialId, x.StaffId });
+            //#endregion
+
+            //#region Event EventType
+            //modelBuilder.Entity<EventEventType>()
+            //.HasKey(x => new { x.EventId, x.EventTypeId });
+            //#endregion
+
+            //#region Property Staff
+            //modelBuilder.Entity<PropertyStaff>()
+            //.HasKey(x => new { x.PropertyId, x.StaffId });
+            //#endregion
+
+            //#region RefreshToken Staff
+            //modelBuilder.Entity<RefreshTokenStaff>()
+            //.HasKey(x => new { x.RefreshTokenId, x.StaffId });
+            //#endregion
+
+            //#region Role Staff
+            //modelBuilder.Entity<RoleStaff>()
+            //.HasKey(x => new { x.RoleId, x.StaffId });
+            //#endregion
 
             #region Add Data
             Property glendale = new Property("gerryhazelton@gmail.com");
@@ -275,6 +323,11 @@ namespace TempleVolunteerAPI.Repository
                 gerry, gerry2
             );
 
+            RoleStaff roleStaff = new RoleStaff { RoleId = 1, StaffId = 1, PropertyId = 1 };
+            modelBuilder.Entity<RoleStaff>().HasData(
+              roleStaff
+            );
+
             //modelBuilder.Entity<RoleStaff>().HasData(
             //    new RoleStaff() { RoleId = 1, StaffId = 1, PropertyId = 1 },
             //    new RoleStaff() { RoleId = 4, StaffId = 2, PropertyId = 2 }
@@ -311,100 +364,100 @@ namespace TempleVolunteerAPI.Repository
                 }
             );
 
-            //modelBuilder.Entity<Credential>().HasData(
-            //    new Credential
-            //    {
-            //        CredentialId = 1,
-            //        Name = "CPR",
-            //        Description = "CRP Certification",
-            //        Note = "There are no notes",
-            //        CompletedDate = DateTime.Now,
-            //        PropertyId = 1,
-            //        CreatedBy = "gerryhazelton@gmail.com",
-            //        CreatedDate = DateTime.UtcNow,
-            //        IsActive = true,
-            //        IsHidden = false,
-            //    }
-            //);
+            modelBuilder.Entity<Credential>().HasData(
+                new Credential
+                {
+                    CredentialId = 1,
+                    Name = "CPR",
+                    Description = "CRP Certification",
+                    Note = "There are no notes",
+                    CompletedDate = DateTime.Now,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
 
-            //modelBuilder.Entity<Document>().HasData(
-            //    new Document
-            //    {
-            //        DocumentId = 1,
-            //        Name = "Annual Event List",
-            //        Description = "A list of events for the year",
-            //        Note = "There are no notes",
-            //        PropertyId = 1,
-            //        CreatedBy = "gerryhazelton@gmail.com",
-            //        CreatedDate = DateTime.UtcNow,
-            //        IsActive = true,
-            //        IsHidden = false,
-            //    }
-            //);
+            modelBuilder.Entity<Document>().HasData(
+                new Document
+                {
+                    DocumentId = 1,
+                    Name = "Annual Event List",
+                    Description = "A list of events for the year",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
 
-            //modelBuilder.Entity<Event>().HasData(
-            //    new Event
-            //    {
-            //        EventId = 1,
-            //        Name = "Master's Birthday",
-            //        Description = "Master's birthday celebration",
-            //        Note = "There are no notes",
-            //        StartDate = DateTime.Now,
-            //        EndDate = DateTime.Now.AddDays(1),
-            //        PropertyId = 1,
-            //        CreatedBy = "gerryhazelton@gmail.com",
-            //        CreatedDate = DateTime.UtcNow,
-            //        IsActive = true,
-            //        IsHidden = false,
-            //    }
-            //);
+            modelBuilder.Entity<Event>().HasData(
+                new Event
+                {
+                    EventId = 1,
+                    Name = "Master's Birthday",
+                    Description = "Master's birthday celebration",
+                    Note = "There are no notes",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(1),
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
 
-            //modelBuilder.Entity<EventTask>().HasData(
-            //    new EventTask
-            //    {
-            //        EventTaskId = 1,
-            //        Name = "Table setup",
-            //        Description = "Setting up tables",
-            //        Note = "There are no notes",
-            //        PropertyId = 1,
-            //        CreatedBy = "gerryhazelton@gmail.com",
-            //        CreatedDate = DateTime.UtcNow,
-            //        IsActive = true,
-            //        IsHidden = false,
-            //    }
-            //);
+            modelBuilder.Entity<EventTask>().HasData(
+                new EventTask
+                {
+                    EventTaskId = 1,
+                    Name = "Table setup",
+                    Description = "Setting up tables",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
 
-            //modelBuilder.Entity<EventType>().HasData(
-            //    new EventType
-            //    {
-            //        EventTypeId = 1,
-            //        Name = "Birthday",
-            //        Description = "Birthday event",
-            //        Note = "There are no notes",
-            //        PropertyId = 1,
-            //        CreatedBy = "gerryhazelton@gmail.com",
-            //        CreatedDate = DateTime.UtcNow,
-            //        IsActive = true,
-            //        IsHidden = false,
-            //    }
-            //);
+            modelBuilder.Entity<EventType>().HasData(
+                new EventType
+                {
+                    EventTypeId = 1,
+                    Name = "Birthday",
+                    Description = "Birthday event",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
 
-            //modelBuilder.Entity<Message>().HasData(
-            //    new Message
-            //    {
-            //        MessageId = 1,
-            //        From = "gerryhazelton@gmail.com",
-            //        To = "janedoe@gmail.com",
-            //        Subject = "Hello",
-            //        MessageSent = "This is my message",
-            //        PropertyId = 1,
-            //        StaffId = 1,
-            //        CreatedBy = "gerryhazelton@gmail.com",
-            //        CreatedDate = DateTime.UtcNow,
-            //        IsActive = true,
-            //        IsHidden = false,
-            //    }
-            //);
+            modelBuilder.Entity<Message>().HasData(
+                new Message
+                {
+                    MessageId = 1,
+                    From = "gerryhazelton@gmail.com",
+                    To = "janedoe@gmail.com",
+                    Subject = "Hello",
+                    MessageSent = "This is my message",
+                    PropertyId = 1,
+                    StaffId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
 
             modelBuilder.Entity<SupplyItem>().HasData(
                 new SupplyItem

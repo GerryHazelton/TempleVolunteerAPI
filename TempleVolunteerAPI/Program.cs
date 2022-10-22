@@ -5,7 +5,6 @@ using TempleVolunteerAPI.Service;
 using System.Text;
 using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Repository;
-using SRFSDP.Api.Repository;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
 
@@ -41,7 +40,6 @@ builder.Services.AddTransient(typeof(IAreaService), typeof(AreaService));
 builder.Services.AddTransient(typeof(IAreaSupplyItemService), typeof(AreaSupplyItemService));
 builder.Services.AddTransient(typeof(ICredentialService), typeof(CredentialService));
 builder.Services.AddTransient(typeof(IDocumentService), typeof(DocumentService));
-builder.Services.AddTransient(typeof(IErrorLogService), typeof(ErrorLogService));
 builder.Services.AddTransient(typeof(IEventService), typeof(EventService));
 builder.Services.AddTransient(typeof(IEventTypeService), typeof(EventTypeService));
 builder.Services.AddTransient(typeof(IMessageService), typeof(MessageService));
@@ -50,7 +48,6 @@ builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
 builder.Services.AddTransient(typeof(IStaffService), typeof(StaffService));
 builder.Services.AddTransient(typeof(ISupplyItemService), typeof(SupplyItemService));
 builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
-//builder.Services.AddTransient(typeof(IPropertyStaffService), typeof(PropertyStaffService));
 builder.Services.AddTransient(typeof(IRoleStaffService), typeof(RoleStaffService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 #endregion
@@ -68,20 +65,16 @@ builder.Services.AddTransient(typeof(IPropertyRepository), typeof(PropertyReposi
 builder.Services.AddTransient(typeof(IRoleRepository), typeof(RoleRepository));
 builder.Services.AddTransient(typeof(IStaffRepository), typeof(StaffRepository));
 builder.Services.AddTransient(typeof(ISupplyItemRepository), typeof(SupplyItemRepository));
-//builder.Services.AddTransient(typeof(IPropertyStaffRepository), typeof(PropertyStaffRepository));
 builder.Services.AddTransient(typeof(IRoleStaffRepository), typeof(RoleStaffRepository));
-builder.Services.AddTransient(typeof(IAccountRepository), typeof(AccountRepository));
 #endregion
 
 #region Misc injection
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<IUnitOfWorkManyToMany, UnitOfWorkManyToMany>();
+builder.Services.AddScoped<IRepositoryWrapperManyToMany, RespositoryWrapperManyToMany>();
+builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 builder.Services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 builder.Services.AddTransient(typeof(IRepositoryManyToManyBase<>), typeof(RepositoryManyToManyBase<>));
-builder.Services.AddTransient(typeof(IServiceBase<>), typeof(ServiceBase<>));
-builder.Services.AddTransient(typeof(IServiceManyToManyBase<>), typeof(ServiceManyToManyBase<>));
 #endregion
 
 var sharedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Mataji22Mataji33Mataji44Mataji55Mataji66Mataji77Mataji88Mataji99Mataji00"));

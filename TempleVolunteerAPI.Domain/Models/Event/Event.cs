@@ -24,9 +24,16 @@ namespace TempleVolunteerAPI.Domain
         public bool Indefinite { get; set; }
  
         #region Dependencis
-        public virtual ICollection<EventEventType> EventsEventTypes { get; set; }
-        public int PropertyId { get; set; }
-        public virtual Property Property { get; set; }
+        public virtual ICollection<AreaEventType> Areas { get; set; }
+        public virtual ICollection<EventEventType> EventTypes { get; set; }
+
+        [ForeignKey(nameof(Area))]
+        public int? AreaId { get; set; }
+        public Area? Area { get; set; }
+        [ForeignKey(nameof(Property))]
+        public int? PropertyId { get; set; }
+        public Property? Property { get; set; }
+
         #endregion
 
         #region Constructors
@@ -39,7 +46,8 @@ namespace TempleVolunteerAPI.Domain
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
-            this.EventsEventTypes = new List<EventEventType>();
+            this.Areas = new List<AreaEventType>();
+            this.EventTypes = new List<EventEventType>();
         }
         #endregion
     }

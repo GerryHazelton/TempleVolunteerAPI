@@ -16,8 +16,9 @@ namespace TempleVolunteerAPI.Domain
         public int PropertyId { get; set; }
 
         #region Dependencies
-        public int StaffId { get; set; }
-        public virtual Staff Staff { get; set; }
+        [ForeignKey(nameof(Staff))]
+        public int? StaffId { get; set; }
+        public Staff? Staff { get; set; }
         #endregion
 
         #region Constructors

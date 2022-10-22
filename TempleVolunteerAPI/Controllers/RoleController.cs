@@ -24,58 +24,5 @@ namespace TempleVolunteerAPI.API
             _collResponse = new ServiceResponse<IList<RoleRequest>>();
             _response = new ServiceResponse<RoleResponse>();
         }
-
-        [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<RoleRequest>>> GetAllAsync(int propertyId, string userId)
-        {
-            _collResponse.Data = _mapper.Map<IList<RoleRequest>>(await ReturnCollection(propertyId, userId));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
-
-            return _collResponse;
-        }
-
-        [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<RoleResponse>> GetByIdAsync(int id, int propertyId, string userId)
-        {
-            _response.Data = _mapper.Map<RoleResponse>(await _roleService.GetByIdAsync(id, propertyId, userId));
-            _response.Success = _response.Data != null ? true : false;
-
-            return _response;
-        }
-
-        [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<RoleRequest>>> PostAsync([FromBody] RoleRequest request)
-        {
-            await _roleService.AddAsync(_mapper.Map<Role>(request), request.PropertyId, request.UpdatedBy);
-            _collResponse.Data = _mapper.Map<IList<RoleRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
-
-            return _collResponse;
-        }
-
-        [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<RoleRequest>>> PutAsync([FromBody] RoleRequest request)
-        {
-            await _roleService.UpdateAsync(_mapper.Map<Role>(request), request.PropertyId, request.CreatedBy);
-            _collResponse.Data = _mapper.Map<IList<RoleRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
-
-            return _collResponse;
-        }
-
-        [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<RoleRequest>>> DeleteAsync(MiscRequest request)
-        {
-            await _roleService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
-            _collResponse.Data = _mapper.Map<IList<RoleRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
-
-            return _collResponse;
-        }
-
-        private async Task<IList<Role>> ReturnCollection(int RoleId, string userId)
-        {
-            return await _roleService.GetAllAsync(RoleId, userId);
-        }
     }
 }

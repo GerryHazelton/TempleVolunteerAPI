@@ -1,40 +1,43 @@
-﻿using TempleVolunteerAPI.Domain;
+﻿using System.Linq.Expressions;
+using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Repository;
+using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Service
 {
-    public class SupplyItemService : ServiceBase<SupplyItem>, ISupplyItemService
+    public class SupplyItemService : ISupplyItemService
     {
-        private RepositoryResponse<SupplyItem> _repositoryResponse;
-        private readonly IUnitOfWork _uow;
-        private IErrorLogService _errorLog;
+        private readonly IRepositoryWrapper _uow;
 
-        public SupplyItemService(IUnitOfWork uow, IErrorLogService errorLog) : base(uow, errorLog)
+        public SupplyItemService(IRepositoryWrapper uow)
         {
-            _repositoryResponse = new RepositoryResponse<SupplyItem>();
-            _uow = uow;
-            _errorLog = errorLog;
+            this._uow = uow;
         }
 
-       public override async Task<IList<SupplyItem>> GetAllAsync(int propertyId, string createdBy)
+        public bool Create(SupplyItem entity, int propertyId, string userId)
         {
-            _repositoryResponse = await _uow.Repository<SupplyItem>().GetAllAsync();
+            return _uow.SupplyItems.CreateSupplyItem(entity, propertyId, userId);
+        }
 
-            if (_repositoryResponse.Error != null)
-            {
-                await _errorLog.LogError(new ErrorRequest
-                {
-                    FunctionName = "Service: GetAsync",
-                    ErrorMessage = _repositoryResponse.Error.Message,
-                    StackTrace = _repositoryResponse.Error.StackTrace,
-                    PropertyId = propertyId,
-                    CreatedBy = createdBy,
-                    CreatedDate = DateTime.UtcNow
-                });
-            }
+        public bool Delete(SupplyItem entity, int propertyId, string userId)
+        {
+            return _uow.SupplyItems.DeleteSupplyItem(entity, propertyId, userId);
+        }
 
-            return _repositoryResponse.Entities.Where(x => x.PropertyId == propertyId).ToList();
+        public IQueryable<SupplyItem> FindAll(int propertyId, string userId)
+        {
+            return _uow.SupplyItems.GetAllSupplyItems(propertyId, userId);
+        }
+
+        public IQueryable<SupplyItem> FindByCondition(Expression<Func<SupplyItem, bool>> match, int propertyId, string userId, WithDetails details)
+        {
+            return _uow.SupplyItems.GetSupplyItemByMatch(match, propertyId, userId);
+        }
+
+        public bool Update(SupplyItem entity, int propertyId, string userId)
+        {
+            return _uow.SupplyItems.UpdateSupplyItem(entity, propertyId, userId);
         }
     }
 }

@@ -22,21 +22,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("PropertyStaff", b =>
-                {
-                    b.Property<int>("PropertiesPropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StaffId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PropertiesPropertyId", "StaffId");
-
-                    b.HasIndex("StaffId");
-
-                    b.ToTable("PropertyStaff");
-                });
-
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Area", b =>
                 {
                     b.Property<int>("AreaId")
@@ -70,7 +55,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<bool>("SupplyItemsAllowed")
@@ -115,10 +100,15 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<int>("EventTypeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("EventId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
                     b.HasKey("AreaId", "EventTypeId");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("EventTypeId");
 
@@ -173,7 +163,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
@@ -193,7 +183,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3470),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9881),
                             Description = "This is a garden tool category",
                             IsActive = true,
                             IsHidden = false,
@@ -252,9 +242,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StaffId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -265,9 +252,22 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.HasIndex("StaffId");
-
                     b.ToTable("Credentials", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CredentialId = 1,
+                            CompletedDate = new DateTime(2022, 10, 22, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9900),
+                            CreatedBy = "gerryhazelton@gmail.com",
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9903),
+                            Description = "CRP Certification",
+                            IsActive = true,
+                            IsHidden = false,
+                            Name = "CPR",
+                            Note = "There are no notes",
+                            PropertyId = 1
+                        });
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.CredentialStaff", b =>
@@ -285,7 +285,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("CredentialsStaff", (string)null);
+                    b.ToTable("CredentialStaff");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Document", b =>
@@ -342,6 +342,20 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("Documents", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            DocumentId = 1,
+                            CreatedBy = "gerryhazelton@gmail.com",
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9975),
+                            Description = "A list of events for the year",
+                            IsActive = true,
+                            IsHidden = false,
+                            Name = "Annual Event List",
+                            Note = "There are no notes",
+                            PropertyId = 1
+                        });
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.ErrorLog", b =>
@@ -405,6 +419,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"), 1L, 1);
 
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -436,7 +453,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("StartDate")
@@ -450,9 +467,28 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasKey("EventId");
 
+                    b.HasIndex("AreaId");
+
                     b.HasIndex("PropertyId");
 
                     b.ToTable("Events", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            EventId = 1,
+                            CreatedBy = "gerryhazelton@gmail.com",
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9996),
+                            Description = "Master's birthday celebration",
+                            EndDate = new DateTime(2022, 10, 23, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9994),
+                            Indefinite = false,
+                            IsActive = true,
+                            IsHidden = false,
+                            Name = "Master's Birthday",
+                            Note = "There are no notes",
+                            PropertyId = 1,
+                            StartDate = new DateTime(2022, 10, 22, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9992)
+                        });
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.EventEventType", b =>
@@ -470,7 +506,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasIndex("EventTypeId");
 
-                    b.ToTable("EventsEventTypes", (string)null);
+                    b.ToTable("EventEventType");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.EventTask", b =>
@@ -506,7 +542,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
@@ -520,6 +556,20 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("EventTask", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            EventTaskId = 1,
+                            CreatedBy = "gerryhazelton@gmail.com",
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(11),
+                            Description = "Setting up tables",
+                            IsActive = true,
+                            IsHidden = false,
+                            Name = "Table setup",
+                            Note = "There are no notes",
+                            PropertyId = 1
+                        });
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.EventType", b =>
@@ -555,7 +605,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
@@ -569,6 +619,20 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("EventTypes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            EventTypeId = 1,
+                            CreatedBy = "gerryhazelton@gmail.com",
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(25),
+                            Description = "Birthday event",
+                            IsActive = true,
+                            IsHidden = false,
+                            Name = "Birthday",
+                            Note = "There are no notes",
+                            PropertyId = 1
+                        });
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Message", b =>
@@ -628,6 +692,22 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("Messages", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            MessageId = 1,
+                            CreatedBy = "gerryhazelton@gmail.com",
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(40),
+                            From = "gerryhazelton@gmail.com",
+                            IsActive = true,
+                            IsHidden = false,
+                            MessageSent = "This is my message",
+                            PropertyId = 1,
+                            StaffId = 1,
+                            Subject = "Hello",
+                            To = "janedoe@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Property", b =>
@@ -724,7 +804,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Glendale",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3213),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9521),
                             EmailAddress = "Glendale@Srf.com",
                             FaxNumber = "333-333-3333",
                             IsActive = true,
@@ -744,7 +824,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Encinitas",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3218),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9534),
                             EmailAddress = "Encinitas@Srf.com",
                             FaxNumber = "666-666-6666",
                             IsActive = true,
@@ -756,21 +836,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             State = "CA",
                             Website = "https://www.encinitastemple.org"
                         });
-                });
-
-            modelBuilder.Entity("TempleVolunteerAPI.Domain.PropertyStaff", b =>
-                {
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StaffId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PropertyId", "StaffId");
-
-                    b.HasIndex("StaffId");
-
-                    b.ToTable("PropertiesStaff", (string)null);
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.RefreshToken", b =>
@@ -790,7 +855,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StaffId")
+                    b.Property<int?>("StaffId")
                         .HasColumnType("int");
 
                     b.Property<string>("TokenHash")
@@ -811,21 +876,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.HasIndex("StaffId");
 
                     b.ToTable("RefreshTokens", (string)null);
-                });
-
-            modelBuilder.Entity("TempleVolunteerAPI.Domain.RefreshTokenStaff", b =>
-                {
-                    b.Property<int>("RefreshTokenId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StaffId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RefreshTokenId", "StaffId");
-
-                    b.HasIndex("StaffId");
-
-                    b.ToTable("RefreshTokensStaff", (string)null);
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Role", b =>
@@ -864,9 +914,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StaffId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -877,8 +924,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.HasIndex("StaffId");
-
                     b.ToTable("Roles", (string)null);
 
                     b.HasData(
@@ -886,7 +931,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3372),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9789),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -897,7 +942,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3376),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9792),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -908,7 +953,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3379),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9795),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -919,7 +964,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3383),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9798),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -943,7 +988,15 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("RolesStaff", (string)null);
+                    b.ToTable("RoleStaff");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            StaffId = 1,
+                            PropertyId = 1
+                        });
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Staff", b =>
@@ -1062,7 +1115,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<bool>("RememberMe")
@@ -1090,6 +1143,8 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasKey("StaffId");
 
+                    b.HasIndex("PropertyId");
+
                     b.ToTable("Staff", (string)null);
 
                     b.HasData(
@@ -1105,7 +1160,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Carlsbad",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3419),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9829),
                             EmailAddress = "gerryhazelton@gmail.com",
                             EmailConfirmed = true,
                             FirstAid = true,
@@ -1126,7 +1181,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             PropertyId = 1,
                             RememberMe = true,
                             State = "CA",
-                            VerifiedDate = new DateTime(2022, 10, 11, 5, 25, 4, 828, DateTimeKind.Local).AddTicks(3415)
+                            VerifiedDate = new DateTime(2022, 10, 22, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9826)
                         },
                         new
                         {
@@ -1140,7 +1195,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Carlsbad",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3428),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9838),
                             EmailAddress = "gerryhazelton@gmail.com",
                             EmailConfirmed = false,
                             FirstAid = true,
@@ -1161,7 +1216,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             PropertyId = 2,
                             RememberMe = true,
                             State = "CA",
-                            VerifiedDate = new DateTime(2022, 10, 11, 5, 25, 4, 828, DateTimeKind.Local).AddTicks(3425)
+                            VerifiedDate = new DateTime(2022, 10, 22, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9835)
                         });
                 });
 
@@ -1205,7 +1260,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -1239,7 +1294,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "23A",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3492),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(56),
                             Description = "Flathead shovel",
                             IsActive = true,
                             IsHidden = false,
@@ -1254,7 +1309,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "24A",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3509),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(71),
                             Description = "Flimsy rake",
                             IsActive = true,
                             IsHidden = false,
@@ -1269,7 +1324,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "10C",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3524),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(82),
                             Description = "Gas driven",
                             IsActive = true,
                             IsHidden = false,
@@ -1284,7 +1339,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "13C",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3537),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(94),
                             Description = "Pick",
                             IsActive = true,
                             IsHidden = false,
@@ -1299,7 +1354,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "16B",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2022, 10, 11, 12, 25, 4, 828, DateTimeKind.Utc).AddTicks(3550),
+                            CreatedDate = new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(104),
                             Description = "Gas driven",
                             IsActive = true,
                             IsHidden = false,
@@ -1310,28 +1365,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PropertyStaff", b =>
-                {
-                    b.HasOne("TempleVolunteerAPI.Domain.Property", null)
-                        .WithMany()
-                        .HasForeignKey("PropertiesPropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TempleVolunteerAPI.Domain.Staff", null)
-                        .WithMany()
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Area", b =>
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
                         .WithMany("Areas")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PropertyId");
 
                     b.Navigation("Property");
                 });
@@ -1339,13 +1377,13 @@ namespace TempleVolunteerAPI.Repository.Migrations
             modelBuilder.Entity("TempleVolunteerAPI.Domain.AreaEventTask", b =>
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Area", "Area")
-                        .WithMany("AreasEventTasks")
+                        .WithMany("EventTasks")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TempleVolunteerAPI.Domain.EventTask", "EventTask")
-                        .WithMany("AreasEventTasks")
+                        .WithMany("Areas")
                         .HasForeignKey("EventTaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1358,13 +1396,17 @@ namespace TempleVolunteerAPI.Repository.Migrations
             modelBuilder.Entity("TempleVolunteerAPI.Domain.AreaEventType", b =>
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Area", "Area")
-                        .WithMany("AreaEventTypes")
+                        .WithMany("EventTypes")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TempleVolunteerAPI.Domain.Event", null)
+                        .WithMany("Areas")
+                        .HasForeignKey("EventId");
+
                     b.HasOne("TempleVolunteerAPI.Domain.EventType", "EventType")
-                        .WithMany("AreasEventTypes")
+                        .WithMany("Areas")
                         .HasForeignKey("EventTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1377,13 +1419,13 @@ namespace TempleVolunteerAPI.Repository.Migrations
             modelBuilder.Entity("TempleVolunteerAPI.Domain.AreaSupplyItem", b =>
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Area", "Area")
-                        .WithMany("AreasSupplyItems")
+                        .WithMany("SupplyItems")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TempleVolunteerAPI.Domain.SupplyItem", "SupplyItem")
-                        .WithMany("AreasSupplyItems")
+                        .WithMany("Areas")
                         .HasForeignKey("SupplyItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1397,9 +1439,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
                         .WithMany("Categories")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PropertyId");
 
                     b.Navigation("Property");
                 });
@@ -1412,23 +1452,19 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TempleVolunteerAPI.Domain.Staff", null)
-                        .WithMany("Credentials")
-                        .HasForeignKey("StaffId");
-
                     b.Navigation("Property");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.CredentialStaff", b =>
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Credential", "Credential")
-                        .WithMany("CredentialsStaff")
+                        .WithMany("Staff")
                         .HasForeignKey("CredentialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TempleVolunteerAPI.Domain.Staff", "Staff")
-                        .WithMany()
+                        .WithMany("Credentials")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1451,11 +1487,15 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Event", b =>
                 {
+                    b.HasOne("TempleVolunteerAPI.Domain.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId");
+
                     b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
                         .WithMany("Events")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PropertyId");
+
+                    b.Navigation("Area");
 
                     b.Navigation("Property");
                 });
@@ -1463,13 +1503,13 @@ namespace TempleVolunteerAPI.Repository.Migrations
             modelBuilder.Entity("TempleVolunteerAPI.Domain.EventEventType", b =>
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Event", "Event")
-                        .WithMany("EventsEventTypes")
+                        .WithMany("EventTypes")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TempleVolunteerAPI.Domain.EventType", "EventType")
-                        .WithMany("EventsEventTypes")
+                        .WithMany("Events")
                         .HasForeignKey("EventTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1483,9 +1523,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
                         .WithMany("EventTasks")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PropertyId");
 
                     b.Navigation("Property");
                 });
@@ -1494,9 +1532,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
                         .WithMany("EventTypes")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PropertyId");
 
                     b.Navigation("Property");
                 });
@@ -1512,25 +1548,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Navigation("Property");
                 });
 
-            modelBuilder.Entity("TempleVolunteerAPI.Domain.PropertyStaff", b =>
-                {
-                    b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
-                        .WithMany()
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TempleVolunteerAPI.Domain.Staff", "Staff")
-                        .WithMany()
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Property");
-
-                    b.Navigation("Staff");
-                });
-
             modelBuilder.Entity("TempleVolunteerAPI.Domain.RefreshToken", b =>
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Property", null)
@@ -1541,28 +1558,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasOne("TempleVolunteerAPI.Domain.Staff", "Staff")
                         .WithMany("RefreshTokens")
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Staff");
-                });
-
-            modelBuilder.Entity("TempleVolunteerAPI.Domain.RefreshTokenStaff", b =>
-                {
-                    b.HasOne("TempleVolunteerAPI.Domain.RefreshToken", "RefreshToken")
-                        .WithMany()
-                        .HasForeignKey("RefreshTokenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TempleVolunteerAPI.Domain.Staff", "Staff")
-                        .WithMany()
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RefreshToken");
+                        .HasForeignKey("StaffId");
 
                     b.Navigation("Staff");
                 });
@@ -1575,23 +1571,19 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TempleVolunteerAPI.Domain.Staff", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("StaffId");
-
                     b.Navigation("Property");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.RoleStaff", b =>
                 {
                     b.HasOne("TempleVolunteerAPI.Domain.Role", "Role")
-                        .WithMany("RolesStaff")
+                        .WithMany("Staff")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TempleVolunteerAPI.Domain.Staff", "Staff")
-                        .WithMany()
+                        .WithMany("Roles")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1599,6 +1591,15 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("Staff");
+                });
+
+            modelBuilder.Entity("TempleVolunteerAPI.Domain.Staff", b =>
+                {
+                    b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
+                        .WithMany("Staff")
+                        .HasForeignKey("PropertyId");
+
+                    b.Navigation("Property");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.SupplyItem", b =>
@@ -1611,9 +1612,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.HasOne("TempleVolunteerAPI.Domain.Property", "Property")
                         .WithMany("SupplyItems")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PropertyId");
 
                     b.Navigation("Category");
 
@@ -1622,33 +1621,35 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Area", b =>
                 {
-                    b.Navigation("AreaEventTypes");
+                    b.Navigation("EventTasks");
 
-                    b.Navigation("AreasEventTasks");
+                    b.Navigation("EventTypes");
 
-                    b.Navigation("AreasSupplyItems");
+                    b.Navigation("SupplyItems");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Credential", b =>
                 {
-                    b.Navigation("CredentialsStaff");
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Event", b =>
                 {
-                    b.Navigation("EventsEventTypes");
+                    b.Navigation("Areas");
+
+                    b.Navigation("EventTypes");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.EventTask", b =>
                 {
-                    b.Navigation("AreasEventTasks");
+                    b.Navigation("Areas");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.EventType", b =>
                 {
-                    b.Navigation("AreasEventTypes");
+                    b.Navigation("Areas");
 
-                    b.Navigation("EventsEventTypes");
+                    b.Navigation("Events");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Property", b =>
@@ -1673,12 +1674,14 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
                     b.Navigation("Roles");
 
+                    b.Navigation("Staff");
+
                     b.Navigation("SupplyItems");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Role", b =>
                 {
-                    b.Navigation("RolesStaff");
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.Staff", b =>
@@ -1692,7 +1695,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
 
             modelBuilder.Entity("TempleVolunteerAPI.Domain.SupplyItem", b =>
                 {
-                    b.Navigation("AreasSupplyItems");
+                    b.Navigation("Areas");
                 });
 #pragma warning restore 612, 618
         }

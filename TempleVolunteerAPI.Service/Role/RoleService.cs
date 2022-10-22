@@ -1,12 +1,42 @@
-﻿using TempleVolunteerAPI.Domain;
+﻿using System.Linq.Expressions;
+using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Repository;
+using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Service
 {
-    public class RoleService : ServiceBase<Role>, IRoleService
+    public class RoleService : IRoleService
     {
-        public RoleService(IUnitOfWork uow, IErrorLogService errorLog) : base(uow, errorLog)
+        private readonly IRepositoryWrapper _uow;
+
+        public RoleService(IRepositoryWrapper uow)
         {
+            this._uow = uow;
+        }
+
+        public bool Create(Role entity, int propertyId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Delete(Role entity, int propertyId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Role> FindAll(int propertyId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Role> FindByCondition(Expression<Func<Role, bool>> match, int propertyId, string userId, WithDetails details)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Update(Role entity, int propertyId, string userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

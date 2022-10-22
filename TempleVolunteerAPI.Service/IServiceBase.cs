@@ -1,14 +1,15 @@
-﻿using TempleVolunteerAPI.Domain;
+﻿using System.Linq.Expressions;
+using TempleVolunteerAPI.Domain;
+using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Service
 {
     public interface IServiceBase<T>
     {
-        Task<IList<T>> GetAllAsync(int propertyId, string createdBy);
-        Task<T> GetByIdAsync(int Id, int propertyId, string createdBy);
-        Task<T> AddAsync(T entity, int propertyId, string createdBy);
-        Task<T> UpdateAsync(T entity, int propertyId, string createdBy);
-        Task<T> DeleteAsync(int id, int propertyId, string createdBy);
-        Task ErrorLog(ErrorRequest error);
+        IQueryable<T> FindAll(int propertyId, string userId);
+        IQueryable<T> FindByCondition(Expression<Func<T, bool>> match, int propertyId, string userId, WithDetails details);
+        bool Create(T entity, int propertyId, string userId);
+        bool Update(T entity, int propertyId, string userId);
+        bool Delete(T entity, int propertyId, string userId);
     }
 }

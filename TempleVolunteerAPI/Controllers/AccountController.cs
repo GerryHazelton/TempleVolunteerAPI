@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
+using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.API
 {
@@ -131,7 +132,7 @@ namespace TempleVolunteerAPI.API
         [HttpPost("GetAllPropertiesAsync")]
         public async Task<ServiceResponse<IList<Property>>> GetAllPropertiesAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = _mapper.Map<IList<Property>>(await _propertyService.GetAllAsync(request.PropertyId, request.UserId));
+            _collResponse.Data = (IList<Property>)_propertyService.FindByCondition(x=>x.PropertyId == request.PropertyId && x.EmailAddress == request.UserId, request.PropertyId, request.UserId, WithDetails.None);
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;

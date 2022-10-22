@@ -24,58 +24,5 @@ namespace TempleVolunteerAPI.API
             _collResponse = new ServiceResponse<IList<EventTaskRequest>>();
             _response = new ServiceResponse<EventTaskResponse>();
         }
-
-        [HttpGet("GetAllAsync")]
-        public async Task<ServiceResponse<IList<EventTaskRequest>>> GetAllAsync(int propertyId, string userId)
-        {
-            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(await ReturnCollection(propertyId, userId));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
-
-            return _collResponse;
-        }
-
-        [HttpGet("GetByIdAsync")]
-        public async Task<ServiceResponse<EventTaskResponse>> GetByIdAsync(int id, int propertyId, string userId)
-        {
-            _response.Data = _mapper.Map<EventTaskResponse>(await _eventTaskService.GetByIdAsync(id, propertyId, userId));
-            _response.Success = _response.Data != null ? true : false;
-
-            return _response;
-        }
-
-        [HttpPost("PostAsync")]
-        public async Task<ServiceResponse<IList<EventTaskRequest>>> PostAsync([FromBody] EventTaskRequest request)
-        {
-            await _eventTaskService.AddAsync(_mapper.Map<EventTask>(request), request.PropertyId, request.UpdatedBy);
-            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
-
-            return _collResponse;
-        }
-
-        [HttpPut("PutAsync")]
-        public async Task<ServiceResponse<IList<EventTaskRequest>>> PutAsync([FromBody] EventTaskRequest request)
-        {
-            await _eventTaskService.UpdateAsync(_mapper.Map<EventTask>(request), request.PropertyId, request.CreatedBy);
-            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
-
-            return _collResponse;
-        }
-
-        [HttpDelete("DeleteAsync")]
-        public async Task<ServiceResponse<IList<EventTaskRequest>>> DeleteAsync(MiscRequest request)
-        {
-            await _eventTaskService.DeleteAsync(request.DeleteById, request.PropertyId, request.UserId);
-            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
-            _collResponse.Success = _collResponse.Data != null ? true : false;
-
-            return _collResponse;
-        }
-
-        private async Task<IList<EventTask>> ReturnCollection(int propertyId, string userId)
-        {
-            return await _eventTaskService.GetAllAsync(propertyId, userId);
-        }
     }
 }

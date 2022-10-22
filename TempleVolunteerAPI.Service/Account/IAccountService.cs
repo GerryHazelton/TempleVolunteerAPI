@@ -3,6 +3,8 @@ using TempleVolunteerAPI.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TempleVolunteerAPI.Domain.DTO;
+using TempleVolunteerAPI.Repository;
+using TempleVolunteerAPI.Common;
 
 namespace TempleVolunteerAPI.Service
 {
@@ -11,11 +13,11 @@ namespace TempleVolunteerAPI.Service
         Task<RegisterResponse> RegisterAsync(RegisterRequest request);
         Task<TokenResponse> LoginAsync(LoginRequest request);
         Task<RepositoryResponse<MyProfileRequest>> MyProfileAsync(MyProfileRequest request);
+        Task<ServiceResponse<Staff>> VerifyEmailAddressAsync(VerifyEmailAddressRequest request);
         Task<ServiceResponse<Staff>> ForgotPasswordAsync(ForgotPasswordRequest request);
-        Task<ServiceResponse<Staff>> ResetPasswordAsync(ResetPasswordRequest request);
         Task<ServiceResponse<Staff>> ResetForgotenPasswordAsync(ResetForgottenPasswordRequest request);
-        Task<int> RecordLoginAttempts(string userId, int propertyId);
-        Task<bool> ResetLoginAttempts(string userId, int propertyId);
-
+        Task<ServiceResponse<Staff>> ResetPasswordAsync(ResetPasswordRequest request);
+        Task RecordLoginAttempts(string userId, int propertyId);
+        Task ResetLoginAttempts(string userId, int propertyId);
     }
 }

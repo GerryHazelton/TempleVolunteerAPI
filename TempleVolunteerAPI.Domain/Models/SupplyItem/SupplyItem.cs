@@ -28,11 +28,13 @@ namespace TempleVolunteerAPI.Domain
         public byte[]? SupplyItemImage { get; set; }
 
         #region Dependencies
-        public ICollection<AreaSupplyItem> AreasSupplyItems { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
-        public int PropertyId { get; set; }
-        public virtual Property Property { get; set; }
+        public ICollection<AreaSupplyItem> Areas { get; set; }
+        [ForeignKey(nameof(Property))]
+        public int? PropertyId { get; set; }
+        public Property? Property { get; set; }
+
         #endregion
 
         #region Constructors
@@ -45,7 +47,7 @@ namespace TempleVolunteerAPI.Domain
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
-            this.AreasSupplyItems = new List<AreaSupplyItem>();
+            this.Areas = new List<AreaSupplyItem>();
         }
         #endregion
     }

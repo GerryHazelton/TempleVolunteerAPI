@@ -1,7 +1,7 @@
 ﻿using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Repository;
 
-namespace SRFSDP.Api.Repository
+namespace TempleVolunteerAPI.Repository
 {
     public class RoleStaffRepository : RepositoryManyToManyBase<RoleStaff>, IRoleStaffRepository
     {

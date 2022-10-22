@@ -6,12 +6,11 @@ namespace TempleVolunteerAPI.Repository
     public class MessageRepository : IMessageRepository
     {
         private readonly ApplicationDBContext _context;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepositoryWrapper _unitOfWork;
 
         public MessageRepository(ApplicationDBContext context)
         {
             _context = context;
-            _unitOfWork = new UnitOfWork(context);
         }
 
         public async Task<bool> AddAsync(Message message)
@@ -19,7 +18,6 @@ namespace TempleVolunteerAPI.Repository
             try
             {
                 _context.Set<Message>().Add(message);
-                await _unitOfWork.CommitAsync();
             }
             catch
             {
@@ -29,11 +27,11 @@ namespace TempleVolunteerAPI.Repository
             return true;
         }
 
-        public async Task<IList<Message>> GetAllAsync()
+        public async Task<IList<Message>> GetAllAsync(int propertyId)
         {
             try
             {
-                return await _context.Set<Message>().ToListAsync(); ;
+                return await _context.Set<Message>().Where(x=>x.PropertyId == propertyId).ToListAsync(); ;
             }
             catch (Exception ex)
             {
