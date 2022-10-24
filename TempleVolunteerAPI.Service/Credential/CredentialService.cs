@@ -14,7 +14,7 @@ namespace TempleVolunteerAPI.Service
             this._uow = uow;
         }
 
-        public bool Create(Credential entity, int propertyId, string userId)
+        public Credential Create(Credential entity, int propertyId, string userId)
         {
             throw new NotImplementedException();
         }

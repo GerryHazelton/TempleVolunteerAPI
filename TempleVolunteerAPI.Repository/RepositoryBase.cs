@@ -66,14 +66,14 @@ namespace TempleVolunteerAPI.Repository
             }
         }
 
-        public bool Create(T entity, int propertyId, string userId)
+        public T Create(T entity, int propertyId, string userId)
         {
             try
             {
                 this._context.Set<T>().Add(entity);
                 this._context.SaveChanges();
 
-                return true;
+                return entity;
             }
             catch (Exception ex)
             {
@@ -87,15 +87,18 @@ namespace TempleVolunteerAPI.Repository
                     CreatedDate = DateTime.UtcNow
                 });
 
-                return false;
+                return entity;
             }
         }
 
-        public bool Update(T entity, int propertyId, string userId)
+        public virtual bool Update(T entity, int propertyId, string userId)
         {
             try
             {
                 this._context.Set<T>().Update(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+                this._context.SaveChanges();
+
                 return true;
             }
             catch (Exception ex)
@@ -119,6 +122,8 @@ namespace TempleVolunteerAPI.Repository
             try
             {
                 this._context.Set<T>().Remove(entity);
+                this._context.SaveChanges();
+
                 return true;
             }
             catch (Exception ex)

@@ -19,15 +19,14 @@ namespace TempleVolunteerAPI.Common
 
         public enum WithDetails
         {
-            AreaEventTask,
             AreaEventType,
             AreaSupplyItem,
-            CredentialStaff,
+            StaffCredential,
             EventEventType,
             None,
             PropertyStaff,
             RefreshTokenStaff,
-            RoleStaff
+            StaffRole
         }
     }
 }

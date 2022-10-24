@@ -27,7 +27,7 @@ namespace TempleVolunteerAPI.Repository
             return FindByCondition(match, propertyId, userId);
         }
 
-        public bool CreateSupplyItem(SupplyItem supplyItem, int propertyId, string userId)
+        public SupplyItem CreateSupplyItem(SupplyItem supplyItem, int propertyId, string userId)
         {
             return Create(supplyItem, propertyId, userId);
         }

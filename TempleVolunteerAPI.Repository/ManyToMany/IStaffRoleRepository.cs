@@ -3,7 +3,7 @@ using TempleVolunteerAPI.Repository;
 
 namespace TempleVolunteerAPI.Repository
 {
-    public interface IRoleStaffRepository : IRepositoryManyToManyBase<RoleStaff>
+    public interface IStaffRoleRepository : IRepositoryManyToManyBase<StaffRole>
     {
     }
 }

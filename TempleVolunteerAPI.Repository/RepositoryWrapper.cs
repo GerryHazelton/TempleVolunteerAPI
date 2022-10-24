@@ -12,7 +12,6 @@ namespace TempleVolunteerAPI.Repository
         private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
         private IAreaRepository _area;
-        private IAreaSupplyItemRepository _areaSupplyItem;
         private ICategoryRepository _category;
         private ICredentialRepository _credential;
         private IDocumentRepository _document;
@@ -26,6 +25,12 @@ namespace TempleVolunteerAPI.Repository
         private IStaffRepository _staff;
         private ISupplyItemRepository _supplyItem;
 
+        private IAreaSupplyItemRepository _areaSupplyItem;
+        private IEventEventTypeRepository _eventEventType;
+        private IEventTypeAreaRepository _eventTypeArea;
+        private IStaffCredentialRepository _staffCredential;
+        private IStaffRoleRepository _staffRole;
+        private IPropertyStaffRepository _propertyStaff;
 
         public RepositoryWrapper(ApplicationDBContext context, IMapper mapper)
         {
@@ -43,19 +48,6 @@ namespace TempleVolunteerAPI.Repository
                 }
                 
                 return _area;
-            }
-        }
-
-        public IAreaSupplyItemRepository AreasSupplyItems
-        {
-            get
-            {
-                if (_areaSupplyItem == null)
-                {
-                    _areaSupplyItem = new AreaSupplyItemRepository(_context);
-                }
-
-                return _areaSupplyItem;
             }
         }
 
@@ -228,15 +220,81 @@ namespace TempleVolunteerAPI.Repository
             }
         }
 
-        public void Save()
+        public IAreaSupplyItemRepository AreaSupplyItems
         {
-            try
+            get
             {
-                _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
+                if (_areaSupplyItem == null)
+                {
+                    _areaSupplyItem = new AreaSupplyItemRepository(_context);
+                }
 
+                return _areaSupplyItem;
+            }
+        }
+
+        public IEventEventTypeRepository EventEventTypes
+        {
+            get
+            {
+                if (_eventEventType == null)
+                {
+                    _eventEventType = new EventEventTypeRepository(_context);
+                }
+
+                return _eventEventType;
+            }
+        }
+
+        public IEventTypeAreaRepository EventTypeAreas
+        {
+            get
+            {
+                if (_eventTypeArea == null)
+                {
+                    _eventTypeArea = new EventTypeAreaRepository(_context);
+                }
+
+                return _eventTypeArea;
+            }
+        }
+
+        public IStaffCredentialRepository StaffCredentials
+        {
+            get
+            {
+                if (_staffCredential == null)
+                {
+                    _staffCredential = new StaffCredentialRepository(_context);
+                }
+
+                return _staffCredential;
+            }
+        }
+
+        public IStaffRoleRepository StaffRoles
+        {
+            get
+            {
+                if (_staffRole == null)
+                {
+                    _staffRole = new StaffRoleRepository(_context);
+                }
+
+                return _staffRole;
+            }
+        }
+
+        public IPropertyStaffRepository PropertyStaff
+        {
+            get
+            {
+                if (_propertyStaff == null)
+                {
+                    _propertyStaff = new PropertyStaffRepository(_context);
+                }
+
+                return _propertyStaff;
             }
         }
     }

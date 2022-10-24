@@ -3,9 +3,9 @@ using TempleVolunteerAPI.Repository;
 
 namespace TempleVolunteerAPI.Repository
 {
-    public class RoleStaffRepository : RepositoryManyToManyBase<RoleStaff>, IRoleStaffRepository
+    public class StaffRoleRepository : RepositoryManyToManyBase<StaffRole>, IStaffRoleRepository
     {
-        public RoleStaffRepository(ApplicationDBContext context)
+        public StaffRoleRepository(ApplicationDBContext context)
             : base(context)
         {
         }

@@ -1,6 +1,6 @@
 ﻿namespace TempleVolunteerAPI.Domain
 {
-    public class AreaEventType
+    public class EventTypeArea
     {
         public int AreaId { get; set; }
         public Area? Area { get; set; }

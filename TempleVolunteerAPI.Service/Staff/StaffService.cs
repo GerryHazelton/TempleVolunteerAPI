@@ -38,7 +38,7 @@ namespace TempleVolunteerAPI.Service
             throw new NotImplementedException();
         }
 
-        public bool Create(Staff entity, int propertyId, string userId)
+        public Staff Create(Staff entity, int propertyId, string userId)
         {
             throw new NotImplementedException();
         }

@@ -14,7 +14,7 @@ namespace TempleVolunteerAPI.Service
             this._uow = uow;
         }
 
-        public bool Create(Document entity, int propertyId, string userId)
+        public Document Create(Document entity, int propertyId, string userId)
         {
             throw new NotImplementedException();
         }

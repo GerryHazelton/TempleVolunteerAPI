@@ -8,11 +8,6 @@
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string Note { get; set; }
-        public ICollection<EventType>? EventTypes { get; set; }
- 
-        public EventRequest()
-        {
-            this.EventTypes = new HashSet<EventType>();
-        }
+        public int[] EventTypeIds { get; set; }
     }
 }

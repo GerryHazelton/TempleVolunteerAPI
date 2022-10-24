@@ -2,7 +2,7 @@
 
 namespace TempleVolunteerAPI.Service
 {
-    public interface IRoleStaffService : IServiceManyToManyBase<RoleStaff>
+    public interface IPropertyStaffService : IServiceManyToManyBase<PropertyStaff>
     {
 
     }

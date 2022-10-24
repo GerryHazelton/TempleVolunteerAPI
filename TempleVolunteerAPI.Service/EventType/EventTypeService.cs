@@ -14,7 +14,7 @@ namespace TempleVolunteerAPI.Service
             this._uow = uow;
         }
 
-        public bool Create(EventType entity, int propertyId, string userId)
+        public EventType Create(EventType entity, int propertyId, string userId)
         {
             throw new NotImplementedException();
         }

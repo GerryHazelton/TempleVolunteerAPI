@@ -14,7 +14,7 @@ namespace TempleVolunteerAPI.Service
             this._uow = uow;
         }
 
-        public bool Create(Role entity, int propertyId, string userId)
+        public Role Create(Role entity, int propertyId, string userId)
         {
             throw new NotImplementedException();
         }

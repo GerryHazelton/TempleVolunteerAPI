@@ -30,7 +30,7 @@ namespace TempleVolunteerAPI.Repository
 
         public bool CreateRole(Role role, int propertyId, string userId)
         {
-            return Create(role, propertyId, userId);
+            return true;// Create(role, propertyId, userId);
         }
 
         public bool UpdateRole(Role role, int propertyId, string userId)

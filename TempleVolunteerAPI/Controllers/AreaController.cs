@@ -55,13 +55,14 @@ namespace TempleVolunteerAPI.API
         public ServiceResponse<IList<AreaRequest>> Post([FromBody] AreaRequest request)
         {
             Area area = _mapper.Map<Area>(request);
+            area = (Area)_areaService.Create(area, request.PropertyId, request.CreatedBy);
 
             if (request.SupplyItemIds.Length > 0)
             {
-                area.SupplyItems = GetSupplyItems(request.SupplyItemIds, request.PropertyId, request.CreatedBy);
+                area.SupplyItems = GetSupplyItems(area, request.SupplyItemIds, request.PropertyId, request.CreatedBy);
             }
 
-            _result = _areaService.Create(area, request.PropertyId, request.CreatedBy);
+            _result = _areaService.Update(area, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(request.PropertyId, request.CreatedBy));
             _collResponse.Success = _result;
 
@@ -71,15 +72,23 @@ namespace TempleVolunteerAPI.API
         [HttpPut("Put")]
         public ServiceResponse<IList<AreaRequest>> Put([FromBody] AreaRequest request)
         {
-            Area area = (Area)_areaService.FindByCondition(x => x.AreaId == request.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.AreaSupplyItem);
+            Area area = _areaService.FindByCondition(x => x.AreaId == request.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.AreaSupplyItem).FirstOrDefault();
+            area = _mapper.Map<Area>(request);
             area.SupplyItems.Clear();
+
+            var areaSupplyItems = _areaSupplyItemService.FindByCondition(x => x.AreaId == area.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.None).ToList();
+
+            foreach (AreaSupplyItem asi in areaSupplyItems)
+            {
+                _areaSupplyItemService.Delete(asi, request.PropertyId, request.UpdatedBy);
+            }
 
             if (request.SupplyItemIds.Length > 0)
             {
-                area.SupplyItems = GetSupplyItems(request.SupplyItemIds, request.PropertyId, request.UpdatedBy);
+                area.SupplyItems = GetSupplyItems(area, request.SupplyItemIds, request.PropertyId, request.UpdatedBy);
             }
 
-            _result = _areaService.Update(_mapper.Map<Area>(request), request.PropertyId, request.CreatedBy);
+            _result = _areaService.Update(area, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(request.PropertyId, request.UpdatedBy));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
@@ -89,7 +98,7 @@ namespace TempleVolunteerAPI.API
         [HttpDelete("Delete")]
         public ServiceResponse<IList<AreaRequest>> Delete(MiscRequest request)
         {
-            Area area = (Area)_areaService.FindByCondition(x => x.AreaId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.None);
+            Area area = _areaService.FindByCondition(x => x.AreaId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.AreaSupplyItem).FirstOrDefault();
 
             _result = _areaService.Delete(area, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(request.PropertyId, request.UserId));
@@ -98,20 +107,20 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        private IList<AreaSupplyItem> GetSupplyItems(int[] supplyItemIds, int propertyId, string userId)
+        private IList<AreaSupplyItem> GetSupplyItems(Area area, int[] supplyItemIds, int propertyId, string userId)
         {
             SupplyItem supplyItem;
             AreaSupplyItem addAreaSupplyItem;
-            IList<AreaSupplyItem> areasSupplyItems = new List<AreaSupplyItem>();
+            IList<AreaSupplyItem> areaSupplyItems = new List<AreaSupplyItem>();
 
             foreach (int supplyItemId in supplyItemIds)
             {
                 supplyItem = _supplyItemService.FindByCondition(x=>x.SupplyItemId == supplyItemId, propertyId, userId, WithDetails.None).FirstOrDefault();
-                addAreaSupplyItem = new AreaSupplyItem { SupplyItem = supplyItem, SupplyItemId = supplyItem.SupplyItemId };
-                areasSupplyItems.Add(addAreaSupplyItem);
+                addAreaSupplyItem = new AreaSupplyItem { Area = area, SupplyItem = supplyItem };
+                areaSupplyItems.Add(addAreaSupplyItem);
             }
 
-            return areasSupplyItems;
+            return areaSupplyItems;
         }
 
         private IList<Area> ReturnCollection(int propertyId, string userId)

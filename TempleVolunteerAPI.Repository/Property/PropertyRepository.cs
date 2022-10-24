@@ -29,7 +29,7 @@ namespace TempleVolunteerAPI.Repository
 
         public bool CreateProperty(Property property, int propertyId, string userId)
         {
-            return Create(property, propertyId, userId);
+            return true;// Create(property, propertyId, userId);
         }
 
         public bool UpdateProperty(Property property, int propertyId, string userId)

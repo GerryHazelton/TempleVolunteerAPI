@@ -20,12 +20,12 @@ namespace TempleVolunteerAPI.Domain
         public string? Note { get; set; }
 
         #region Dependencies
-        public ICollection<AreaEventTask> EventTasks { get; set; }
-        public ICollection<AreaEventType> EventTypes { get; set; }
         [ForeignKey(nameof(Property))]
         public int? PropertyId { get; set; }
         public Property? Property { get; set; }
         public ICollection<AreaSupplyItem> SupplyItems { get; set; }
+        public virtual ICollection<EventTypeArea> EventTypes { get; set; }
+
         #endregion
 
         #region Constructors
@@ -38,8 +38,6 @@ namespace TempleVolunteerAPI.Domain
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
-            this.EventTasks = new List<AreaEventTask>();
-            this.EventTypes = new List<AreaEventType>();
             this.SupplyItems = new List<AreaSupplyItem>();
         }
         #endregion

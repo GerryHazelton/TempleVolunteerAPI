@@ -22,8 +22,12 @@ namespace TempleVolunteerAPI.Repository
         IRoleRepository Roles { get; }
         IStaffRepository Staff { get; }
         ISupplyItemRepository SupplyItems { get; }
-        void Save();
 
-        IAreaSupplyItemRepository AreasSupplyItems { get; }
+        IAreaSupplyItemRepository AreaSupplyItems { get; }
+        IEventTypeAreaRepository EventTypeAreas { get; }
+        IEventEventTypeRepository EventEventTypes { get; }
+        IStaffCredentialRepository StaffCredentials { get; }
+        IStaffRoleRepository StaffRoles { get; }
+        IPropertyStaffRepository PropertyStaff { get; }
     }
 }

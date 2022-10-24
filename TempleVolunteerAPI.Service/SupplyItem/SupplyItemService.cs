@@ -15,7 +15,7 @@ namespace TempleVolunteerAPI.Service
             this._uow = uow;
         }
 
-        public bool Create(SupplyItem entity, int propertyId, string userId)
+        public SupplyItem Create(SupplyItem entity, int propertyId, string userId)
         {
             return _uow.SupplyItems.CreateSupplyItem(entity, propertyId, userId);
         }

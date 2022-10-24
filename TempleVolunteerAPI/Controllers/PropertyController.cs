@@ -53,9 +53,9 @@ namespace TempleVolunteerAPI.API
         {
             Property property = _mapper.Map<Property>(request);
 
-            _result = _propertyService.Create(property, request.PropertyId, request.CreatedBy);
+            property = _propertyService.Create(property, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.CreatedBy));
-            _collResponse.Success = _result;
+            _collResponse.Success = property != null ? true : false;
 
             return _collResponse;
         }

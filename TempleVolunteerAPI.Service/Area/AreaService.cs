@@ -8,23 +8,25 @@ namespace TempleVolunteerAPI.Service
     public class AreaService : IAreaService
     {
         private readonly IRepositoryWrapper _uow;
+        private bool _result;
 
         public AreaService(IRepositoryWrapper uow)
         {
             this._uow = uow;
         }
 
-        public bool Create(Area entity, int propertyId, string userId)
+        public Area Create(Area entity, int propertyId, string userId)
         {
-            _uow.Areas.CreateArea(entity, propertyId, userId);
-            //_uow.Save();
+            var area = _uow.Areas.CreateArea(entity, propertyId, userId);
 
-            return true;
+            return area;
         }
 
         public bool Delete(Area entity, int propertyId, string userId)
         {
-            return _uow.Areas.DeleteArea(entity, propertyId, userId);
+            _result = _uow.Areas.DeleteArea(entity, propertyId, userId);
+
+            return _result;
         }
 
         public IQueryable<Area> FindAll(int propertyId, string userId)
@@ -39,7 +41,9 @@ namespace TempleVolunteerAPI.Service
 
         public bool Update(Area entity, int propertyId, string userId)
         {
-            return _uow.Areas.UpdateArea(entity, propertyId, userId);
+            _result = _uow.Areas.UpdateArea(entity, propertyId, userId);
+
+            return _result;
         }
     }
 }

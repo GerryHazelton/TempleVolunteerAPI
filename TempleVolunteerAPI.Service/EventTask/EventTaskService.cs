@@ -14,7 +14,7 @@ namespace TempleVolunteerAPI.Service
             this._uow = uow;
         }
 
-        public bool Create(EventTask entity, int propertyId, string userId)
+        public bool IQueryable<EventTask>(EventTask entity, int propertyId, string userId)
         {
             throw new NotImplementedException();
         }
@@ -35,6 +35,11 @@ namespace TempleVolunteerAPI.Service
         }
 
         public bool Update(EventTask entity, int propertyId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public EventTask Create(EventTask entity, int propertyId, string userId)
         {
             throw new NotImplementedException();
         }

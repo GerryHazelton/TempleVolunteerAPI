@@ -445,7 +445,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CredentialStaff",
+                name: "StaffCredential",
                 columns: table => new
                 {
                     CredentialId = table.Column<int>(type: "int", nullable: false),
@@ -454,15 +454,39 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CredentialStaff", x => new { x.CredentialId, x.StaffId });
+                    table.PrimaryKey("PK_StaffCredential", x => new { x.CredentialId, x.StaffId });
                     table.ForeignKey(
-                        name: "FK_CredentialStaff_Credentials_CredentialId",
+                        name: "FK_StaffCredential_Credentials_CredentialId",
                         column: x => x.CredentialId,
                         principalTable: "Credentials",
                         principalColumn: "CredentialId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CredentialStaff_Staff_StaffId",
+                        name: "FK_StaffCredential_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
+                        principalColumn: "StaffId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PropertyStaff",
+                columns: table => new
+                {
+                    PropertyId = table.Column<int>(type: "int", nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PropertyStaff", x => new { x.PropertyId, x.StaffId });
+                    table.ForeignKey(
+                        name: "FK_PropertyStaff_Properties_PropertyId",
+                        column: x => x.PropertyId,
+                        principalTable: "Properties",
+                        principalColumn: "PropertyId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PropertyStaff_Staff_StaffId",
                         column: x => x.StaffId,
                         principalTable: "Staff",
                         principalColumn: "StaffId",
@@ -500,7 +524,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoleStaff",
+                name: "StaffRole",
                 columns: table => new
                 {
                     RoleId = table.Column<int>(type: "int", nullable: false),
@@ -509,15 +533,15 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleStaff", x => new { x.RoleId, x.StaffId });
+                    table.PrimaryKey("PK_StaffRole", x => new { x.RoleId, x.StaffId });
                     table.ForeignKey(
-                        name: "FK_RoleStaff_Roles_RoleId",
+                        name: "FK_StaffRole_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "RoleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleStaff_Staff_StaffId",
+                        name: "FK_StaffRole_Staff_StaffId",
                         column: x => x.StaffId,
                         principalTable: "Staff",
                         principalColumn: "StaffId",
@@ -581,7 +605,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AreasSupplyItems",
+                name: "AreaSupplyItems",
                 columns: table => new
                 {
                     AreaId = table.Column<int>(type: "int", nullable: false),
@@ -589,75 +613,99 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AreasSupplyItems", x => new { x.AreaId, x.SupplyItemId });
+                    table.PrimaryKey("PK_AreaSupplyItems", x => new { x.AreaId, x.SupplyItemId });
                     table.ForeignKey(
-                        name: "FK_AreasSupplyItems_Areas_AreaId",
+                        name: "FK_AreaSupplyItems_Areas_AreaId",
                         column: x => x.AreaId,
                         principalTable: "Areas",
                         principalColumn: "AreaId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AreasSupplyItems_SupplyItems_SupplyItemId",
+                        name: "FK_AreaSupplyItems_SupplyItems_SupplyItemId",
                         column: x => x.SupplyItemId,
                         principalTable: "SupplyItems",
                         principalColumn: "SupplyItemId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Properties",
-                columns: new[] { "PropertyId", "Address", "Address2", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "FaxNumber", "IsActive", "IsHidden", "Name", "Note", "PhoneNumber", "PostalCode", "State", "UpdatedBy", "UpdatedDate", "Website" },
-                values: new object[] { 1, "123 Main Street", "Suite 45", "Glendale", "US", "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9521), "Glendale@Srf.com", "333-333-3333", true, false, "Glendale Temple", "Currently, there are no notes", "222-222-2222", "91001", "CA", null, null, "https://www.glendaletemple.org" });
+            migrationBuilder.CreateTable(
+                name: "RefreshTokenStaff",
+                columns: table => new
+                {
+                    RefreshTokenId = table.Column<int>(type: "int", nullable: false),
+                    StaffId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokenStaff", x => new { x.RefreshTokenId, x.StaffId });
+                    table.ForeignKey(
+                        name: "FK_RefreshTokenStaff_RefreshTokens_RefreshTokenId",
+                        column: x => x.RefreshTokenId,
+                        principalTable: "RefreshTokens",
+                        principalColumn: "RefreshTokenId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokenStaff_Staff_StaffId",
+                        column: x => x.StaffId,
+                        principalTable: "Staff",
+                        principalColumn: "StaffId",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.InsertData(
                 table: "Properties",
                 columns: new[] { "PropertyId", "Address", "Address2", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "FaxNumber", "IsActive", "IsHidden", "Name", "Note", "PhoneNumber", "PostalCode", "State", "UpdatedBy", "UpdatedDate", "Website" },
-                values: new object[] { 2, "456 Main Street", "Suite 65", "Encinitas", "US", "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9534), "Encinitas@Srf.com", "666-666-6666", true, false, "Encinitas Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.encinitastemple.org" });
+                values: new object[] { 1, "123 Main Street", "Suite 45", "Glendale", "US", "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2561), "Glendale@Srf.com", "333-333-3333", true, false, "Glendale Temple", "Currently, there are no notes", "222-222-2222", "91001", "CA", null, null, "https://www.glendaletemple.org" });
+
+            migrationBuilder.InsertData(
+                table: "Properties",
+                columns: new[] { "PropertyId", "Address", "Address2", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "FaxNumber", "IsActive", "IsHidden", "Name", "Note", "PhoneNumber", "PostalCode", "State", "UpdatedBy", "UpdatedDate", "Website" },
+                values: new object[] { 2, "456 Main Street", "Suite 65", "Encinitas", "US", "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2565), "Encinitas@Srf.com", "666-666-6666", true, false, "Encinitas Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.encinitastemple.org" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "CategoryId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9881), "This is a garden tool category", true, false, "Garden Tool", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2864), "This is a garden tool category", true, false, "Garden Tool", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Credentials",
                 columns: new[] { "CredentialId", "CompletedDate", "CreatedBy", "CreatedDate", "CredentialFileName", "CredentialImage", "Description", "ExpireDate", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, new DateTime(2022, 10, 22, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9900), "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9903), null, null, "CRP Certification", null, true, false, "CPR", "There are no notes", 1, null, null });
+                values: new object[] { 1, new DateTime(2022, 10, 22, 8, 0, 57, 756, DateTimeKind.Local).AddTicks(2886), "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2888), null, null, "CRP Certification", null, true, false, "CPR", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Documents",
                 columns: new[] { "DocumentId", "CreatedBy", "CreatedDate", "Description", "DocumentFileName", "DocumentImage", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9975), "A list of events for the year", null, null, true, false, "Annual Event List", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2903), "A list of events for the year", null, null, true, false, "Annual Event List", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "EventTask",
                 columns: new[] { "EventTaskId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(11), "Setting up tables", true, false, "Table setup", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2943), "Setting up tables", true, false, "Table setup", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "EventTypes",
                 columns: new[] { "EventTypeId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(25), "Birthday event", true, false, "Birthday", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(3008), "Birthday event", true, false, "Birthday", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Events",
                 columns: new[] { "EventId", "AreaId", "CreatedBy", "CreatedDate", "Description", "EndDate", "Indefinite", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "StartDate", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, null, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9996), "Master's birthday celebration", new DateTime(2022, 10, 23, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9994), false, true, false, "Master's Birthday", "There are no notes", 1, new DateTime(2022, 10, 22, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9992), null, null });
+                values: new object[] { 1, null, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2925), "Master's birthday celebration", new DateTime(2022, 10, 23, 8, 0, 57, 756, DateTimeKind.Local).AddTicks(2922), false, true, false, "Master's Birthday", "There are no notes", 1, new DateTime(2022, 10, 22, 8, 0, 57, 756, DateTimeKind.Local).AddTicks(2921), null, null });
 
             migrationBuilder.InsertData(
                 table: "Messages",
                 columns: new[] { "MessageId", "CreatedBy", "CreatedDate", "From", "IsActive", "IsHidden", "MessageSent", "PropertyId", "StaffId", "Subject", "To", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(40), "gerryhazelton@gmail.com", true, false, "This is my message", 1, 1, "Hello", "janedoe@gmail.com", null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(3029), "gerryhazelton@gmail.com", true, false, "This is my message", 1, 1, "Hello", "janedoe@gmail.com", null, null });
 
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "RoleId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9789), "Admin role has full prviliedges", true, false, "Admin", null, 1, null, null },
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9792), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 1, null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9795), "Admin role has full prviliedges", true, false, "Admin", null, 2, null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9798), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 2, null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2769), "Admin role has full prviliedges", true, false, "Admin", null, 1, null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2771), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 1, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2774), "Admin role has full prviliedges", true, false, "Admin", null, 2, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2777), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 2, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -665,12 +713,12 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "StaffId", "AcceptTerms", "Address", "Address2", "CPR", "CanSendMessages", "CanViewDocuments", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "EmailConfirmed", "FirstAid", "FirstName", "Gender", "IsActive", "IsHidden", "IsLockedOut", "IsVerified", "Kriyaban", "LastName", "LessonStudent", "LoginAttempts", "Note", "Password", "PasswordReset", "PasswordSalt", "PhoneNumber", "PostalCode", "PropertyId", "RememberMe", "StaffFileName", "StaffImage", "State", "UpdatedBy", "UpdatedDate", "VerifiedDate" },
                 values: new object[,]
                 {
-                    { 1, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9829), "gerryhazelton@gmail.com", true, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=", null, "371952==", "760-444-4444", "92009", 1, true, null, null, "CA", null, null, new DateTime(2022, 10, 22, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9826) },
-                    { 2, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 730, DateTimeKind.Utc).AddTicks(9838), "gerryhazelton@gmail.com", false, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=", null, "371952==", "760-444-4444", "92009", 2, true, null, null, "CA", null, null, new DateTime(2022, 10, 22, 5, 29, 15, 730, DateTimeKind.Local).AddTicks(9835) }
+                    { 1, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2813), "gerryhazelton@gmail.com", true, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=", null, "371952==", "760-444-4444", "92009", 1, true, null, null, "CA", null, null, new DateTime(2022, 10, 22, 8, 0, 57, 756, DateTimeKind.Local).AddTicks(2810) },
+                    { 2, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(2821), "gerryhazelton@gmail.com", false, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=", null, "371952==", "760-444-4444", "92009", 2, true, null, null, "CA", null, null, new DateTime(2022, 10, 22, 8, 0, 57, 756, DateTimeKind.Local).AddTicks(2819) }
                 });
 
             migrationBuilder.InsertData(
-                table: "RoleStaff",
+                table: "StaffRole",
                 columns: new[] { "RoleId", "StaffId", "PropertyId" },
                 values: new object[] { 1, 1, 1 });
 
@@ -679,11 +727,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "SupplyItemId", "BinNumber", "CategoryId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "Quantity", "SupplyItemFileName", "SupplyItemImage", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "23A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(56), "Flathead shovel", true, false, "Shovel", "No notes", 1, 5, null, null, null, null },
-                    { 2, "24A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(71), "Flimsy rake", true, false, "Rake", "No notes", 1, 2, null, null, null, null },
-                    { 3, "10C", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(82), "Gas driven", true, false, "Lawn Mower", "No notes", 1, 1, null, null, null, null },
-                    { 4, "13C", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(94), "Pick", true, false, "Pick", "No notes", 1, 1, null, null, null, null },
-                    { 5, "16B", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 12, 29, 15, 731, DateTimeKind.Utc).AddTicks(104), "Gas driven", true, false, "Leaf Blower", "No notes", 1, 1, null, null, null, null }
+                    { 1, "23A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(3052), "Flathead shovel", true, false, "Shovel", "No notes", 1, 5, null, null, null, null },
+                    { 2, "24A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(3066), "Flimsy rake", true, false, "Rake", "No notes", 1, 2, null, null, null, null },
+                    { 3, "10C", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(3078), "Gas driven", true, false, "Lawn Mower", "No notes", 1, 1, null, null, null, null },
+                    { 4, "13C", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(3090), "Pick", true, false, "Pick", "No notes", 1, 1, null, null, null, null },
+                    { 5, "16B", 1, "gerryhazelton@gmail.com", new DateTime(2022, 10, 22, 15, 0, 57, 756, DateTimeKind.Utc).AddTicks(3101), "Gas driven", true, false, "Leaf Blower", "No notes", 1, 1, null, null, null, null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -707,8 +755,8 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 column: "EventTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AreasSupplyItems_SupplyItemId",
-                table: "AreasSupplyItems",
+                name: "IX_AreaSupplyItems_SupplyItemId",
+                table: "AreaSupplyItems",
                 column: "SupplyItemId");
 
             migrationBuilder.CreateIndex(
@@ -722,8 +770,8 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CredentialStaff_StaffId",
-                table: "CredentialStaff",
+                name: "IX_StaffCredential_StaffId",
+                table: "StaffCredential",
                 column: "StaffId");
 
             migrationBuilder.CreateIndex(
@@ -762,6 +810,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PropertyStaff_StaffId",
+                table: "PropertyStaff",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_PropertyId",
                 table: "RefreshTokens",
                 column: "PropertyId");
@@ -772,13 +825,18 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 column: "StaffId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokenStaff_StaffId",
+                table: "RefreshTokenStaff",
+                column: "StaffId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Roles_PropertyId",
                 table: "Roles",
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleStaff_StaffId",
-                table: "RoleStaff",
+                name: "IX_StaffRole_StaffId",
+                table: "StaffRole",
                 column: "StaffId");
 
             migrationBuilder.CreateIndex(
@@ -806,10 +864,10 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 name: "AreasEventTypes");
 
             migrationBuilder.DropTable(
-                name: "AreasSupplyItems");
+                name: "AreaSupplyItems");
 
             migrationBuilder.DropTable(
-                name: "CredentialStaff");
+                name: "StaffCredential");
 
             migrationBuilder.DropTable(
                 name: "Documents");
@@ -824,10 +882,13 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "RefreshTokens");
+                name: "PropertyStaff");
 
             migrationBuilder.DropTable(
-                name: "RoleStaff");
+                name: "RefreshTokenStaff");
+
+            migrationBuilder.DropTable(
+                name: "StaffRole");
 
             migrationBuilder.DropTable(
                 name: "EventTask");
@@ -845,16 +906,19 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 name: "EventTypes");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "Staff");
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Areas");
+
+            migrationBuilder.DropTable(
+                name: "Staff");
 
             migrationBuilder.DropTable(
                 name: "Properties");

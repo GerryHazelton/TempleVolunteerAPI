@@ -29,19 +29,9 @@ namespace TempleVolunteerAPI.Repository
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<SupplyItem> SupplyItems { get; set; }
 
-        public virtual DbSet<AreaEventTask> AreasEventTasks { get; set; }
-        public virtual DbSet<AreaEventType> AreasEventTypes { get; set; }
-        public virtual DbSet<AreaSupplyItem> AreasSupplyItems { get; set; }
-        //public virtual DbSet<CredentialStaff> CredentialsStaff { get; set; }
-        //public virtual DbSet<EventEventType> EventsEventTypes { get; set; }
-        //public virtual DbSet<PropertyStaff> PropertiesStaff { get; set; }
-        //public virtual DbSet<RefreshTokenStaff> RefreshTokensStaff { get; set; }
-        //public virtual DbSet<RoleStaff> RolesStaff { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Area>().ToTable("Areas");
             modelBuilder.Entity<Category>().ToTable("Categories");
             modelBuilder.Entity<Credential>().ToTable("Credentials");
@@ -56,103 +46,46 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<Role>().ToTable("Roles");
             modelBuilder.Entity<Staff>().ToTable("Staff");
             modelBuilder.Entity<SupplyItem>().ToTable("SupplyItems");
+            modelBuilder.Entity<StaffCredential>().ToTable("CredentialsStaff");
+            modelBuilder.Entity<PropertyStaff>().ToTable("PropertiesStaff");
+            modelBuilder.Entity<RefreshTokenStaff>().ToTable("RefreshTokensStaff");
+            modelBuilder.Entity<StaffRole>().ToTable("RolesStaff");
+            modelBuilder.Entity<AreaSupplyItem>().ToTable("AreaSupplyItems");
+            modelBuilder.Entity<EventEventType>().ToTable("EventEventTypes");
+            modelBuilder.Entity<StaffCredential>().ToTable("CredentialsStaff");
+            modelBuilder.Entity<PropertyStaff>().ToTable("PropertiesStaff");
+            modelBuilder.Entity<RefreshToken>().ToTable("RefreshTokens");
+            modelBuilder.Entity<StaffRole>().ToTable("RolesStaff");
 
-            modelBuilder.Entity<AreaEventTask>().ToTable("AreasEventTasks");
-            modelBuilder.Entity<AreaEventType>().ToTable("AreasEventTypes");
-            modelBuilder.Entity<AreaSupplyItem>().ToTable("AreasSupplyItems");
-            //modelBuilder.Entity<CredentialStaff>().ToTable("CredentialsStaff");
-            //modelBuilder.Entity<EventEventType>().ToTable("EventsEventTypes");
-            //modelBuilder.Entity<PropertyStaff>().ToTable("PropertiesStaff");
-            //modelBuilder.Entity<RefreshTokenStaff>().ToTable("RefreshTokensStaff");
-            //modelBuilder.Entity<RoleStaff>().ToTable("RolesStaff");
+            #region Area SupplyItem
+            modelBuilder.Entity<AreaSupplyItem>()
+            .HasKey(x => new { x.AreaId, x.SupplyItemId });
+            #endregion
 
-            //#region Area EventTask
-            //modelBuilder.Entity<AreaEventTask>()
-            //.HasKey(x => new { x.AreaId, x.EventTaskId });
-            //#endregion
+            #region Credential Staff
+            modelBuilder.Entity<StaffCredential>()
+            .HasKey(x => new { x.CredentialId, x.StaffId });
+            #endregion
 
-            //#region Area EventType
-            //modelBuilder.Entity<AreaEventType>()
-            //.HasKey(x => new { x.AreaId, x.EventTypeId });
-            //#endregion
+            #region Event EventType
+            modelBuilder.Entity<EventEventType>()
+            .HasKey(x => new { x.EventId, x.EventTypeId });
+            #endregion
 
-            //#region Area SupplyItem
-            //modelBuilder.Entity<AreaSupplyItem>()
-            //.HasKey(x => new { x.AreaId, x.SupplyItemId });
-            //#endregion
+            #region Property Staff
+            modelBuilder.Entity<PropertyStaff>()
+            .HasKey(x => new { x.PropertyId, x.StaffId });
+            #endregion
 
-            modelBuilder.Entity<AreaEventTask>().HasKey(x => new { x.AreaId, x.EventTaskId });
-            modelBuilder.Entity<AreaEventTask>().HasOne(x => x.EventTask)
-                                                  .WithMany(x => x.Areas)
-                                                  .HasForeignKey(x => x.EventTaskId);
-            modelBuilder.Entity<AreaEventTask>().HasOne(x => x.Area)
-                                                  .WithMany(x => x.EventTasks)
-                                                  .HasForeignKey(x => x.AreaId);
+            #region RefreshToken Staff
+            modelBuilder.Entity<RefreshTokenStaff>()
+            .HasKey(x => new { x.RefreshTokenId, x.StaffId });
+            #endregion
 
-            modelBuilder.Entity<AreaEventType>().HasKey(x => new { x.AreaId, x.EventTypeId });
-            modelBuilder.Entity<AreaEventType>().HasOne(x => x.EventType)
-                                                  .WithMany(x => x.Areas)
-                                                  .HasForeignKey(x => x.EventTypeId);
-            modelBuilder.Entity<AreaEventType>().HasOne(x => x.Area)
-                                                  .WithMany(x => x.EventTypes)
-                                                  .HasForeignKey(x => x.AreaId);
-
-            modelBuilder.Entity<AreaSupplyItem>().HasKey(x => new { x.AreaId, x.SupplyItemId });
-            modelBuilder.Entity<AreaSupplyItem>().HasOne(x => x.SupplyItem)
-                                                  .WithMany(x => x.Areas)
-                                                  .HasForeignKey(x => x.SupplyItemId);
-            modelBuilder.Entity<AreaSupplyItem>().HasOne(x => x.Area)
-                                                  .WithMany(x => x.SupplyItems)
-                                                  .HasForeignKey(x => x.AreaId);
-
-            modelBuilder.Entity<CredentialStaff>().HasKey(x => new { x.CredentialId, x.StaffId });
-            modelBuilder.Entity<CredentialStaff>().HasOne(x => x.Staff)
-                                                  .WithMany(x => x.Credentials)
-                                                  .HasForeignKey(x => x.StaffId);
-            modelBuilder.Entity<CredentialStaff>().HasOne(x => x.Credential)
-                                                  .WithMany(x => x.Staff)
-                                                  .HasForeignKey(x => x.CredentialId);
-
-            modelBuilder.Entity<EventEventType>().HasKey(x => new { x.EventId, x.EventTypeId });
-            modelBuilder.Entity<EventEventType>().HasOne(x => x.EventType)
-                                                  .WithMany(x => x.Events)
-                                                  .HasForeignKey(x => x.EventTypeId);
-            modelBuilder.Entity<EventEventType>().HasOne(x => x.Event)
-                                                  .WithMany(x => x.EventTypes)
-                                                  .HasForeignKey(x => x.EventId);
-
-            modelBuilder.Entity<RoleStaff>().HasKey(x => new { x.RoleId, x.StaffId });
-            modelBuilder.Entity<RoleStaff>().HasOne(x => x.Staff)
-                                                  .WithMany(x => x.Roles)
-                                                  .HasForeignKey(x => x.StaffId);
-            modelBuilder.Entity<RoleStaff>().HasOne(x => x.Role)
-                                                  .WithMany(x => x.Staff)
-                                                  .HasForeignKey(x => x.RoleId);
-
-            //#region Credential Staff
-            //modelBuilder.Entity<CredentialStaff>()
-            //.HasKey(x => new { x.CredentialId, x.StaffId });
-            //#endregion
-
-            //#region Event EventType
-            //modelBuilder.Entity<EventEventType>()
-            //.HasKey(x => new { x.EventId, x.EventTypeId });
-            //#endregion
-
-            //#region Property Staff
-            //modelBuilder.Entity<PropertyStaff>()
-            //.HasKey(x => new { x.PropertyId, x.StaffId });
-            //#endregion
-
-            //#region RefreshToken Staff
-            //modelBuilder.Entity<RefreshTokenStaff>()
-            //.HasKey(x => new { x.RefreshTokenId, x.StaffId });
-            //#endregion
-
-            //#region Role Staff
-            //modelBuilder.Entity<RoleStaff>()
-            //.HasKey(x => new { x.RoleId, x.StaffId });
-            //#endregion
+            #region Role Staff
+            modelBuilder.Entity<StaffRole>()
+            .HasKey(x => new { x.RoleId, x.StaffId });
+            #endregion
 
             #region Add Data
             Property glendale = new Property("gerryhazelton@gmail.com");
@@ -323,14 +256,15 @@ namespace TempleVolunteerAPI.Repository
                 gerry, gerry2
             );
 
-            RoleStaff roleStaff = new RoleStaff { RoleId = 1, StaffId = 1, PropertyId = 1 };
-            modelBuilder.Entity<RoleStaff>().HasData(
-              roleStaff
+            StaffRole roleStaff = new StaffRole { RoleId = 1, StaffId = 1 };
+            StaffRole roleStaff2 = new StaffRole { RoleId = 2, StaffId = 1 };
+            modelBuilder.Entity<StaffRole>().HasData(
+              roleStaff, roleStaff2
             );
 
-            //modelBuilder.Entity<RoleStaff>().HasData(
-            //    new RoleStaff() { RoleId = 1, StaffId = 1, PropertyId = 1 },
-            //    new RoleStaff() { RoleId = 4, StaffId = 2, PropertyId = 2 }
+            //modelBuilder.Entity<StaffRole>().HasData(
+            //    new StaffRole() { RoleId = 1, StaffId = 1, PropertyId = 1 },
+            //    new StaffRole() { RoleId = 4, StaffId = 2, PropertyId = 2 }
             //);
 
             //modelBuilder.Entity<Area>().HasData(

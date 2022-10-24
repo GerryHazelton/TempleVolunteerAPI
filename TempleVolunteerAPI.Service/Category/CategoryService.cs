@@ -14,7 +14,7 @@ namespace TempleVolunteerAPI.Service
             this._uow = uow;
         }
 
-        public bool Create(Category entity, int propertyId, string userId)
+        public Category Create(Category entity, int propertyId, string userId)
         {
             throw new NotImplementedException();
         }

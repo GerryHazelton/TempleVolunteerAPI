@@ -48,7 +48,7 @@ builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
 builder.Services.AddTransient(typeof(IStaffService), typeof(StaffService));
 builder.Services.AddTransient(typeof(ISupplyItemService), typeof(SupplyItemService));
 builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
-builder.Services.AddTransient(typeof(IRoleStaffService), typeof(RoleStaffService));
+builder.Services.AddTransient(typeof(IStaffRoleService), typeof(StaffRoleService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 #endregion
 
@@ -65,7 +65,7 @@ builder.Services.AddTransient(typeof(IPropertyRepository), typeof(PropertyReposi
 builder.Services.AddTransient(typeof(IRoleRepository), typeof(RoleRepository));
 builder.Services.AddTransient(typeof(IStaffRepository), typeof(StaffRepository));
 builder.Services.AddTransient(typeof(ISupplyItemRepository), typeof(SupplyItemRepository));
-builder.Services.AddTransient(typeof(IRoleStaffRepository), typeof(RoleStaffRepository));
+builder.Services.AddTransient(typeof(IStaffRoleRepository), typeof(StaffRoleRepository));
 #endregion
 
 #region Misc injection

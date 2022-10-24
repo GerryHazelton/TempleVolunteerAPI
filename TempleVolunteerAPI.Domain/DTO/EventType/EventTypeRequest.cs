@@ -6,13 +6,6 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public string Note { get; set; }
-
-        public ICollection<Area> Areas { get; set; }
-
-        public EventTypeRequest()
-        {
-            this.Areas = new HashSet<Area>();
-
-        }
+        public int[] AreaIds { get; set; }
     }
 }

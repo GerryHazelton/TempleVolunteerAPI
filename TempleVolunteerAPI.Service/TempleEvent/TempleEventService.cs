@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
 using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Repository;
-using System.Text;
-using System.Linq.Expressions;
 using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Service
@@ -10,35 +8,42 @@ namespace TempleVolunteerAPI.Service
     public class EventService : IEventService
     {
         private readonly IRepositoryWrapper _uow;
+        private bool _result;
 
         public EventService(IRepositoryWrapper uow)
         {
             this._uow = uow;
         }
 
-        public bool Create(Event entity, int propertyId, string userId)
+        public Event Create(Event entity, int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            var templeEvent = _uow.Events.CreateEvent(entity, propertyId, userId);
+
+            return templeEvent;
         }
 
         public bool Delete(Event entity, int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            _result = _uow.Events.DeleteEvent(entity, propertyId, userId);
+
+            return _result;
         }
 
         public IQueryable<Event> FindAll(int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            return _uow.Events.GetAllEvents(propertyId, userId);
         }
 
         public IQueryable<Event> FindByCondition(Expression<Func<Event, bool>> match, int propertyId, string userId, WithDetails details)
         {
-            throw new NotImplementedException();
+            return _uow.Events.GetEventWithDetails(match, propertyId, userId, details);
         }
 
         public bool Update(Event entity, int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            _result = _uow.Events.UpdateEvent(entity, propertyId, userId);
+
+            return _result;
         }
     }
 }

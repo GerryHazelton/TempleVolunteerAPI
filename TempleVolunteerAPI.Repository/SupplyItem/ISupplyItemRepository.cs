@@ -8,7 +8,7 @@ namespace TempleVolunteerAPI.Repository
     {
         IQueryable<SupplyItem> GetAllSupplyItems(int propertyId, string userId);
         IQueryable<SupplyItem> GetSupplyItemByMatch(Expression<Func<SupplyItem, bool>> match, int propertyId, string userId);
-        bool CreateSupplyItem(SupplyItem supplyItem, int propertyId, string userId);
+        SupplyItem CreateSupplyItem(SupplyItem supplyItem, int propertyId, string userId);
         bool UpdateSupplyItem(SupplyItem supplyItem, int propertyId, string userId);
         bool DeleteSupplyItem(SupplyItem supplyItem, int propertyId, string userId);
     }

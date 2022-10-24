@@ -10,7 +10,7 @@ namespace TempleVolunteerAPI.Repository
         IQueryable<Area> GetAllAreas(int propertyId, string userId);
         IQueryable<Area> GetAreaByMatch(Expression<Func<Area, bool>> match, int propertyId, string userId);
         IQueryable<Area> GetAreaWithDetails(Expression<Func<Area, bool>> match, int propertyId, string userId, WithDetails details);
-        bool CreateArea(Area area, int propertyId, string userId);
+        Area CreateArea(Area area, int propertyId, string userId);
         bool UpdateArea(Area area, int propertyId, string userId);
         bool DeleteArea(Area area, int propertyId, string userId);
     }

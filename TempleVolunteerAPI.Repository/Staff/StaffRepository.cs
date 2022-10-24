@@ -219,7 +219,7 @@ namespace TempleVolunteerAPI.Repository
 
         public bool CreateStaff(Staff staff, int propertyId, string userId)
         {
-            return Create(staff, propertyId, userId);
+            return true;// Create(staff, propertyId, userId);
         }
 
         public bool UpdateStaff(Staff staff, int propertyId, string userId)

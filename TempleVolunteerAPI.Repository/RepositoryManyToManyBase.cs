@@ -46,9 +46,9 @@ namespace TempleVolunteerAPI.Repository
         {
             try
             {
-                var result = this._context.Set<T>().Where(match).AsNoTracking().FirstOrDefault();
+                var result = this._context.Set<T>().Where(match).AsNoTracking();
 
-                return (IQueryable<T>)result;
+                return result;
             }
             catch (Exception ex)
             {
@@ -71,6 +71,8 @@ namespace TempleVolunteerAPI.Repository
             try
             {
                 this._context.Set<T>().Add(entity);
+                this._context.SaveChanges();
+                
                 return true;
             }
             catch (Exception ex)
@@ -94,6 +96,9 @@ namespace TempleVolunteerAPI.Repository
             try
             {
                 this._context.Set<T>().Update(entity);
+                _context.Entry(entity).State = EntityState.Modified;
+                this._context.SaveChanges();
+                
                 return true;
             }
             catch (Exception ex)
@@ -117,6 +122,8 @@ namespace TempleVolunteerAPI.Repository
             try
             {
                 this._context.Set<T>().Remove(entity);
+                this._context.SaveChanges();
+
                 return true;
             }
             catch (Exception ex)

@@ -13,50 +13,46 @@ namespace TempleVolunteerAPI.Repository
         {
         }
 
-        public async Task<IEnumerable<AreaSupplyItem>> GetAllAreasSupplyItemsAsync(int propertyId, string userId)
+        public IQueryable<AreaSupplyItem> GetAllAreaSupplyItems(int propertyId, string userId)
         {
-            return await FindAll(propertyId, userId)
-               .OrderBy(x => x.Area)
-               .ToListAsync();
+            return FindAll(propertyId, userId)
+               .OrderBy(x => x.AreaId).AsNoTracking();
         }
 
-        public async Task<AreaSupplyItem> GetAreaSupplyItemByMatchAsync(Expression<Func<AreaSupplyItem, bool>> match, int propertyId, string userId)
+        public IQueryable<AreaSupplyItem> GetAreaSupplyItemByMatch(Expression<Func<AreaSupplyItem, bool>> match, int propertyId, string userId)
         {
-            return await FindByCondition(match, propertyId, userId).FirstOrDefaultAsync();
+            return FindByCondition(match, propertyId, userId).AsNoTracking();
         }
 
-        public async Task<AreaSupplyItem> GetAreaSupplyItemWithDetailsAsync(Expression<Func<AreaSupplyItem, bool>> match, int propertyId, string userId, WithDetails details)
+        public IQueryable<AreaSupplyItem> GetAreaSupplyItemWithDetails(Expression<Func<AreaSupplyItem, bool>> match, int propertyId, string userId, WithDetails details)
         {
             switch (details)
             {
-                case WithDetails.AreaEventTask:
-                    return await FindByCondition(match, propertyId, userId).Include(x => x.SupplyItem).FirstOrDefaultAsync();
-                    break;
                 case WithDetails.AreaEventType:
-                    return await FindByCondition(match, propertyId, userId).Include(x => x.SupplyItem).FirstOrDefaultAsync();
+                    return FindByCondition(match, propertyId, userId).Include(x => x.SupplyItem).AsNoTracking();
                     break;
                 case WithDetails.AreaSupplyItem:
-                    return await FindByCondition(match, propertyId, userId).Include(x => x.SupplyItem).FirstOrDefaultAsync();
+                    return FindByCondition(match, propertyId, userId).Include(x => x.SupplyItem).AsNoTracking();
                     break;
                 default:
-                    return await FindByCondition(match, propertyId, userId).FirstOrDefaultAsync();
+                    return FindByCondition(match, propertyId, userId).AsNoTracking();
                     break;
             }
         }
 
-        public bool CreateAreaSupplyItem(AreaSupplyItem area, int propertyId, string userId)
+        public bool CreateAreaSupplyItem(AreaSupplyItem areaSupplyItem, int propertyId, string userId)
         {
-            return Create(area, propertyId, userId);
+            return Create(areaSupplyItem, propertyId, userId);
         }
 
-        public bool UpdateAreaSupplyItem(AreaSupplyItem area, int propertyId, string userId)
+        public bool UpdateAreaSupplyItem(AreaSupplyItem areaSupplyItem, int propertyId, string userId)
         {
-            return Update(area, propertyId, userId);
+            return Update(areaSupplyItem, propertyId, userId);
         }
 
-        public bool DeleteAreaSupplyItem(AreaSupplyItem area, int propertyId, string userId)
+        public bool DeleteAreaSupplyItem(AreaSupplyItem areaSupplyItem, int propertyId, string userId)
         {
-            return Delete(area, propertyId, userId);
+            return Delete(areaSupplyItem, propertyId, userId);
         }
     }
 }
