@@ -9,7 +9,6 @@ namespace TempleVolunteerAPI.API
     {
         public MappingProfile()
         {
-
             #region Area
             CreateMap<Area, AreaRequest>();
             CreateMap<AreaRequest, Area>();
@@ -18,6 +17,11 @@ namespace TempleVolunteerAPI.API
             #region Category
             CreateMap<Category, CategoryRequest>();
             CreateMap<CategoryRequest, Category>();
+            #endregion
+
+            #region Committee
+            CreateMap<Committee, CommitteeRequest>();
+            CreateMap<CommitteeRequest, Committee>();
             #endregion
 
             #region Credential

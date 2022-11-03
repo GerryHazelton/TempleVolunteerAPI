@@ -19,7 +19,7 @@ namespace TempleVolunteerAPI.Domain
 
         #region Dependencies
         public virtual Property Property { get; set; }
-        public virtual ICollection<AreaCommittee> Area { get; set; }
+        public virtual ICollection<AreaCommittee> Areas { get; set; }
         public virtual ICollection<CommitteeStaff> Staff { get; set; }
         #endregion
 
@@ -33,7 +33,7 @@ namespace TempleVolunteerAPI.Domain
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
-            this.Area = new List<AreaCommittee>();
+            this.Areas = new List<AreaCommittee>();
             this.Staff = new List<CommitteeStaff>();
         }
         #endregion

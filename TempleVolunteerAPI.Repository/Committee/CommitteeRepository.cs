@@ -30,6 +30,9 @@ namespace TempleVolunteerAPI.Repository
         {
             switch (details)
             {
+                case WithDetails.Yes:
+                    return FindByCondition(match, propertyId, userId).Include(x => x.Areas).Include(x => x.Staff).AsNoTracking();
+                    break;
                 default:
                     return FindByCondition(match, propertyId, userId).AsNoTracking();
                     break;

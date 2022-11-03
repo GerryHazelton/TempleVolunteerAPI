@@ -13,7 +13,7 @@ namespace TempleVolunteerAPI.Repository
         {
         }
          
-        public IQueryable<CommitteeStaff> GetAllCommitteeStaffs(int propertyId, string userId)
+        public IQueryable<CommitteeStaff> GetAllCommitteeStaff(int propertyId, string userId)
         {
             return FindAll(propertyId, userId)
                .OrderBy(x => x.CommitteeId).AsNoTracking();

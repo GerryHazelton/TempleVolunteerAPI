@@ -584,6 +584,22 @@ namespace TempleVolunteerAPI.Repository
                 }
             );
 
+            modelBuilder.Entity<Committee>().HasData(
+                new Committee
+                {
+                    CommitteeId = 1,
+                    Name = "Flowers",
+                    Description = "Flowers Committee",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+
             modelBuilder.Entity<Credential>().HasData(
                 new Credential
                 {

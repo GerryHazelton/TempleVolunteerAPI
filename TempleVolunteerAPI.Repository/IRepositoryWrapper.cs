@@ -11,6 +11,7 @@ namespace TempleVolunteerAPI.Repository
     {
         IAreaRepository Areas { get; }
         ICategoryRepository Categories { get; }
+        ICommitteeRepository Committees { get; }
         ICredentialRepository Credentials { get; }
         IDocumentRepository Documents { get; }
         IErrorLogRepository ErrorLog { get; }

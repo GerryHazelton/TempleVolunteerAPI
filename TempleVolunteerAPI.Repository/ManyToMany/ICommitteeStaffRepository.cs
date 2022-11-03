@@ -7,7 +7,7 @@ namespace TempleVolunteerAPI.Repository
 {
     public interface ICommitteeStaffRepository : IRepositoryManyToManyBase<CommitteeStaff>
     {
-        IQueryable<CommitteeStaff> GetAllCommitteeStaffs(int propertyId, string userId);
+        IQueryable<CommitteeStaff> GetAllCommitteeStaff(int propertyId, string userId);
         IQueryable<CommitteeStaff> GetCommitteeStaffByMatch(Expression<Func<CommitteeStaff, bool>> match, int propertyId, string userId);
         IQueryable<CommitteeStaff> GetCommitteeStaffWithDetails(Expression<Func<CommitteeStaff, bool>> match, int propertyId, string userId, WithDetails details);
         bool CreateCommitteeStaff(CommitteeStaff committeeStaff, int propertyId, string userId);

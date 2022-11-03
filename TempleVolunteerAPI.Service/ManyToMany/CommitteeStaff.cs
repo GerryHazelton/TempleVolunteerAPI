@@ -5,38 +5,38 @@ using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Service
 {
-    public class AreaCommitteeService : IAreaCommitteeService
+    public class CommitteeStaffService : ICommitteeStaffService
     {
         private readonly IRepositoryWrapper _uow;
 
-        public AreaCommitteeService(IRepositoryWrapper uow)
+        public CommitteeStaffService(IRepositoryWrapper uow)
         {
             this._uow = uow;
         }
 
-        public bool Create(AreaCommittee entity, int propertyId, string userId)
+        public bool Create(CommitteeStaff entity, int propertyId, string userId)
         {
-            return _uow.AreaCommittees.CreateAreaCommittee(entity, propertyId, userId);
+            return _uow.CommitteeStaff.CreateCommitteeStaff(entity, propertyId, userId);
         }
 
-        public bool Delete(AreaCommittee entity, int propertyId, string userId)
+        public bool Delete(CommitteeStaff entity, int propertyId, string userId)
         {
-            return _uow.AreaCommittees.DeleteAreaCommittee(entity, propertyId, userId);
+            return _uow.CommitteeStaff.DeleteCommitteeStaff(entity, propertyId, userId);
         }
 
-        public IQueryable<AreaCommittee> FindAll(int propertyId, string userId)
+        public IQueryable<CommitteeStaff> FindAll(int propertyId, string userId)
         {
-            return (IQueryable<AreaCommittee>)_uow.AreaCommittees.GetAllAreaCommittees(propertyId, userId);
+            return (IQueryable<CommitteeStaff>)_uow.CommitteeStaff.GetAllCommitteeStaff(propertyId, userId);
         }
 
-        public IQueryable<AreaCommittee> FindByCondition(Expression<Func<AreaCommittee, bool>> match, int propertyId, string userId, WithDetails details)
+        public IQueryable<CommitteeStaff> FindByCondition(Expression<Func<CommitteeStaff, bool>> match, int propertyId, string userId, WithDetails details)
         {
-            return (IQueryable<AreaCommittee>)_uow.AreaCommittees.GetAreaCommitteeWithDetails(match, propertyId, userId, details);
+            return (IQueryable<CommitteeStaff>)_uow.CommitteeStaff.GetCommitteeStaffWithDetails(match, propertyId, userId, details);
         }
 
-        public bool Update(AreaCommittee entity, int propertyId, string userId)
+        public bool Update(CommitteeStaff entity, int propertyId, string userId)
         {
-            return _uow.AreaCommittees.UpdateAreaCommittee(entity, propertyId, userId);
+            return _uow.CommitteeStaff.UpdateCommitteeStaff(entity, propertyId, userId);
         }
     }
 }
