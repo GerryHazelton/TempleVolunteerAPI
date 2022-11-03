@@ -10,7 +10,7 @@ namespace TempleVolunteerAPI.Service
 {
     public interface IAccountService
     {
-        Task<RegisterResponse> RegisterAsync(RegisterRequest request);
+        Task<RegisterResponse> RegisterAsync(Staff staff);
         Task<TokenResponse> LoginAsync(LoginRequest request);
         Task<RepositoryResponse<MyProfileRequest>> MyProfileAsync(MyProfileRequest request);
         Task<ServiceResponse<Staff>> VerifyEmailAddressAsync(VerifyEmailAddressRequest request);

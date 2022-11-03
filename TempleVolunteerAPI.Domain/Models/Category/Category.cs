@@ -18,8 +18,6 @@ namespace TempleVolunteerAPI.Domain
         public string? Note { get; set; }
 
         #region Dependencies
-        [ForeignKey(nameof(Property))]
-        public int? PropertyId { get; set; }
         public Property? Property { get; set; }
         #endregion
 

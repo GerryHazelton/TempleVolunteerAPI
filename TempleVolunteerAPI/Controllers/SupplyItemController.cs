@@ -29,8 +29,8 @@ namespace TempleVolunteerAPI.API
             _response = new ServiceResponse<SupplyItemResponse>();
         }
 
-        [HttpGet("GetAll")]
-        public ServiceResponse<IList<SupplyItemRequest>> GetAll(int propertyId, string userId)
+        [HttpGet("GetAllAsync")]
+        public ServiceResponse<IList<SupplyItemRequest>> GetAllAsync(int propertyId, string userId)
         {
             _collResponse.Data = _mapper.Map<IList<SupplyItemRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
@@ -38,17 +38,17 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpGet("GetById")]
-        public ServiceResponse<SupplyItemResponse> GetById(int id, int propertyId, string userId)
+        [HttpGet("GetByIdAsync")]
+        public ServiceResponse<SupplyItemResponse> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<SupplyItemResponse>(_supplyItemService.FindByCondition(x => x.SupplyItemId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.None));
+            _response.Data = _mapper.Map<SupplyItemResponse>(_supplyItemService.FindByCondition(x => x.SupplyItemId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
-        [HttpPost("Post")]
-        public ServiceResponse<IList<SupplyItemRequest>> Post([FromBody] SupplyItemRequest request)
+        [HttpPost("PostAsync")]
+        public ServiceResponse<IList<SupplyItemRequest>> PostAsync([FromBody] SupplyItemRequest request)
         {
             SupplyItem supplyItem = _mapper.Map<SupplyItem>(request);
 
@@ -59,8 +59,8 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpPut("Put")]
-        public ServiceResponse<IList<SupplyItemRequest>> Put([FromBody] SupplyItemRequest request)
+        [HttpPut("PutAsync")]
+        public ServiceResponse<IList<SupplyItemRequest>> PutAsync([FromBody] SupplyItemRequest request)
         {
             SupplyItem supplyItem = _mapper.Map<SupplyItem>(request);
             _result = _supplyItemService.Update(supplyItem, request.PropertyId, request.CreatedBy);
@@ -70,10 +70,10 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpDelete("Delete")]
-        public ServiceResponse<IList<SupplyItemRequest>> Delete(MiscRequest request)
+        [HttpDelete("DeleteAsync")]
+        public ServiceResponse<IList<SupplyItemRequest>> DeleteAsync(MiscRequest request)
         {
-            SupplyItem supplyItem = _supplyItemService.FindByCondition(x => x.SupplyItemId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.None).FirstOrDefault();
+            SupplyItem supplyItem = _supplyItemService.FindByCondition(x => x.SupplyItemId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.No).FirstOrDefault();
 
             _result = _supplyItemService.Delete(supplyItem, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<SupplyItemRequest>>(ReturnCollection(request.PropertyId, request.UserId));

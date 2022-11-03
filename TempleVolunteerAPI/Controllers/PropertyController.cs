@@ -22,9 +22,9 @@ namespace TempleVolunteerAPI.API
         private ServiceResponse<PropertyResponse> _response;
         private bool _result;
 
-        public PropertyController(IPropertyService PropertyService, IMapper mapper)
+        public PropertyController(IPropertyService propertyService, IMapper mapper)
         {
-            _propertyService = PropertyService;
+            _propertyService = propertyService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<PropertyRequest>>();
             _response = new ServiceResponse<PropertyResponse>();
@@ -42,7 +42,7 @@ namespace TempleVolunteerAPI.API
         [HttpGet("GetByIdAsync")]
         public async Task<ServiceResponse<PropertyResponse>> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<PropertyResponse>(_propertyService.FindByCondition(x => x.PropertyId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.None));
+            _response.Data = _mapper.Map<PropertyResponse>(_propertyService.FindByCondition(x => x.PropertyId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -63,7 +63,7 @@ namespace TempleVolunteerAPI.API
         [HttpPut("PutAsync")]
         public async Task<ServiceResponse<IList<PropertyRequest>>> PutAsync([FromBody] PropertyRequest request)
         {
-            Property property = (Property)_propertyService.FindByCondition(x => x.PropertyId == request.PropertyId, request.PropertyId, request.UpdatedBy, WithDetails.None);
+            Property property = (Property)_propertyService.FindByCondition(x => x.PropertyId == request.PropertyId, request.PropertyId, request.UpdatedBy, WithDetails.No);
 
             _result = _propertyService.Update(_mapper.Map<Property>(request), request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.UpdatedBy));
@@ -75,7 +75,7 @@ namespace TempleVolunteerAPI.API
         [HttpDelete("DeleteAsync")]
         public async Task<ServiceResponse<IList<PropertyRequest>>> DeleteAsync(MiscRequest request)
         {
-            Property property = (Property)_propertyService.FindByCondition(x => x.PropertyId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.None);
+            Property property = (Property)_propertyService.FindByCondition(x => x.PropertyId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.No);
 
             _result = _propertyService.Delete(property, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<PropertyRequest>>(await ReturnCollection(request.PropertyId, request.UserId));
@@ -86,7 +86,7 @@ namespace TempleVolunteerAPI.API
 
         private async Task<IList<Property>> ReturnCollection(int propertyId, string userId)
         {
-            return (IList<Property>)_propertyService.FindAll(propertyId, userId);
+            return _propertyService.FindAll(propertyId, userId).ToList();
         }
     }
 }

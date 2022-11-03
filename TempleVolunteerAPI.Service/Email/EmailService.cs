@@ -27,7 +27,7 @@ namespace TempleVolunteerAPI.Service
             _smtpPwd = _appSettings.SmtpPass;
         }
 
-        public async Task<string> SendEmail(Staff request, int propertyId, EmailTypeEnum emailType)
+        public async Task<string> SendEmail(Staff request, EmailTypeEnum emailType)
         {
             
             try
@@ -39,7 +39,7 @@ namespace TempleVolunteerAPI.Service
                             _message = new StringBuilder("<h4>Email Already Registered</h4>");
                             _message.AppendFormat("Hello {0} - if you don't know your password please click: ", request.FirstName);
                             _message.AppendFormat("<a href={0}/Account/ForgotPassword?emailAddress={1}>Forgot Password</a>", _uri, request.EmailAddress);
-                            await Send(request.EmailAddress, "Temple Volunteer - Already Registered", _message.ToString(), _fromEmail, propertyId);
+                            await Send(request.EmailAddress, "Temple Volunteer - Already Registered", _message.ToString(), _fromEmail, request.PropertyId);
 
                             return "Temple Volunteer - Email Already Registered";
                         }
@@ -51,8 +51,8 @@ namespace TempleVolunteerAPI.Service
                             _message.AppendFormat("Hello {0} - your temporary password is: <b>Master1952SRF!</b>. Please change your password once you have logged in.", request.FirstName);
                             _message.Append("<p></p>");
                             _message.Append("Please click the link below to complete your registration: ");
-                            _message.AppendFormat("<a href={0}/Account/VerifyEmailAddress?emailAddress={1}> Complete Registration </a>", _uri, request.EmailAddress);
-                            await Send(request.EmailAddress, "Temple Volunteer - Register", _message.ToString(), _fromEmail, propertyId);
+                            _message.AppendFormat("<a href={0}/Account/VerifyEmailAddress?emailAddress={1}&propertyId={2}> Complete Registration </a>", _uri, request.EmailAddress, request.PropertyId);
+                            await Send(request.EmailAddress, "Temple Volunteer - Register", _message.ToString(), _fromEmail, request.PropertyId);
 
                             return "Temple Volunteer - Registration Successful";
                         }
@@ -63,7 +63,7 @@ namespace TempleVolunteerAPI.Service
                             _message = new StringBuilder("<h4>Reset Password</h4>");
                             _message.AppendFormat("Hello {0} - please click the below link to reset your password. This link will be valid for 3 days: ", request.FirstName);
                             _message.AppendFormat("<a href={0}/Account/ResetPassword?emailAddress={1}>Reset Password</a>", _uri, request.EmailAddress);
-                            await Send(request.EmailAddress, "Temple Volunteer - Reset Password", _message.ToString(), _fromEmail, propertyId);
+                            await Send(request.EmailAddress, "Temple Volunteer - Reset Password", _message.ToString(), _fromEmail, request.PropertyId);
 
                             return "Temple Volunteer - Reset Password Successful";
                         }
@@ -73,8 +73,8 @@ namespace TempleVolunteerAPI.Service
                         {
                             _message = new StringBuilder("<h4>Forgot Password</h4>");
                             _message.AppendFormat("Greetings {0} - please click the below link to reset your password. This link will be valid for 3 days: ", request.FirstName);
-                            _message.AppendFormat("<a href={0}/Account/ResetForgottenPassword?emailAddress={1}&PropertyId={2}>Reset Password</a>", _uri, request.EmailAddress, propertyId);
-                            await Send(request.EmailAddress, "Temple Volunteer - Forgot Password", _message.ToString(), _fromEmail, propertyId);
+                            _message.AppendFormat("<a href={0}/Account/ResetForgottenPassword?emailAddress={1}&PropertyId={2}>Reset Password</a>", _uri, request.EmailAddress, request.PropertyId);
+                            await Send(request.EmailAddress, "Temple Volunteer - Forgot Password", _message.ToString(), _fromEmail, request.PropertyId);
 
                             return "Temple Volunteer - Reset Password Successful";
                         }

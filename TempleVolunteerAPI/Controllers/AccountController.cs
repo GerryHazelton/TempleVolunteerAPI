@@ -45,7 +45,8 @@ namespace TempleVolunteerAPI.API
         [HttpPost("RegisterAsync")]
         public async Task<RegisterResponse> RegisterAsync([FromBody] RegisterRequest request)
         {
-            RegisterResponse response = await _accountService.RegisterAsync(request);
+            Staff staff = _mapper.Map<Staff>(request);
+            RegisterResponse response = await _accountService.RegisterAsync(staff);
 
             return response;
         }
@@ -76,6 +77,14 @@ namespace TempleVolunteerAPI.API
                 response.Success = false;
                 response.Message = "Profile unable to be updated.";
             }
+
+            return response;
+        }
+
+        [HttpPost("VerifyEmailAddressAsync")]
+        public async Task<ServiceResponse<Staff>> VerifyEmailAddressAsync(VerifyEmailAddressRequest request)
+        {
+            ServiceResponse<Staff> response = await _accountService.VerifyEmailAddressAsync(request);
 
             return response;
         }
@@ -132,7 +141,7 @@ namespace TempleVolunteerAPI.API
         [HttpPost("GetAllPropertiesAsync")]
         public async Task<ServiceResponse<IList<Property>>> GetAllPropertiesAsync([FromBody] MiscRequest request)
         {
-            _collResponse.Data = (IList<Property>)_propertyService.FindByCondition(x=>x.PropertyId == request.PropertyId && x.EmailAddress == request.UserId, request.PropertyId, request.UserId, WithDetails.None);
+            _collResponse.Data = _propertyService.FindAll(request.PropertyId, request.UserId).ToList();
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;

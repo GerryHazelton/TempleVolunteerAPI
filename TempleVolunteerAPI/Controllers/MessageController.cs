@@ -6,8 +6,9 @@ using TempleVolunteerAPI.Service;
 
 namespace TempleVolunteerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    //[Authorize]
     [ApiController]
+    [Route("[controller]")]
     public class MessageController : ControllerBase
     {
         private readonly IEmailService _emailService;
@@ -28,48 +29,48 @@ namespace TempleVolunteerAPI.Controllers
         }
 
 
-        //[HttpPost("SendMessageAsync")]
-        //public async Task<ServiceResponse<Staff>> SendMessageAsync([FromBody] MessageRequest request)
-        //{
-        //    ServiceResponse<Staff> response = new ServiceResponse<Staff>();
+        [HttpPost("SendAsync")]
+        public async Task<ServiceResponse<Staff>> SendAsync([FromBody] MessageRequest request)
+        {
+            ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-        //    Message message = new Message(request.From);
-        //    message.Subject = request.Subject;
-        //    message.From = request.From;
-        //    message.To = request.To;
-        //    message.MessageSent = request.MessageSent;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-        //    await _emailService.Send(request.To, request.Subject, request.MessageSent, request.From, request.PropertyId);
-        //    await _messageService.AddAsync(message);
+            Message message = new Message(request.From);
+            message.Subject = request.Subject;
+            message.From = request.From;
+            message.To = request.To;
+            message.MessageSent = request.MessageSent;
 
-        //    response.Success = true;
-        //    response.Message = "Send Message successful (Service: SendMessageEmailAsync)";
+            await _emailService.Send(request.To, request.Subject, request.MessageSent, request.From, request.PropertyId);
+            await _messageService.AddAsync(message);
 
-        //    return response;
-        //}
+            response.Success = true;
+            response.Message = "Send Message successful (Service: SendMessageEmailAsync)";
 
-        //[HttpGet("GetAllMessagesByIdAsync")]
-        //public async Task<ServiceResponse<IList<Message>>> GetAllMessagesByIdAsync(int id, int propertyId, string userId)
-        //{
-        //    ServiceResponse<IList<Message>> response = new ServiceResponse<IList<Message>>();
+            return response;
+        }
 
-        //    response.Data = await _messageService.GetAllByIdAsync(userId);
-        //    response.Success = true;
-        //    response.Message = "Get All Messages by staffId successful (Service: GetAllMessagesByIdAsync)";
+        [HttpGet("GetAllByIdAsync")]
+        public async Task<ServiceResponse<IList<Message>>> GetAllByIdAsync(int id, int propertyId, string userId)
+        {
+            ServiceResponse<IList<Message>> response = new ServiceResponse<IList<Message>>();
 
-        //    return response;
-        //}
+            response.Data = await _messageService.GetAllByIdAsync(id);
+            response.Success = true;
+            response.Message = "Get All Messages by staffId successful (Service: GetAllMessagesByIdAsync)";
 
-        //[HttpGet("GetAllMessagesAsync")]
-        //public async Task<ServiceResponse<IList<Message>>> GetAllMessagesAsync(int propertyId, string userId)
-        //{
-        //    ServiceResponse<IList<Message>> response = new ServiceResponse<IList<Message>>();
+            return response;
+        }
 
-        //    response.Data = await _messageService.GetAllAsync();
-        //    response.Success = true;
-        //    response.Message = "Get All Messages (Service: GetAllMessagesAsync)";
+        [HttpGet("GetAllAsync")]
+        public async Task<ServiceResponse<IList<Message>>> GetAllAsync(int propertyId, string userId)
+        {
+            ServiceResponse<IList<Message>> response = new ServiceResponse<IList<Message>>();
 
-        //    return response;
-        //}
+            response.Data = await _messageService.GetAllAsync(propertyId);
+            response.Success = true;
+            response.Message = "Get All Messages (Service: GetAllMessagesAsync)";
+
+            return response;
+        }
     }
 }

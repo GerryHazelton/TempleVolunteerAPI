@@ -37,53 +37,24 @@ namespace TempleVolunteerAPI.Service
             _repositoryResponse = new RepositoryResponse<Staff>();
         }
 
-        public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
+        public async Task<RegisterResponse> RegisterAsync(Staff staff)
         {
             RegisterResponse response = new RegisterResponse();
-            Staff staff = await _uow.Staff.GetStaffByMatchAsync(x=>x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress);
-            
-            if (staff != null)
-            {
-                response.Success = false;
-                response.Message = "User already exists.";
-                return response;
-            }
-
             var salt = Helper.GetSecureSalt();
-            var passwordHash = Helper.HashUsingPbkdf2(request.Password, salt);
+            var passwordHash = Helper.HashUsingPbkdf2(staff.Password, salt);
 
-            staff = new Staff(request.EmailAddress);
-            staff.FirstName = request.FirstName;
-            staff.LastName = request.LastName;
-            staff.Address = request.Address;
-            staff.Address2 = request.Address2;
-            staff.City = request.City;
-            staff.State = request.State;
-            staff.PostalCode = request.PostalCode;
-            staff.Country = request.Country;
-            staff.PhoneNumber = request.PhoneNumber;
-            staff.EmailAddress = request.EmailAddress;
-            staff.PhoneNumber = request.EmailAddress;
-            staff.Gender = request.EmailAddress;
-            staff.FirstAid = request.FirstAid;
-            staff.CPR = request.CPR;
-            staff.Kriyaban = request.Kriyaban;
-            staff.LessonStudent = request.LessonStudent;
-            staff.AcceptTerms = request.AcceptTerms;
-            staff.CreatedDate = DateTime.UtcNow;
             staff.Password = passwordHash;
             staff.PasswordSalt = Convert.ToBase64String(salt);
+            staff = _uow.Staff.CreateStaff(staff, staff.PropertyId, staff.EmailAddress);
 
-            bool result = _uow.Staff.CreateStaff(staff, request.PropertyId, request.EmailAddress);
-
-            if (result)
+            if (staff == null)
             {
                 response.Success = false;
                 response.Message = "Unable to register.";
                 return response;
             }
 
-            await _emailService.SendEmail(staff, 0, EnumHelper.EmailTypeEnum.RegisterEmail);
+            await _emailService.SendEmail(staff, EnumHelper.EmailTypeEnum.RegisterEmail);
             
             return new RegisterResponse { Success = true, Message = "Registration successful." };
         }
@@ -91,16 +62,9 @@ namespace TempleVolunteerAPI.Service
         {
             TokenResponse response = new TokenResponse();
 
-            var staff = await _uow.Staff.GetStaffWithDetailsAsync(x=>x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress);
+            var staff = _uow.Staff.GetStaffWithDetails(x=>x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress, EnumHelper.WithDetails.Yes).FirstOrDefault();
 
-            if (_repositoryResponse.Error != null)
-            {
-                response.Success = false;
-                response.Message = "Unable to login.";
-                return response;
-            }
-
-            if (_repositoryResponse.Entity == null)
+            if (staff == null)
             {
                 return new TokenResponse
                 {
@@ -109,9 +73,9 @@ namespace TempleVolunteerAPI.Service
                 };
             }
 
-            var passwordHash = Helper.HashUsingPbkdf2(request.Password, Convert.FromBase64String(_repositoryResponse.Entity.PasswordSalt));
+            var passwordHash = Helper.HashUsingPbkdf2(request.Password, Convert.FromBase64String(staff.PasswordSalt));
 
-            if (_repositoryResponse.Entity.Password != passwordHash)
+            if (staff.Password != passwordHash)
             {
                 return new TokenResponse
                 {
@@ -120,7 +84,7 @@ namespace TempleVolunteerAPI.Service
                 };
             }
 
-            var token = await Task.Run(() => _tokenService.GenerateTokensAsync(_repositoryResponse.Entity.StaffId, request.PropertyId));
+            var token = await Task.Run(() => _tokenService.GenerateTokensAsync(staff.StaffId, request.PropertyId));
             Property property = _uow.Properties.FindByCondition(x => x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress).FirstOrDefault();
             bool isAdmin = staff.Roles.Any(x => x.RoleId == 1);
  
@@ -129,10 +93,10 @@ namespace TempleVolunteerAPI.Service
                 Success = true,
                 AccessToken = token.Item1,
                 RefreshToken = token.Item2,
-                FirstName = _repositoryResponse.Entity.FirstName,
-                LastName = _repositoryResponse.Entity.LastName,
+                FirstName = staff.FirstName,
+                LastName = staff.LastName,
                 IsAdmin = isAdmin,
-                StaffId = _repositoryResponse.Entity.StaffId,
+                StaffId = staff.StaffId,
                 PropertyId = request.PropertyId,
                 PropertyName = property.Name
             };
@@ -141,7 +105,8 @@ namespace TempleVolunteerAPI.Service
         public async Task<RepositoryResponse<MyProfileRequest>> MyProfileAsync(MyProfileRequest request)
         {
             RepositoryResponse<MyProfileRequest> response = new RepositoryResponse<MyProfileRequest>();
-            response = await _uow.Staff.CustomMyProfileUpdateAsync(request);
+            _uow.Staff.CustomMyProfileUpdate(request);
+            response.Result = true;
             return response;
         }
 
@@ -149,24 +114,23 @@ namespace TempleVolunteerAPI.Service
         {
             ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-            var staff = await _uow.Staff.GetStaffByMatchAsync(x=>x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress);
+            Staff staff = _uow.Staff.GetStaffByMatch(x=>x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress).FirstOrDefault();
 
-            if (_repositoryResponse.Error != null)
+            if (staff == null)
             {
                 response.Success = false;
                 response.Message = "Unable to verify email address.";
                 return response;
             }
 
-            if (_repositoryResponse.Entity.IsVerified)
+            if (staff != null && staff.IsVerified)
             {
                 response.Message = "Email successfully verified.";
                 response.Success = true;
 
                 return response;
             }
-
-            if (_repositoryResponse.Entity == null)
+            else
             {
                 response.Message = "Email verification failed.";
                 response.Success = false;
@@ -198,27 +162,19 @@ namespace TempleVolunteerAPI.Service
         {
             ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-            _repositoryResponse = await _uow.Staff.GetStaffByMatchAsync(x => x.EmailAddress == request.EmailAddress && x.PostalCode == request.PostalCode && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress);
+            Staff staff = _uow.Staff.GetStaffByMatch(x => x.EmailAddress == request.EmailAddress && x.PostalCode == request.PostalCode && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress).FirstOrDefault();
 
-            if (_repositoryResponse.Error != null)
+            if (staff == null)
             {
                 response.Success = false;
                 response.Message = "Unable to verify email address.";
                 return response;
             }
 
-            if (_repositoryResponse.Entity == null)
-            {
-                response.Message = "User not found.";
-                response.Success = false;
+            staff.UpdatedBy = request.EmailAddress;
+            staff.UpdatedDate = DateTime.UtcNow;
 
-                return response;
-            }
-
-            _repositoryResponse.Entity.UpdatedBy = request.EmailAddress;
-            _repositoryResponse.Entity.UpdatedDate = DateTime.UtcNow;
-
-            _result = _uow.Staff.UpdateStaff(_repositoryResponse.Entity, request.PropertyId, request.UpdatedBy);
+            _result = _uow.Staff.UpdateStaff(staff, request.PropertyId, request.UpdatedBy);
 
             if (!_result)
             {
@@ -227,7 +183,7 @@ namespace TempleVolunteerAPI.Service
                 return response;
             }
 
-            await _emailService.SendEmail(_repositoryResponse.Entity, request.PropertyId, EnumHelper.EmailTypeEnum.ForgotPassword);
+            await _emailService.SendEmail(staff, EnumHelper.EmailTypeEnum.ForgotPassword);
 
             response.Message = "Email successfully sent.";
             response.Success = true;
@@ -239,7 +195,7 @@ namespace TempleVolunteerAPI.Service
         {
             ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-            var staff = await _uow.Staff.GetStaffByMatchAsync(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress);
+            Staff staff = _uow.Staff.GetStaffByMatch(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress).FirstOrDefault();
 
             if (staff == null)
             {
@@ -257,7 +213,7 @@ namespace TempleVolunteerAPI.Service
             staff.Password = passwordHash;
             staff.PasswordSalt = Convert.ToBase64String(salt);
             staff.PasswordReset = DateTime.UtcNow;
-            _result = _uow.Staff.UpdateStaff(_repositoryResponse.Entity, request.PropertyId, request.EmailAddress);
+            _result = _uow.Staff.UpdateStaff(staff, request.PropertyId, request.EmailAddress);
 
             if (_repositoryResponse.Error != null)
             {
@@ -277,7 +233,7 @@ namespace TempleVolunteerAPI.Service
         {
             ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-            var staff = await _uow.Staff.GetStaffByMatchAsync(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress);
+            Staff staff = _uow.Staff.GetStaffByMatch(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress).FirstOrDefault();
 
             if (staff == null)
             {
@@ -287,7 +243,7 @@ namespace TempleVolunteerAPI.Service
                 return response;
             }
 
-            var passwordHash = Helper.HashUsingPbkdf2(request.OldPassword, Convert.FromBase64String(_repositoryResponse.Entity.PasswordSalt));
+            var passwordHash = Helper.HashUsingPbkdf2(request.OldPassword, Convert.FromBase64String(staff.PasswordSalt));
 
             if (staff.Password != passwordHash)
             {
@@ -325,7 +281,7 @@ namespace TempleVolunteerAPI.Service
         {
             ServiceResponse<Staff> response = new ServiceResponse<Staff>();
 
-            var staff = await _uow.Staff.GetStaffByMatchAsync(x => x.StaffId == id, propertyId, userId);
+            Staff staff = _uow.Staff.GetStaffByMatch(x => x.StaffId == id, propertyId, userId).FirstOrDefault();
 
             if (staff == null)
             {
@@ -342,12 +298,12 @@ namespace TempleVolunteerAPI.Service
 
         public async Task RecordLoginAttempts(string userId, int propertyId)
         {
-            await _uow.Staff.RecordLoginAttempts(userId, propertyId);
+            _uow.Staff.RecordLoginAttempts(userId, propertyId);
         }
 
         public async Task ResetLoginAttempts(string userId, int propertyId)
         {
-            await _uow.Staff.ResetLoginAttempts(userId, propertyId);
+            _uow.Staff.ResetLoginAttempts(userId, propertyId);
         }
         #endregion
     }

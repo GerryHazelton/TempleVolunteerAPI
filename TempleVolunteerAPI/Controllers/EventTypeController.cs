@@ -23,9 +23,9 @@ namespace TempleVolunteerAPI.API
         private ServiceResponse<EventTypeResponse> _response;
         private bool _result;
 
-        public EventTypeController(IEventTypeService EventTypeService, IMapper mapper, IEventTypeAreaService eventTypeAreaService, IAreaService areaService)
+        public EventTypeController(IEventTypeService eventTypeService, IMapper mapper, IEventTypeAreaService eventTypeAreaService, IAreaService areaService)
         {
-            _eventTypeService = EventTypeService;
+            _eventTypeService = eventTypeService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<EventTypeRequest>>();
             _response = new ServiceResponse<EventTypeResponse>();
@@ -33,8 +33,8 @@ namespace TempleVolunteerAPI.API
             _areaService = areaService;
         }
 
-        [HttpGet("GetAll")]
-        public ServiceResponse<IList<EventTypeRequest>> GetAll(int propertyId, string userId)
+        [HttpGet("GetAllAsync")]
+        public ServiceResponse<IList<EventTypeRequest>> GetAllAsync(int propertyId, string userId)
         {
             _collResponse.Data = _mapper.Map<IList<EventTypeRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
@@ -42,17 +42,17 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpGet("GetById")]
-        public ServiceResponse<EventTypeResponse> GetById(int id, int propertyId, string userId)
+        [HttpGet("GetByIdAsync")]
+        public ServiceResponse<EventTypeResponse> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<EventTypeResponse>(_eventTypeService.FindByCondition(x => x.EventTypeId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.None));
+            _response.Data = _mapper.Map<EventTypeResponse>(_eventTypeService.FindByCondition(x => x.EventTypeId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
-        [HttpPost("Post")]
-        public ServiceResponse<IList<EventTypeRequest>> Post([FromBody] EventTypeRequest request)
+        [HttpPost("PostAsync")]
+        public ServiceResponse<IList<EventTypeRequest>> PostAsync([FromBody] EventTypeRequest request)
         {
             EventType eventType = _mapper.Map<EventType>(request);
             eventType = (EventType)_eventTypeService.Create(eventType, request.PropertyId, request.CreatedBy);
@@ -69,14 +69,14 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpPut("Put")]
-        public ServiceResponse<IList<EventTypeRequest>> Put([FromBody] EventTypeRequest request)
+        [HttpPut("PutAsync")]
+        public ServiceResponse<IList<EventTypeRequest>> PutAsync([FromBody] EventTypeRequest request)
         {
-            EventType eventType = _eventTypeService.FindByCondition(x => x.EventTypeId == request.EventTypeId, request.PropertyId, request.UpdatedBy, WithDetails.EventEventType).FirstOrDefault();
+            EventType eventType = _eventTypeService.FindByCondition(x => x.EventTypeId == request.EventTypeId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             eventType = _mapper.Map<EventType>(request);
             eventType.Areas.Clear();
 
-            var eventTypeAreas = _eventTypeAreaService.FindByCondition(x => x.EventTypeId == eventType.EventTypeId, request.PropertyId, request.UpdatedBy, WithDetails.None).ToList();
+            var eventTypeAreas = _eventTypeAreaService.FindByCondition(x => x.EventTypeId == eventType.EventTypeId, request.PropertyId, request.UpdatedBy, WithDetails.No).ToList();
 
             foreach (EventTypeArea eta in eventTypeAreas)
             {
@@ -95,10 +95,10 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpDelete("Delete")]
-        public ServiceResponse<IList<EventTypeRequest>> Delete(MiscRequest request)
+        [HttpDelete("DeleteAsync")]
+        public ServiceResponse<IList<EventTypeRequest>> DeleteAsync(MiscRequest request)
         {
-            EventType eventType = _eventTypeService.FindByCondition(x => x.EventTypeId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.EventEventType).FirstOrDefault();
+            EventType eventType = _eventTypeService.FindByCondition(x => x.EventTypeId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.Yes).FirstOrDefault();
 
             _result = _eventTypeService.Delete(eventType, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<EventTypeRequest>>(ReturnCollection(request.PropertyId, request.UserId));
@@ -115,7 +115,7 @@ namespace TempleVolunteerAPI.API
 
             foreach (int areaId in areaIds)
             {
-                area = _areaService.FindByCondition(x => x.AreaId == areaId, propertyId, userId, WithDetails.None).FirstOrDefault();
+                area = _areaService.FindByCondition(x => x.AreaId == areaId, propertyId, userId, WithDetails.No).FirstOrDefault();
                 addEventTypeArea = new EventTypeArea { EventType = eventType, Area = area };
                 eventTypeAreas.Add(addEventTypeArea);
             }

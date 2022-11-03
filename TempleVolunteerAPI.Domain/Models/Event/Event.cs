@@ -29,10 +29,7 @@ namespace TempleVolunteerAPI.Domain
         [ForeignKey(nameof(Area))]
         public int? AreaId { get; set; }
         public Area? Area { get; set; }
-        [ForeignKey(nameof(Property))]
-        public int? PropertyId { get; set; }
         public Property? Property { get; set; }
-
         #endregion
 
         #region Constructors

@@ -18,12 +18,14 @@ namespace TempleVolunteerAPI.API
         private readonly IAreaService _areaService;
         private readonly IAreaSupplyItemService _areaSupplyItemService;
         private readonly ISupplyItemService _supplyItemService;
+        private readonly IAreaEventTaskService _areaEventTaskService;
+        private readonly IEventTaskService _eventTaskService;
         private readonly IMapper _mapper;
         private ServiceResponse<IList<AreaRequest>> _collResponse;
         private ServiceResponse<AreaResponse> _response;
         private bool _result;
 
-        public AreaController(IAreaService AreaService, IMapper mapper, IAreaSupplyItemService areaSupplyItemService, ISupplyItemService supplyItemService)
+        public AreaController(IAreaService AreaService, IMapper mapper, IAreaSupplyItemService areaSupplyItemService, ISupplyItemService supplyItemService, IAreaEventTaskService areaEventTaskService, IEventTaskService eventTaskService)
         {
             _areaService = AreaService;
             _mapper = mapper;
@@ -31,10 +33,12 @@ namespace TempleVolunteerAPI.API
             _response = new ServiceResponse<AreaResponse>();
             _areaSupplyItemService = areaSupplyItemService;
             _supplyItemService = supplyItemService;
+            _areaEventTaskService = areaEventTaskService;
+            _eventTaskService = eventTaskService;
         }
 
-        [HttpGet("GetAll")]
-        public ServiceResponse<IList<AreaRequest>> GetAll(int propertyId, string userId)
+        [HttpGet("GetAllAsync")]
+        public ServiceResponse<IList<AreaRequest>> GetAllAsync(int propertyId, string userId)
         {
             _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
@@ -42,20 +46,25 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpGet("GetById")]
-        public ServiceResponse<AreaResponse> GetById(int id, int propertyId, string userId)
+        [HttpGet("GetByIdAsync")]
+        public ServiceResponse<AreaResponse> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<AreaResponse>(_areaService.FindByCondition(x=>x.AreaId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.None));
+            _response.Data = _mapper.Map<AreaResponse>(_areaService.FindByCondition(x=>x.AreaId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
-        [HttpPost("Post")]
-        public ServiceResponse<IList<AreaRequest>> Post([FromBody] AreaRequest request)
+        [HttpPost("PostAsync")]
+        public ServiceResponse<IList<AreaRequest>> PostAsync([FromBody] AreaRequest request)
         {
             Area area = _mapper.Map<Area>(request);
             area = (Area)_areaService.Create(area, request.PropertyId, request.CreatedBy);
+
+            if (request.EventTaskIds.Length > 0)
+            {
+                area.EventTasks = GetEventTasks(area, request.EventTaskIds, request.PropertyId, request.CreatedBy);
+            }
 
             if (request.SupplyItemIds.Length > 0)
             {
@@ -69,18 +78,36 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpPut("Put")]
-        public ServiceResponse<IList<AreaRequest>> Put([FromBody] AreaRequest request)
+        [HttpPut("PutAsync")]
+        public ServiceResponse<IList<AreaRequest>> PutAsync([FromBody] AreaRequest request)
         {
-            Area area = _areaService.FindByCondition(x => x.AreaId == request.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.AreaSupplyItem).FirstOrDefault();
+            Area area = _areaService.FindByCondition(x => x.AreaId == request.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             area = _mapper.Map<Area>(request);
             area.SupplyItems.Clear();
+            area.EventTasks.Clear();
 
-            var areaSupplyItems = _areaSupplyItemService.FindByCondition(x => x.AreaId == area.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.None).ToList();
+            var areaSupplyItems = _areaSupplyItemService.FindByCondition(x => x.AreaId == area.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.No).ToList();
 
             foreach (AreaSupplyItem asi in areaSupplyItems)
             {
                 _areaSupplyItemService.Delete(asi, request.PropertyId, request.UpdatedBy);
+            }
+
+            if (request.EventTaskIds.Length > 0)
+            {
+                area.EventTasks = GetEventTasks(area, request.EventTaskIds, request.PropertyId, request.CreatedBy);
+            }
+
+            var areaEventTasks = _areaEventTaskService.FindByCondition(x => x.AreaId == area.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.No).ToList();
+
+            foreach (AreaEventTask aet in areaEventTasks)
+            {
+                _areaEventTaskService.Delete(aet, request.PropertyId, request.UpdatedBy);
+            }
+
+            if (request.EventTaskIds.Length > 0)
+            {
+                area.EventTasks = GetEventTasks(area, request.EventTaskIds, request.PropertyId, request.UpdatedBy);
             }
 
             if (request.SupplyItemIds.Length > 0)
@@ -95,10 +122,10 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpDelete("Delete")]
-        public ServiceResponse<IList<AreaRequest>> Delete(MiscRequest request)
+        [HttpDelete("DeleteAsync")]
+        public ServiceResponse<IList<AreaRequest>> DeleteAsync(MiscRequest request)
         {
-            Area area = _areaService.FindByCondition(x => x.AreaId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.AreaSupplyItem).FirstOrDefault();
+            Area area = _areaService.FindByCondition(x => x.AreaId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.Yes).FirstOrDefault();
 
             _result = _areaService.Delete(area, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<AreaRequest>>(ReturnCollection(request.PropertyId, request.UserId));
@@ -115,12 +142,28 @@ namespace TempleVolunteerAPI.API
 
             foreach (int supplyItemId in supplyItemIds)
             {
-                supplyItem = _supplyItemService.FindByCondition(x=>x.SupplyItemId == supplyItemId, propertyId, userId, WithDetails.None).FirstOrDefault();
+                supplyItem = _supplyItemService.FindByCondition(x => x.SupplyItemId == supplyItemId, propertyId, userId, WithDetails.No).FirstOrDefault();
                 addAreaSupplyItem = new AreaSupplyItem { Area = area, SupplyItem = supplyItem };
                 areaSupplyItems.Add(addAreaSupplyItem);
             }
 
             return areaSupplyItems;
+        }
+
+        private IList<AreaEventTask> GetEventTasks(Area area, int[] eventTaskIds, int propertyId, string userId)
+        {
+            EventTask eventTask;
+            AreaEventTask addAreaEventTask;
+            IList<AreaEventTask> areaEventTasks = new List<AreaEventTask>();
+
+            foreach (int eventTaskId in eventTaskIds)
+            {
+                eventTask = _eventTaskService.FindByCondition(x => x.EventTaskId == eventTaskId, propertyId, userId, WithDetails.No).FirstOrDefault();
+                addAreaEventTask = new AreaEventTask { Area = area, EventTask = eventTask };
+                areaEventTasks.Add(addAreaEventTask);
+            }
+
+            return areaEventTasks;
         }
 
         private IList<Area> ReturnCollection(int propertyId, string userId)

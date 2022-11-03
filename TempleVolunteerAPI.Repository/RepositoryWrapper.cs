@@ -13,6 +13,7 @@ namespace TempleVolunteerAPI.Repository
         private readonly IMapper _mapper;
         private IAreaRepository _area;
         private ICategoryRepository _category;
+        private ICommitteeRepository _committee;
         private ICredentialRepository _credential;
         private IDocumentRepository _document;
         private IErrorLogRepository _errorLog;
@@ -25,7 +26,10 @@ namespace TempleVolunteerAPI.Repository
         private IStaffRepository _staff;
         private ISupplyItemRepository _supplyItem;
 
+        private IAreaCommitteeRepository _areaCommittees;
+        private IAreaEventTaskRepository _areaEventTask;
         private IAreaSupplyItemRepository _areaSupplyItem;
+        private ICommitteeStaffRepository _committeeStaff;
         private IEventEventTypeRepository _eventEventType;
         private IEventTypeAreaRepository _eventTypeArea;
         private IStaffCredentialRepository _staffCredential;
@@ -64,6 +68,19 @@ namespace TempleVolunteerAPI.Repository
             }
         }
 
+        public IAreaCommitteeRepository AreaCommittees
+        {
+            get
+            {
+                if (_areaCommittees == null)
+                {
+                    _areaCommittees = new AreaCommitteeRepository(_context);
+                }
+
+                return _areaCommittees;
+            }
+        }
+
         public ICategoryRepository Categories
         {
             get
@@ -74,6 +91,32 @@ namespace TempleVolunteerAPI.Repository
                 }
 
                 return _category;
+            }
+        }
+
+        public ICommitteeRepository Committees
+        {
+            get
+            {
+                if (_committee == null)
+                {
+                    _committee = new CommitteeRepository(_context);
+                }
+
+                return _committee;
+            }
+        }
+
+        public ICommitteeStaffRepository CommitteeStaff
+        {
+            get
+            {
+                if (_committeeStaff == null)
+                {
+                    _committeeStaff = new CommitteeStaffRepository(_context);
+                }
+
+                return _committeeStaff;
             }
         }
 
@@ -217,6 +260,19 @@ namespace TempleVolunteerAPI.Repository
                 }
 
                 return _supplyItem;
+            }
+        }
+
+        public IAreaEventTaskRepository AreaEventTasks
+        {
+            get
+            {
+                if (_areaEventTask == null)
+                {
+                    _areaEventTask = new AreaEventTaskRepository(_context);
+                }
+
+                return _areaEventTask;
             }
         }
 

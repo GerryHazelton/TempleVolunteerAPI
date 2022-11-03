@@ -23,7 +23,6 @@ namespace TempleVolunteerAPI.Domain
         public int StaffId { get; set; }
 
         #region Dependencies
-        public int PropertyId { get; set; }
         public virtual Property Property { get; set; }
         #endregion
 

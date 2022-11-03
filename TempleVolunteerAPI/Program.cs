@@ -37,34 +37,51 @@ builder.Services.AddSession(options =>
 #region Services injection
 builder.Services.AddTransient(typeof(IEmailService), typeof(EmailService));
 builder.Services.AddTransient(typeof(IAreaService), typeof(AreaService));
+builder.Services.AddTransient(typeof(IAreaCommitteeService), typeof(AreaCommitteeService));
 builder.Services.AddTransient(typeof(IAreaSupplyItemService), typeof(AreaSupplyItemService));
+builder.Services.AddTransient(typeof(IAreaEventTaskService), typeof(AreaEventTaskService));
+builder.Services.AddTransient(typeof(ICategoryService), typeof(CategoryService));
+builder.Services.AddTransient(typeof(ICommitteeService), typeof(CommitteeService));
+builder.Services.AddTransient(typeof(ICommitteeStaffService), typeof(CommitteeStaffService));
 builder.Services.AddTransient(typeof(ICredentialService), typeof(CredentialService));
 builder.Services.AddTransient(typeof(IDocumentService), typeof(DocumentService));
 builder.Services.AddTransient(typeof(IEventService), typeof(EventService));
+builder.Services.AddTransient(typeof(IEventTaskService), typeof(EventTaskService));
 builder.Services.AddTransient(typeof(IEventTypeService), typeof(EventTypeService));
+builder.Services.AddTransient(typeof(IEventTypeAreaService), typeof(EventTypeAreaService));
+builder.Services.AddTransient(typeof(IEventEventTypeService), typeof(EventEventTypeService));
 builder.Services.AddTransient(typeof(IMessageService), typeof(MessageService));
 builder.Services.AddTransient(typeof(IPropertyService), typeof(PropertyService));
 builder.Services.AddTransient(typeof(IRoleService), typeof(RoleService));
 builder.Services.AddTransient(typeof(IStaffService), typeof(StaffService));
 builder.Services.AddTransient(typeof(ISupplyItemService), typeof(SupplyItemService));
 builder.Services.AddTransient(typeof(ITokenService), typeof(TokenService));
+builder.Services.AddTransient(typeof(IStaffCredentialService), typeof(StaffCredentialService));
 builder.Services.AddTransient(typeof(IStaffRoleService), typeof(StaffRoleService));
 builder.Services.AddTransient(typeof(IAccountService), typeof(AccountService));
 #endregion
 
 #region Repositories injection
 builder.Services.AddTransient(typeof(IAreaRepository), typeof(AreaRepository));
+builder.Services.AddTransient(typeof(IAreaCommitteeRepository), typeof(AreaCommitteeRepository));
 builder.Services.AddTransient(typeof(IAreaSupplyItemRepository), typeof(AreaSupplyItemRepository));
+builder.Services.AddTransient(typeof(IAreaEventTaskRepository), typeof(AreaEventTaskRepository));
+builder.Services.AddTransient(typeof(ICategoryRepository), typeof(CategoryRepository));
+builder.Services.AddTransient(typeof(ICommitteeRepository), typeof(CommitteeRepository));
+builder.Services.AddTransient(typeof(ICommitteeStaffRepository), typeof(CommitteeStaffRepository));
 builder.Services.AddTransient(typeof(ICredentialRepository), typeof(CredentialRepository));
 builder.Services.AddTransient(typeof(IDocumentRepository), typeof(DocumentRepository));
-builder.Services.AddTransient(typeof(IErrorLogRepository), typeof(ErrorLogRepository));
 builder.Services.AddTransient(typeof(IEventRepository), typeof(EventRepository));
+builder.Services.AddTransient(typeof(IEventTypeAreaRepository), typeof(EventTypeAreaRepository));
+builder.Services.AddTransient(typeof(IEventTaskRepository), typeof(EventTaskRepository));
 builder.Services.AddTransient(typeof(IEventTypeRepository), typeof(EventTypeRepository));
+builder.Services.AddTransient(typeof(IEventEventTypeRepository), typeof(EventEventTypeRepository));
 builder.Services.AddTransient(typeof(IMessageRepository), typeof(MessageRepository));
 builder.Services.AddTransient(typeof(IPropertyRepository), typeof(PropertyRepository));
 builder.Services.AddTransient(typeof(IRoleRepository), typeof(RoleRepository));
 builder.Services.AddTransient(typeof(IStaffRepository), typeof(StaffRepository));
 builder.Services.AddTransient(typeof(ISupplyItemRepository), typeof(SupplyItemRepository));
+builder.Services.AddTransient(typeof(IStaffCredentialRepository), typeof(StaffCredentialRepository));
 builder.Services.AddTransient(typeof(IStaffRoleRepository), typeof(StaffRoleRepository));
 #endregion
 

@@ -28,10 +28,7 @@ namespace TempleVolunteerAPI.Repository
         {
             switch (details)
             {
-                case WithDetails.AreaEventType:
-                    return FindByCondition(match, propertyId, userId).Include(x => x.SupplyItem).AsNoTracking();
-                    break;
-                case WithDetails.AreaSupplyItem:
+                case WithDetails.Yes:
                     return FindByCondition(match, propertyId, userId).Include(x => x.SupplyItem).AsNoTracking();
                     break;
                 default:

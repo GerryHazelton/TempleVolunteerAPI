@@ -1,36 +1,44 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TempleVolunteerAPI.Domain;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
+using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Repository
 {
     public class RoleRepository : RepositoryBase<Role>, IRoleRepository
     {
+        private readonly ApplicationDBContext _context;
+
         public RoleRepository(ApplicationDBContext context)
             : base(context)
         {
+            _context = context;
         }
 
-        public async Task<IEnumerable<Role>> GetAllRolesAsync(int propertyId, string userId)
+        public IQueryable<Role> GetAllRoles(int propertyId, string userId)
         {
-            return await FindAll(propertyId, userId)
-               .OrderBy(x => x.Name)
-               .ToListAsync();
+            return FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
         }
 
-        public async Task<Role> GetRoleByMatchAsync(Expression<Func<Role, bool>> match, int propertyId, string userId)
+        public IQueryable<Role> GetRoleByMatch(Expression<Func<Role, bool>> match, int propertyId, string userId)
         {
-            return await FindByCondition(match, propertyId, userId).FirstOrDefaultAsync();
+            return FindByCondition(match, propertyId, userId).AsNoTracking();
         }
 
-        public async Task<Role> GetRoleWithDetailsAsync(Expression<Func<Role, bool>> match, int propertyId, string userId)
+        public IQueryable<Role> GetRoleWithDetails(Expression<Func<Role, bool>> match, int propertyId, string userId, WithDetails details)
         {
-            return await FindByCondition(match, propertyId, userId).FirstOrDefaultAsync();
+            switch (details)
+            {
+                default:
+                    return FindByCondition(match, propertyId, userId).AsNoTracking();
+                    break;
+            }
         }
 
-        public bool CreateRole(Role role, int propertyId, string userId)
+        public Role CreateRole(Role role, int propertyId, string userId)
         {
-            return true;// Create(role, propertyId, userId);
+            return Create(role, propertyId, userId);
         }
 
         public bool UpdateRole(Role role, int propertyId, string userId)

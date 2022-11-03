@@ -31,10 +31,7 @@ namespace TempleVolunteerAPI.Domain
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
         public ICollection<AreaSupplyItem> Areas { get; set; }
-        [ForeignKey(nameof(Property))]
-        public int? PropertyId { get; set; }
         public Property? Property { get; set; }
-
         #endregion
 
         #region Constructors

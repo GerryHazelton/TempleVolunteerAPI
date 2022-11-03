@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TempleVolunteerAPI.Domain
 {
@@ -10,6 +11,7 @@ namespace TempleVolunteerAPI.Domain
         public DateTime? UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsHidden { get; set; }
+        [ForeignKey(nameof(Property))]
         public int PropertyId { get; set; }
 
         public Audit()

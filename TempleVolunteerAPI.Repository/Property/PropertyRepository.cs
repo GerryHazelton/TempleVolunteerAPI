@@ -12,7 +12,7 @@ namespace TempleVolunteerAPI.Repository
         {
         }
 
-        public IQueryable<Property> GetAllPropertys(int propertyId, string userId)
+        public IQueryable<Property> GetAllProperties(int propertyId, string userId)
         {
             return FindAll(propertyId, userId).OrderBy(x => x.Name);
         }
@@ -27,9 +27,9 @@ namespace TempleVolunteerAPI.Repository
             return FindByCondition(match, propertyId, userId);
         }
 
-        public bool CreateProperty(Property property, int propertyId, string userId)
+        public Property CreateProperty(Property property, int propertyId, string userId)
         {
-            return true;// Create(property, propertyId, userId);
+            return Create(property, propertyId, userId);
         }
 
         public bool UpdateProperty(Property property, int propertyId, string userId)

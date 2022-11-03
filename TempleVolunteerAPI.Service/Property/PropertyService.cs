@@ -8,6 +8,7 @@ namespace TempleVolunteerAPI.Service
     public class PropertyService : IPropertyService
     {
         private readonly IRepositoryWrapper _uow;
+        private bool _result;
 
         public PropertyService(IRepositoryWrapper uow)
         {
@@ -16,27 +17,33 @@ namespace TempleVolunteerAPI.Service
 
         public Property Create(Property entity, int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            var property = _uow.Properties.CreateProperty(entity, propertyId, userId);
+
+            return property;
         }
 
         public bool Delete(Property entity, int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            _result = _uow.Properties.DeleteProperty(entity, propertyId, userId);
+
+            return _result;
         }
 
         public IQueryable<Property> FindAll(int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            return _uow.Properties.GetAllProperties(propertyId, userId);
         }
 
         public IQueryable<Property> FindByCondition(Expression<Func<Property, bool>> match, int propertyId, string userId, WithDetails details)
         {
-            throw new NotImplementedException();
+            return _uow.Properties.GetPropertyWithDetails(match, propertyId, userId, details);
         }
 
         public bool Update(Property entity, int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            _result = _uow.Properties.UpdateProperty(entity, propertyId, userId);
+
+            return _result;
         }
     }
 }

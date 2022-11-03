@@ -23,6 +23,9 @@ namespace TempleVolunteerAPI.Repository
         IStaffRepository Staff { get; }
         ISupplyItemRepository SupplyItems { get; }
 
+        IAreaCommitteeRepository AreaCommittees { get; }
+        ICommitteeStaffRepository CommitteeStaff { get; }
+        IAreaEventTaskRepository AreaEventTasks { get; }
         IAreaSupplyItemRepository AreaSupplyItems { get; }
         IEventTypeAreaRepository EventTypeAreas { get; }
         IEventEventTypeRepository EventEventTypes { get; }

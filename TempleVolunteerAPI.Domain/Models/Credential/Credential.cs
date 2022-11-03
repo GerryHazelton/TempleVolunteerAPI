@@ -28,7 +28,6 @@ namespace TempleVolunteerAPI.Domain
         public DateTime? ExpireDate { get; set; }
 
         #region Dependencies
-        public int PropertyId { get; set; }
         public virtual Property Property { get; set; }
         public virtual ICollection<StaffCredential> Staff { get; set; }
 

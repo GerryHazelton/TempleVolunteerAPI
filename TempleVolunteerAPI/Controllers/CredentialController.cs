@@ -21,16 +21,16 @@ namespace TempleVolunteerAPI.API
         private ServiceResponse<CredentialResponse> _response;
         private bool _result;
 
-        public CredentialController(ICredentialService CredentialService, IMapper mapper, ISupplyItemService supplyItemService)
+        public CredentialController(ICredentialService credentialService, IMapper mapper, ISupplyItemService supplyItemService)
         {
-            _credentialService = CredentialService;
+            _credentialService = credentialService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<CredentialRequest>>();
             _response = new ServiceResponse<CredentialResponse>();
         }
 
-        [HttpGet("GetAll")]
-        public ServiceResponse<IList<CredentialRequest>> GetAll(int propertyId, string userId)
+        [HttpGet("GetAllAsync")]
+        public ServiceResponse<IList<CredentialRequest>> GetAllAsync(int propertyId, string userId)
         {
             _collResponse.Data = _mapper.Map<IList<CredentialRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
@@ -38,17 +38,17 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpGet("GetById")]
-        public ServiceResponse<CredentialResponse> GetById(int id, int propertyId, string userId)
+        [HttpGet("GetByIdAsync")]
+        public ServiceResponse<CredentialResponse> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<CredentialResponse>(_credentialService.FindByCondition(x => x.CredentialId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.None));
+            _response.Data = _mapper.Map<CredentialResponse>(_credentialService.FindByCondition(x => x.CredentialId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
-        [HttpPost("Post")]
-        public ServiceResponse<IList<CredentialRequest>> Post([FromBody] CredentialRequest request)
+        [HttpPost("PostAsync")]
+        public ServiceResponse<IList<CredentialRequest>> PostAsync([FromBody] CredentialRequest request)
         {
             Credential credential = _mapper.Map<Credential>(request);
             credential = (Credential)_credentialService.Create(credential, request.PropertyId, request.CreatedBy);
@@ -58,10 +58,10 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpPut("Put")]
-        public ServiceResponse<IList<CredentialRequest>> Put([FromBody] CredentialRequest request)
+        [HttpPut("PutAsync")]
+        public ServiceResponse<IList<CredentialRequest>> PutAsync([FromBody] CredentialRequest request)
         {
-            Credential credential = _credentialService.FindByCondition(x => x.CredentialId == request.CredentialId, request.PropertyId, request.UpdatedBy, WithDetails.None).FirstOrDefault();
+            Credential credential = _credentialService.FindByCondition(x => x.CredentialId == request.CredentialId, request.PropertyId, request.UpdatedBy, WithDetails.No).FirstOrDefault();
             credential = _mapper.Map<Credential>(request);
 
             _result = _credentialService.Update(credential, request.PropertyId, request.CreatedBy);
@@ -71,10 +71,10 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpDelete("Delete")]
-        public ServiceResponse<IList<CredentialRequest>> Delete(MiscRequest request)
+        [HttpDelete("DeleteAsync")]
+        public ServiceResponse<IList<CredentialRequest>> DeleteAsync(MiscRequest request)
         {
-            Credential credential = _credentialService.FindByCondition(x => x.CredentialId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.None).FirstOrDefault();
+            Credential credential = _credentialService.FindByCondition(x => x.CredentialId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.No).FirstOrDefault();
 
             _result = _credentialService.Delete(credential, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<CredentialRequest>>(ReturnCollection(request.PropertyId, request.UserId));

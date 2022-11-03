@@ -6,6 +6,7 @@ using TempleVolunteerAPI.Domain.DTO;
 using AutoMapper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Linq.Expressions;
+using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Repository
 {
@@ -95,19 +96,13 @@ namespace TempleVolunteerAPI.Repository
             return _repositoryResponse;
         }
 
-        public async Task<RepositoryResponse<MyProfileRequest>> CustomMyProfileUpdateAsync(MyProfileRequest request)
+        public void CustomMyProfileUpdate(MyProfileRequest request)
         {
             try
             {
                 StringBuilder sbSql = new StringBuilder("UPDATE Staff\n");
                 sbSql.Append("SET ");
-                var originalStaff = await _context.Staff.FirstAsync(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
-
-                if (originalStaff == null)
-                {
-                    _myProfileRepositoryResponse.Error = new Exception("User not found.");
-                    return _myProfileRepositoryResponse;
-                }
+                var originalStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
 
                 if (!originalStaff.FirstName.ToLower().Trim().Equals(request.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", request.FirstName);
                 if (!originalStaff.LastName.ToLower().Trim().Equals(request.LastName.ToLower().Trim())) sbSql.AppendFormat("LastName = '{0}', ", request.LastName);
@@ -156,23 +151,21 @@ namespace TempleVolunteerAPI.Repository
 
                 sbSql = new StringBuilder(sbSql.ToString().Substring(0, sbSql.ToString().Length - 2));
                 sbSql.AppendFormat("\nWHERE EmailAddress = '{0}' AND PropertyId = {1}", request.EmailAddress, request.PropertyId);
-                await _context.Database.ExecuteSqlRawAsync(sbSql.ToString());
-                Staff updatedStaff = await _context.Staff.FirstAsync(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
+                _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                Staff updatedStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
                 _myProfileRepositoryResponse.Entity = _mapper.Map<MyProfileRequest>(updatedStaff);
             }
             catch (Exception ex)
             {
                 _myProfileRepositoryResponse.Error = ex;
             }
-
-            return _myProfileRepositoryResponse;
         }
 
-        public async Task RecordLoginAttempts(string userId, int propertyId)
+        public void RecordLoginAttempts(string userId, int propertyId)
         {
             try
             {
-                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId && x.PropertyId == propertyId);
+                Staff staff = _context.Set<Staff>().SingleOrDefault(x => x.EmailAddress == userId && x.PropertyId == propertyId);
                 staff.LoginAttempts++;
                 _context.Set<Staff>().Attach(staff);
                 _context.Entry(staff).State = EntityState.Modified;
@@ -184,11 +177,11 @@ namespace TempleVolunteerAPI.Repository
             }
         }
 
-        public async Task ResetLoginAttempts(string userId, int propertyId)
+        public void ResetLoginAttempts(string userId, int propertyId)
         {
             try
             {
-                Staff staff = await _context.Set<Staff>().SingleOrDefaultAsync(x => x.EmailAddress == userId && x.PropertyId == propertyId);
+                Staff staff = _context.Set<Staff>().SingleOrDefault(x => x.EmailAddress == userId && x.PropertyId == propertyId);
                 staff.LoginAttempts = 0;
                 _context.Set<Staff>().Attach(staff);
                 _context.Entry(staff).State = EntityState.Modified;
@@ -200,26 +193,31 @@ namespace TempleVolunteerAPI.Repository
             }
         }
 
-        public async Task<IEnumerable<Staff>> GetAllStaffAsync(int propertyId, string userId)
+        public IQueryable<Staff> GetAllStaff(int propertyId, string userId)
         {
-            return await FindAll(propertyId, userId)
-               .OrderBy(x => x.LastName)
-               .ToListAsync();
+            return FindAll(propertyId, userId).OrderBy(x => x.LastName).AsNoTracking();
         }
 
-        public async Task<Staff> GetStaffByMatchAsync(Expression<Func<Staff, bool>> match, int propertyId, string userId)
+        public IQueryable<Staff> GetStaffByMatch(Expression<Func<Staff, bool>> match, int propertyId, string userId)
         {
-            return await FindByCondition(match, propertyId, userId).FirstOrDefaultAsync();
+            return FindByCondition(match, propertyId, userId).AsNoTracking();
         }
 
-        public async Task<Staff> GetStaffWithDetailsAsync(Expression<Func<Staff, bool>> match, int propertyId, string userId)
+        public IQueryable<Staff> GetStaffWithDetails(Expression<Func<Staff, bool>> match, int propertyId, string userId, WithDetails details)
         {
-            return await FindByCondition(match, propertyId, userId).Include(x=>x.Roles).FirstOrDefaultAsync();
+            switch (details)
+            {
+                case WithDetails.Yes:
+                    return FindByCondition(match, propertyId, userId).Include(x=>x.Credentials).Include(x=>x.RefreshTokens).Include(x=>x.Roles).AsNoTracking();
+                default:
+                    return FindByCondition(match, propertyId, userId).AsNoTracking();
+                    break;
+            }
         }
 
-        public bool CreateStaff(Staff staff, int propertyId, string userId)
+        public Staff CreateStaff(Staff staff, int propertyId, string userId)
         {
-            return true;// Create(staff, propertyId, userId);
+            return Create(staff, propertyId, userId);
         }
 
         public bool UpdateStaff(Staff staff, int propertyId, string userId)

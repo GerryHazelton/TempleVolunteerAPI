@@ -20,10 +20,7 @@ namespace TempleVolunteerAPI.Domain
 
         #region Dependencies
         public virtual ICollection<AreaEventTask> Areas { get; set; }
-        [ForeignKey(nameof(Property))]
-        public int? PropertyId { get; set; }
         public Property? Property { get; set; }
-
         #endregion
 
         #region Constructors

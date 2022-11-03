@@ -30,7 +30,7 @@ namespace TempleVolunteerAPI.Repository
         {
             switch (details)
             {
-                case WithDetails.EventEventType:
+                case WithDetails.Yes:
                     return FindByCondition(match, propertyId, userId).Include(x => x.EventTypes).AsNoTracking();
                     break;
                 default:

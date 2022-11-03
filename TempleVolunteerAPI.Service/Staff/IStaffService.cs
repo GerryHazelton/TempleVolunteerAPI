@@ -5,6 +5,6 @@ namespace TempleVolunteerAPI.Service
 {
     public interface IStaffService : IServiceBase<Staff>
     {
-        Task<bool> CustomUpdateAsync(Staff entity, string userId);
+        void CustomUpdate(MyProfileRequest entity, string userId);
     }
 }

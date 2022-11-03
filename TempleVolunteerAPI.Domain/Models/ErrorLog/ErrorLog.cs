@@ -20,8 +20,6 @@ namespace TempleVolunteerAPI.Domain
         [StringLength(6)]
         public string? Environment { get; set; }
 
-        public int? PropertyId { get; set; }
-
         #region Constructors
         public ErrorLog()
         {

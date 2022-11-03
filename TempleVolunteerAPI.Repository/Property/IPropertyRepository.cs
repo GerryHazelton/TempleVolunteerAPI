@@ -6,10 +6,10 @@ namespace TempleVolunteerAPI.Repository
 {
     public interface IPropertyRepository : IRepositoryBase<Property>
     {
-        IQueryable<Property> GetAllPropertys(int propertyId, string userId);
+        IQueryable<Property> GetAllProperties(int propertyId, string userId);
         IQueryable<Property> GetPropertyByMatch(Expression<Func<Property, bool>> match, int propertyId, string userId);
         IQueryable<Property> GetPropertyWithDetails(Expression<Func<Property, bool>> match, int propertyId, string userId, WithDetails details);
-        bool CreateProperty(Property property, int propertyId, string userId);
+        Property CreateProperty(Property property, int propertyId, string userId);
         bool UpdateProperty(Property property, int propertyId, string userId);
         bool DeleteProperty(Property property, int propertyId, string userId);
     }

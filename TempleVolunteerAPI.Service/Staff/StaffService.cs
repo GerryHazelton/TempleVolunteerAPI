@@ -1,9 +1,6 @@
-﻿using TempleVolunteerAPI.Domain;
-using TempleVolunteerAPI.Common;
+﻿using System.Linq.Expressions;
+using TempleVolunteerAPI.Domain;
 using TempleVolunteerAPI.Repository;
-using TempleVolunteerAPI.Service;
-using TempleVolunteerAPI.Domain.DTO;
-using System.Linq.Expressions;
 using static TempleVolunteerAPI.Common.EnumHelper;
 
 namespace TempleVolunteerAPI.Service
@@ -11,46 +8,47 @@ namespace TempleVolunteerAPI.Service
     public class StaffService : IStaffService
     {
         private readonly IRepositoryWrapper _uow;
-        private readonly IEmailService _emailService;
-        RepositoryResponse<Staff> _repositoryResponse;
-        private readonly IStaffRepository _staffRepository;
+        private bool _result;
 
-        public StaffService(IRepositoryWrapper uow, IEmailService emailService, IStaffRepository staffRepository)
+        public StaffService(IRepositoryWrapper uow)
         {
             this._uow = uow;
-            this._emailService = emailService;
-            _repositoryResponse = new RepositoryResponse<Staff>();
-            _staffRepository = staffRepository;
-        }
-
-        public Task<bool> CustomUpdateAsync(Staff entity, string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQueryable<Staff> FindAll(int propertyId, string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQueryable<Staff> FindByCondition(Expression<Func<Staff, bool>> match, int propertyId, string userId, WithDetails details)
-        {
-            throw new NotImplementedException();
         }
 
         public Staff Create(Staff entity, int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            var staff = _uow.Staff.CreateStaff(entity, propertyId, userId);
+
+            return staff;
         }
 
-        public bool Update(Staff entity, int propertyId, string userId)
+        public void CustomUpdate(MyProfileRequest entity, string userId)
         {
-            throw new NotImplementedException();
+            _uow.Staff.CustomMyProfileUpdate(entity);
         }
 
         public bool Delete(Staff entity, int propertyId, string userId)
         {
-            throw new NotImplementedException();
+            _result = _uow.Staff.DeleteStaff(entity, propertyId, userId);
+
+            return _result;
+        }
+
+        public IQueryable<Staff> FindAll(int propertyId, string userId)
+        {
+            return _uow.Staff.GetAllStaff(propertyId, userId);
+        }
+
+        public IQueryable<Staff> FindByCondition(Expression<Func<Staff, bool>> match, int propertyId, string userId, WithDetails details)
+        {
+            return _uow.Staff.GetStaffWithDetails(match, propertyId, userId, details);
+        }
+
+        public bool Update(Staff entity, int propertyId, string userId)
+        {
+            _result = _uow.Staff.UpdateStaff(entity, propertyId, userId);
+
+            return _result;
         }
     }
 }

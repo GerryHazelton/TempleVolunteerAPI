@@ -21,16 +21,16 @@ namespace TempleVolunteerAPI.API
         private ServiceResponse<DocumentResponse> _response;
         private bool _result;
 
-        public DocumentController(IDocumentService DocumentService, IMapper mapper, ISupplyItemService supplyItemService)
+        public DocumentController(IDocumentService documentService, IMapper mapper, ISupplyItemService supplyItemService)
         {
-            _documentService = DocumentService;
+            _documentService = documentService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<DocumentRequest>>();
             _response = new ServiceResponse<DocumentResponse>();
         }
 
-        [HttpGet("GetAll")]
-        public ServiceResponse<IList<DocumentRequest>> GetAll(int propertyId, string userId)
+        [HttpGet("GetAllAsync")]
+        public ServiceResponse<IList<DocumentRequest>> GetAllAsync(int propertyId, string userId)
         {
             _collResponse.Data = _mapper.Map<IList<DocumentRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
@@ -38,17 +38,17 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpGet("GetById")]
-        public ServiceResponse<DocumentResponse> GetById(int id, int propertyId, string userId)
+        [HttpGet("GetByIdAsync")]
+        public ServiceResponse<DocumentResponse> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<DocumentResponse>(_documentService.FindByCondition(x => x.DocumentId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.None));
+            _response.Data = _mapper.Map<DocumentResponse>(_documentService.FindByCondition(x => x.DocumentId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
         }
 
-        [HttpPost("Post")]
-        public ServiceResponse<IList<DocumentRequest>> Post([FromBody] DocumentRequest request)
+        [HttpPost("PostAsync")]
+        public ServiceResponse<IList<DocumentRequest>> PostAsync([FromBody] DocumentRequest request)
         {
             Document document = _mapper.Map<Document>(request);
             document = (Document)_documentService.Create(document, request.PropertyId, request.CreatedBy);
@@ -58,10 +58,10 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpPut("Put")]
-        public ServiceResponse<IList<DocumentRequest>> Put([FromBody] DocumentRequest request)
+        [HttpPut("PutAsync")]
+        public ServiceResponse<IList<DocumentRequest>> PutAsync([FromBody] DocumentRequest request)
         {
-            Document document = _documentService.FindByCondition(x => x.DocumentId == request.DocumentId, request.PropertyId, request.UpdatedBy, WithDetails.None).FirstOrDefault();
+            Document document = _documentService.FindByCondition(x => x.DocumentId == request.DocumentId, request.PropertyId, request.UpdatedBy, WithDetails.No).FirstOrDefault();
             document = _mapper.Map<Document>(request);
 
             _result = _documentService.Update(document, request.PropertyId, request.CreatedBy);
@@ -71,10 +71,10 @@ namespace TempleVolunteerAPI.API
             return _collResponse;
         }
 
-        [HttpDelete("Delete")]
-        public ServiceResponse<IList<DocumentRequest>> Delete(MiscRequest request)
+        [HttpDelete("DeleteAsync")]
+        public ServiceResponse<IList<DocumentRequest>> DeleteAsync(MiscRequest request)
         {
-            Document document = _documentService.FindByCondition(x => x.DocumentId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.None).FirstOrDefault();
+            Document document = _documentService.FindByCondition(x => x.DocumentId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.No).FirstOrDefault();
 
             _result = _documentService.Delete(document, request.PropertyId, request.UserId);
             _collResponse.Data = _mapper.Map<IList<DocumentRequest>>(ReturnCollection(request.PropertyId, request.UserId));

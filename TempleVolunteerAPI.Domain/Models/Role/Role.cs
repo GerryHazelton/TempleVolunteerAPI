@@ -18,7 +18,6 @@ namespace TempleVolunteerAPI.Domain
         public string? Note { get; set; }
 
         #region Dependencies
-        public int PropertyId { get; set; }
         public virtual Property Property { get; set; }
         public virtual ICollection<StaffRole> Staff { get; set; }
 

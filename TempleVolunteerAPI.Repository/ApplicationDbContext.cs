@@ -16,6 +16,7 @@ namespace TempleVolunteerAPI.Repository
 
         public virtual DbSet<Area> Areas { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Committee> Committees { get; set; }
         public virtual DbSet<Credential> Credentials { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<ErrorLog> ErrorLog { get; set; }
@@ -34,6 +35,7 @@ namespace TempleVolunteerAPI.Repository
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Area>().ToTable("Areas");
             modelBuilder.Entity<Category>().ToTable("Categories");
+            modelBuilder.Entity<Committee>().ToTable("Committees");
             modelBuilder.Entity<Credential>().ToTable("Credentials");
             modelBuilder.Entity<Document>().ToTable("Documents");
             modelBuilder.Entity<ErrorLog>().ToTable("ErrorLog");
@@ -46,25 +48,45 @@ namespace TempleVolunteerAPI.Repository
             modelBuilder.Entity<Role>().ToTable("Roles");
             modelBuilder.Entity<Staff>().ToTable("Staff");
             modelBuilder.Entity<SupplyItem>().ToTable("SupplyItems");
-            modelBuilder.Entity<StaffCredential>().ToTable("CredentialsStaff");
-            modelBuilder.Entity<PropertyStaff>().ToTable("PropertiesStaff");
-            modelBuilder.Entity<RefreshTokenStaff>().ToTable("RefreshTokensStaff");
-            modelBuilder.Entity<StaffRole>().ToTable("RolesStaff");
+            modelBuilder.Entity<AreaCommittee>().ToTable("AreaCommittees");
+            modelBuilder.Entity<CommitteeStaff>().ToTable("CommitteeStaff");
+            modelBuilder.Entity<StaffCredential>().ToTable("StaffCredentials");
+            modelBuilder.Entity<PropertyStaff>().ToTable("PropertyStaff");
+            modelBuilder.Entity<RefreshTokenStaff>().ToTable("StaffRefreshTokens");
+            modelBuilder.Entity<StaffRole>().ToTable("StaffRoles");
+            modelBuilder.Entity<AreaEventTask>().ToTable("AreaEventTasks");
             modelBuilder.Entity<AreaSupplyItem>().ToTable("AreaSupplyItems");
+            modelBuilder.Entity<EventTypeArea>().ToTable("EventTypeAreas");
             modelBuilder.Entity<EventEventType>().ToTable("EventEventTypes");
-            modelBuilder.Entity<StaffCredential>().ToTable("CredentialsStaff");
-            modelBuilder.Entity<PropertyStaff>().ToTable("PropertiesStaff");
-            modelBuilder.Entity<RefreshToken>().ToTable("RefreshTokens");
-            modelBuilder.Entity<StaffRole>().ToTable("RolesStaff");
+
+            #region Area Committee
+            modelBuilder.Entity<AreaCommittee>()
+            .HasKey(x => new { x.AreaId, x.CommitteeId });
+            #endregion
+
+            #region Area EventTask
+            modelBuilder.Entity<AreaEventTask>()
+            .HasKey(x => new { x.AreaId, x.EventTaskId });
+            #endregion
 
             #region Area SupplyItem
             modelBuilder.Entity<AreaSupplyItem>()
             .HasKey(x => new { x.AreaId, x.SupplyItemId });
             #endregion
 
+            #region Committee Staff
+            modelBuilder.Entity<CommitteeStaff>()
+            .HasKey(x => new { x.CommitteeId, x.StaffId });
+            #endregion
+
             #region Credential Staff
             modelBuilder.Entity<StaffCredential>()
             .HasKey(x => new { x.CredentialId, x.StaffId });
+            #endregion
+
+            #region EventType Area
+            modelBuilder.Entity<EventTypeArea>()
+            .HasKey(x => new { x.EventTypeId, x.AreaId });
             #endregion
 
             #region Event EventType
@@ -88,24 +110,26 @@ namespace TempleVolunteerAPI.Repository
             #endregion
 
             #region Add Data
-            Property glendale = new Property("gerryhazelton@gmail.com");
-            glendale.PropertyId = 1;
-            glendale.Name = "Glendale Temple";
-            glendale.Address = "123 Main Street";
-            glendale.Address2 = "Suite 45";
-            glendale.City = "Glendale";
-            glendale.State = "CA";
-            glendale.PostalCode = "91001";
-            glendale.Country = "US";
-            glendale.EmailAddress = "Glendale@Srf.com";
-            glendale.PhoneNumber = "222-222-2222";
-            glendale.FaxNumber = "333-333-3333";
-            glendale.Website = "https://www.glendaletemple.org";
-            glendale.Note = "Currently, there are no notes";
-            glendale.CreatedBy = "gerryhazelton@gmail.com";
-            glendale.CreatedDate = DateTime.UtcNow;
-            glendale.IsActive = true;
-            glendale.IsHidden = false;
+            Property glendale = new Property
+            {
+                PropertyId = 1,
+                Name = "Glendale Temple",
+                Address = "123 Main Street",
+                Address2 = "Suite 45",
+                City = "Glendale",
+                State = "CA",
+                PostalCode = "91001",
+                Country = "US",
+                EmailAddress = "Glendale@Srf.com",
+                PhoneNumber = "222-222-2222",
+                FaxNumber = "333-333-3333",
+                Website = "https://www.glendaletemple.org",
+                Note = "Currently, there are no notes",
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false
+            };
 
             Property encinitas = new Property
             {
@@ -128,9 +152,75 @@ namespace TempleVolunteerAPI.Repository
                 IsHidden = false,
             };
 
+            Property fullerton = new Property
+            {
+                PropertyId = 3,
+                Name = "Fullterton Temple",
+                Address = "789 Main Street",
+                Address2 = "Suite 22",
+                City = "Fullerton",
+                State = "CA",
+                PostalCode = "92026",
+                Country = "US",
+                EmailAddress = "Fullerton@Srf.com",
+                PhoneNumber = "555-555-5555",
+                FaxNumber = "666-666-6666",
+                Website = "https://www.fullertontemple.org",
+                Note = "Currently, there are no notes",
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
+            Property sandiego = new Property
+            {
+                PropertyId = 4,
+                Name = "San Diego Temple",
+                Address = "222 South Street",
+                Address2 = "Suite 11",
+                City = "San Diego",
+                State = "CA",
+                PostalCode = "92026",
+                Country = "US",
+                EmailAddress = "SanDiego@Srf.com",
+                PhoneNumber = "555-555-5555",
+                FaxNumber = "666-666-6666",
+                Website = "https://www.sandiegotemple.org",
+                Note = "Currently, there are no notes",
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
+            Property hollywood = new Property
+            {
+                PropertyId = 5,
+                Name = "Hollywood Temple",
+                Address = "444 South Street",
+                Address2 = "Suite 33",
+                City = "Hollywood Diego",
+                State = "CA",
+                PostalCode = "92026",
+                Country = "US",
+                EmailAddress = "Hollywood@Srf.com",
+                PhoneNumber = "555-555-5555",
+                FaxNumber = "666-666-6666",
+                Website = "https://www.hollywoodtemple.org",
+                Note = "Currently, there are no notes",
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
             modelBuilder.Entity<Property>().HasData(
                 glendale,
-                encinitas
+                encinitas,
+                fullerton,
+                sandiego,
+                hollywood
             );
 
             Role glendaleAdmin = new Role
@@ -181,11 +271,89 @@ namespace TempleVolunteerAPI.Repository
                 IsHidden = false,
             };
 
+            Role fullertonAdmin = new Role
+            {
+                RoleId = 5,
+                Name = "Admin",
+                Description = "Admin role has full prviliedges",
+                PropertyId = 3,
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
+            Role fullertonVolunteer = new Role
+            {
+                RoleId = 6,
+                Name = "Volunteer",
+                Description = "Volunteer has limited prviliedges",
+                PropertyId = 3,
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
+            Role sandiegoAdmin = new Role
+            {
+                RoleId = 7,
+                Name = "Admin",
+                Description = "Admin role has full prviliedges",
+                PropertyId = 4,
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
+            Role sandiegoVolunteer = new Role
+            {
+                RoleId = 8,
+                Name = "Volunteer",
+                Description = "Volunteer has limited prviliedges",
+                PropertyId = 4,
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
+            Role hollywoodAdmin = new Role
+            {
+                RoleId = 9,
+                Name = "Admin",
+                Description = "Admin role has full prviliedges",
+                PropertyId = 5,
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
+            Role hollywoodVolunteer = new Role
+            {
+                RoleId = 10,
+                Name = "Volunteer",
+                Description = "Volunteer has limited prviliedges",
+                PropertyId = 5,
+                CreatedBy = "gerryhazelton@gmail.com",
+                CreatedDate = DateTime.UtcNow,
+                IsActive = true,
+                IsHidden = false,
+            };
+
             modelBuilder.Entity<Role>().HasData(
                 glendaleAdmin,
                 glendaleVolunteer,
                 encinitasAdmin,
-                encinitasVolunteer
+                encinitasVolunteer,
+                fullertonAdmin,
+                fullertonVolunteer,
+                sandiegoAdmin,
+                sandiegoVolunteer,
+                hollywoodAdmin,
+                hollywoodVolunteer
             );
 
             Staff gerry = new Staff("gerryhazelton@gmail.com");
@@ -214,7 +382,7 @@ namespace TempleVolunteerAPI.Repository
             gerry.RememberMe = true;
             gerry.IsLockedOut = false;
             gerry.LoginAttempts = 0;
-            gerry.Password = "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=";
+            gerry.Password = "11111111";
             gerry.PasswordSalt = "371952==";
             gerry.PropertyId = 1;
             gerry.CreatedBy = "gerryhazelton@gmail.com";
@@ -222,7 +390,7 @@ namespace TempleVolunteerAPI.Repository
 
             Staff gerry2 = new Staff("gerryhazelton@gmail.com");
             gerry2.StaffId = 2;
-            gerry2.FirstName = "Gerry";
+            gerry2.FirstName = "Dolores";
             gerry2.LastName = "Hazelton";
             gerry2.Address = "123 Main Street";
             gerry2.Address2 = "Apt. B";
@@ -246,7 +414,7 @@ namespace TempleVolunteerAPI.Repository
             gerry2.RememberMe = true;
             gerry2.IsLockedOut = false;
             gerry2.LoginAttempts = 0;
-            gerry2.Password = "OLpa5mnXgMZyfwlSkiHI2/enbMo4iTQkPpE9+xYHMEI=";
+            gerry2.Password = "11111111";
             gerry2.PasswordSalt = "371952==";
             gerry2.PropertyId = 2;
             gerry2.CreatedBy = "gerryhazelton@gmail.com";
@@ -256,32 +424,90 @@ namespace TempleVolunteerAPI.Repository
                 gerry, gerry2
             );
 
-            StaffRole roleStaff = new StaffRole { RoleId = 1, StaffId = 1 };
-            StaffRole roleStaff2 = new StaffRole { RoleId = 2, StaffId = 1 };
             modelBuilder.Entity<StaffRole>().HasData(
-              roleStaff, roleStaff2
+                new StaffRole() { RoleId = 1, StaffId = 1 },
+                new StaffRole() { RoleId = 4, StaffId = 2 }
             );
 
-            //modelBuilder.Entity<StaffRole>().HasData(
-            //    new StaffRole() { RoleId = 1, StaffId = 1, PropertyId = 1 },
-            //    new StaffRole() { RoleId = 4, StaffId = 2, PropertyId = 2 }
-            //);
+            modelBuilder.Entity<Area>().HasData(
+                new Area
+                {
+                    AreaId = 1,
+                    Name = "Main Temple",
+                    Description = "This is the main temple area",
+                    Note = "There are no notes",
+                    SupplyItemsAllowed = true,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
 
-            //modelBuilder.Entity<Area>().HasData(
-            //    new Area
-            //    {
-            //        AreaId = 1,
-            //        Name = "Main Temple",
-            //        Description = "This is the main temple area",
-            //        Note = "There are no notes",
-            //        SupplyItemsAllowed = true,
-            //        PropertyId = 1,
-            //        CreatedBy = "gerryhazelton@gmail.com",
-            //        CreatedDate = DateTime.UtcNow,
-            //        IsActive = true,
-            //        IsHidden = false,
-            //    }
-            //);
+            modelBuilder.Entity<Area>().HasData(
+                new Area
+                {
+                    AreaId = 2,
+                    Name = "Kitchen",
+                    Description = "This is the kitchen area",
+                    Note = "There are no notes",
+                    SupplyItemsAllowed = true,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Area>().HasData(
+                new Area
+                {
+                    AreaId = 3,
+                    Name = "Bathroom",
+                    Description = "This is the bathroom area",
+                    Note = "There are no notes",
+                    SupplyItemsAllowed = true,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Area>().HasData(
+                new Area
+                {
+                    AreaId = 4,
+                    Name = "Sunday School Room",
+                    Description = "This is the sunday school room area",
+                    Note = "There are no notes",
+                    SupplyItemsAllowed = true,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Area>().HasData(
+                new Area
+                {
+                    AreaId = 5,
+                    Name = "Parking Lot",
+                    Description = "This is the parking lot area",
+                    Note = "There are no notes",
+                    SupplyItemsAllowed = true,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
 
             modelBuilder.Entity<Category>().HasData(
                 new Category
@@ -289,6 +515,66 @@ namespace TempleVolunteerAPI.Repository
                     CategoryId = 1,
                     Name = "Garden Tool",
                     Description = "This is a garden tool category",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category
+                {
+                    CategoryId = 2,
+                    Name = "Cleaning Liquid",
+                    Description = "This is cleaning liquid category",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category
+                {
+                    CategoryId = 3,
+                    Name = "Gas Powered Tool",
+                    Description = "This is gas powered tool category",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category
+                {
+                    CategoryId = 4,
+                    Name = "Literature",
+                    Description = "This is literature category",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category
+                {
+                    CategoryId = 5,
+                    Name = "Cleaning Appliance",
+                    Description = "This is cleaning appliance category",
                     Note = "There are no notes",
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
@@ -314,12 +600,136 @@ namespace TempleVolunteerAPI.Repository
                 }
             );
 
+            modelBuilder.Entity<Credential>().HasData(
+                new Credential
+                {
+                    CredentialId = 2,
+                    Name = "First Aid",
+                    Description = "First Aid Certification",
+                    Note = "There are no notes",
+                    CompletedDate = DateTime.Now,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Credential>().HasData(
+                new Credential
+                {
+                    CredentialId = 3,
+                    Name = "Drivers License",
+                    Description = "Drivers License",
+                    Note = "There are no notes",
+                    CompletedDate = DateTime.Now,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Credential>().HasData(
+                new Credential
+                {
+                    CredentialId = 4,
+                    Name = "Passport",
+                    Description = "Drivers License",
+                    Note = "There are no notes",
+                    CompletedDate = DateTime.Now,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Credential>().HasData(
+                new Credential
+                {
+                    CredentialId = 5,
+                    Name = "Fork Lift Certification",
+                    Description = "Fork Lift Certification",
+                    Note = "There are no notes",
+                    CompletedDate = DateTime.Now,
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
             modelBuilder.Entity<Document>().HasData(
                 new Document
                 {
                     DocumentId = 1,
                     Name = "Annual Event List",
                     Description = "A list of events for the year",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Document>().HasData(
+                new Document
+                {
+                    DocumentId = 2,
+                    Name = "India Night Announcement",
+                    Description = "India Night event announcement",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Document>().HasData(
+                new Document
+                {
+                    DocumentId = 3,
+                    Name = "Masters Birthday Announcement",
+                    Description = "Masters Birthday event announcement",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Document>().HasData(
+                new Document
+                {
+                    DocumentId = 4,
+                    Name = "All Day Meditation Announcement",
+                    Description = "All Day Meditation event announcement",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Document>().HasData(
+                new Document
+                {
+                    DocumentId = 5,
+                    Name = "All Day Christmas Meditation Announcement",
+                    Description = "All Day Christmas Meditation event announcement",
                     Note = "There are no notes",
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
@@ -346,6 +756,149 @@ namespace TempleVolunteerAPI.Repository
                 }
             );
 
+            modelBuilder.Entity<Event>().HasData(
+                new Event
+                {
+                    EventId = 2,
+                    Name = "Krisha's Birthday",
+                    Description = "Krishna's birthday celebration",
+                    Note = "There are no notes",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(1),
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Event>().HasData(
+                new Event
+                {
+                    EventId = 3,
+                    Name = "Sri Yukteswar's Birthday",
+                    Description = "Sri Yukteswar's birthday celebration",
+                    Note = "There are no notes",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(1),
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Event>().HasData(
+                new Event
+                {
+                    EventId = 4,
+                    Name = "Mahatar Babaji's Birthday",
+                    Description = "Mahavatar's birthday celebration",
+                    Note = "There are no notes",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(1),
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Event>().HasData(
+                new Event
+                {
+                    EventId = 5,
+                    Name = "Jesus' Birthday",
+                    Description = "Jesus' birthday celebration",
+                    Note = "There are no notes",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(1),
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<EventType>().HasData(
+                new EventType
+                {
+                    EventTypeId = 1,
+                    Name = "Comemerative Service",
+                    Description = "Comemerative Service event",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<EventType>().HasData(
+                new EventType
+                {
+                    EventTypeId = 2,
+                    Name = "Birthday",
+                    Description = "Birthday Service event",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<EventType>().HasData(
+                new EventType
+                {
+                    EventTypeId = 3,
+                    Name = "Memorial Service",
+                    Description = "Memorial Service event",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<EventType>().HasData(
+                new EventType
+                {
+                    EventTypeId = 4,
+                    Name = "Wedding Service",
+                    Description = "Wedding Service event",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<EventType>().HasData(
+                new EventType
+                {
+                    EventTypeId = 5,
+                    Name = "Christening Service",
+                    Description = "Christening Service event",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
             modelBuilder.Entity<EventTask>().HasData(
                 new EventTask
                 {
@@ -361,12 +914,57 @@ namespace TempleVolunteerAPI.Repository
                 }
             );
 
-            modelBuilder.Entity<EventType>().HasData(
-                new EventType
+            modelBuilder.Entity<EventTask>().HasData(
+                new EventTask
                 {
-                    EventTypeId = 1,
-                    Name = "Birthday",
-                    Description = "Birthday event",
+                    EventTaskId = 2,
+                    Name = "Chairs setup",
+                    Description = "Setting up chairs",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<EventTask>().HasData(
+                new EventTask
+                {
+                    EventTaskId = 3,
+                    Name = "Toilets",
+                    Description = "Cleaning toilets",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<EventTask>().HasData(
+                new EventTask
+                {
+                    EventTaskId = 4,
+                    Name = "Mop Floors",
+                    Description = "Mopping floors",
+                    Note = "There are no notes",
+                    PropertyId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<EventTask>().HasData(
+                new EventTask
+                {
+                    EventTaskId = 5,
+                    Name = "Clean Windows",
+                    Description = "Cleaning windows",
                     Note = "There are no notes",
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
@@ -382,8 +980,76 @@ namespace TempleVolunteerAPI.Repository
                     MessageId = 1,
                     From = "gerryhazelton@gmail.com",
                     To = "janedoe@gmail.com",
-                    Subject = "Hello",
-                    MessageSent = "This is my message",
+                    Subject = "Hello Jane",
+                    MessageSent = "This is my message to Jane Doe",
+                    PropertyId = 1,
+                    StaffId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Message>().HasData(
+                new Message
+                {
+                    MessageId = 2,
+                    From = "gerryhazelton@gmail.com",
+                    To = "johndoe@gmail.com",
+                    Subject = "Hello John",
+                    MessageSent = "This is my message to John Doe",
+                    PropertyId = 1,
+                    StaffId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Message>().HasData(
+                new Message
+                {
+                    MessageId = 3,
+                    From = "gerryhazelton@gmail.com",
+                    To = "master@gmail.com",
+                    Subject = "Hello Master",
+                    MessageSent = "This is my message to Master",
+                    PropertyId = 1,
+                    StaffId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Message>().HasData(
+                new Message
+                {
+                    MessageId = 4,
+                    From = "gerryhazelton@gmail.com",
+                    To = "dolores@gmail.com",
+                    Subject = "Hello Dolores",
+                    MessageSent = "This is my message to Dolores",
+                    PropertyId = 1,
+                    StaffId = 1,
+                    CreatedBy = "gerryhazelton@gmail.com",
+                    CreatedDate = DateTime.UtcNow,
+                    IsActive = true,
+                    IsHidden = false,
+                }
+            );
+
+            modelBuilder.Entity<Message>().HasData(
+                new Message
+                {
+                    MessageId = 5,
+                    From = "gerryhazelton@gmail.com",
+                    To = "seannie@gmail.com",
+                    Subject = "Hello Seannie",
+                    MessageSent = "This is my message to Seannie",
                     PropertyId = 1,
                     StaffId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
