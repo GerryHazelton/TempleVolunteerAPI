@@ -12,6 +12,8 @@ namespace TempleVolunteerAPI.API
             #region Area
             CreateMap<Area, AreaRequest>();
             CreateMap<AreaRequest, Area>();
+            CreateMap<Area, AreaResponse>();
+            CreateMap<AreaResponse, Area>();
             #endregion
 
             #region Category
@@ -27,6 +29,8 @@ namespace TempleVolunteerAPI.API
             #region Credential
             CreateMap<Credential, CredentialRequest>();
             CreateMap<CredentialRequest, Credential>();
+            CreateMap<Credential, CredentialResponse>();
+            CreateMap<CredentialResponse, Credential>();
             #endregion
 
             #region Document

@@ -64,8 +64,7 @@ namespace TempleVolunteerAPI.Domain
         {
         }
 
-        public Property(string createdBy) :
-            base(createdBy)
+        public Property(string createdBy)
         {
             this.Areas = new List<Area>();
             this.Categories = new List<Category>();

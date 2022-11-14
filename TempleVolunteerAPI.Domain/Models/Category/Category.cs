@@ -27,7 +27,6 @@ namespace TempleVolunteerAPI.Domain
         }
 
         public Category(string createdBy)
-            : base(createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;

@@ -28,8 +28,7 @@ namespace TempleVolunteerAPI.Domain
         {
         }
 
-        public Role(string createdBy) :
-            base(createdBy)
+        public Role(string createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;

@@ -29,7 +29,6 @@ namespace TempleVolunteerAPI.Domain
         }
 
         public EventType(string createdBy)
-            : base(createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;

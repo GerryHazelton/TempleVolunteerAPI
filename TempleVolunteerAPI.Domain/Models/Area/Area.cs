@@ -32,8 +32,7 @@ namespace TempleVolunteerAPI.Domain
         {
         }
 
-        public Area(string createdBy) :
-            base(createdBy)
+        public Area(string createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;

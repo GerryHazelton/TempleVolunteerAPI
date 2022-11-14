@@ -32,7 +32,6 @@ namespace TempleVolunteerAPI.Domain
         }
 
         public Message(string createdBy)
-            : base(createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;

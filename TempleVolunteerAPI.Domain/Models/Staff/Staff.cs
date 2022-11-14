@@ -83,8 +83,7 @@ namespace TempleVolunteerAPI.Domain
         {
         }
 
-        public Staff(string createdBy) :
-            base(createdBy)
+        public Staff(string createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;

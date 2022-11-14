@@ -40,7 +40,6 @@ namespace TempleVolunteerAPI.Domain
         }
 
         public SupplyItem(string createdBy)
-            : base(createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;

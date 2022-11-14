@@ -17,16 +17,6 @@ namespace TempleVolunteerAPI.Domain
         [StringLength(250)]
         public string? Note { get; set; }
 
-
-        [StringLength(150)]
-        public string? CredentialFileName { get; set; }
-
-        public byte[]? CredentialImage { get; set; }
-
-        public DateTime? CompletedDate { get; set; }
-
-        public DateTime? ExpireDate { get; set; }
-
         #region Dependencies
         public virtual Property Property { get; set; }
         public virtual ICollection<StaffCredential> Staff { get; set; }
@@ -39,7 +29,6 @@ namespace TempleVolunteerAPI.Domain
         }
 
         public Credential(string createdBy)
-            : base(createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;

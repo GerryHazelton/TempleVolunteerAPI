@@ -41,7 +41,8 @@ namespace TempleVolunteerAPI.API
         [HttpGet("GetByIdAsync")]
         public ServiceResponse<CredentialResponse> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<CredentialResponse>(_credentialService.FindByCondition(x => x.CredentialId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
+            Credential credential = _credentialService.FindByCondition(x => x.CredentialId == id && x.PropertyId == propertyId, propertyId, userId, WithDetails.No).FirstOrDefault();
+            _response.Data = _mapper.Map<CredentialResponse>(credential);
             _response.Success = _response.Data != null ? true : false;
 
             return _response;

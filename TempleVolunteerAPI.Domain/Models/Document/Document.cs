@@ -32,7 +32,6 @@ namespace TempleVolunteerAPI.Domain
         }
 
         public Document(string createdBy)
-            : base(createdBy)
         {
             this.CreatedBy = createdBy;
             this.CreatedDate = DateTime.UtcNow;
