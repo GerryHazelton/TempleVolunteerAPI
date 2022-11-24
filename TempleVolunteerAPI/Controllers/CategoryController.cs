@@ -16,17 +16,19 @@ namespace TempleVolunteerAPI.API
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly ISupplyItemService _supplyItemService;
+        private readonly IEventTaskService _eventTaskService;
         private readonly IMapper _mapper;
         private ServiceResponse<IList<CategoryRequest>> _collResponse;
-        private ServiceResponse<CategoryResponse> _response;
+        private ServiceResponse<CategoryRequest> _response;
         private bool _result;
 
-        public CategoryController(ICategoryService categoryService, IMapper mapper, ISupplyItemService supplyItemService)
+        public CategoryController(ICategoryService CategoryService, IMapper mapper)
         {
-            _categoryService = categoryService;
+            _categoryService = CategoryService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<CategoryRequest>>();
-            _response = new ServiceResponse<CategoryResponse>();
+            _response = new ServiceResponse<CategoryRequest>();
         }
 
         [HttpGet("GetAllAsync")]
@@ -39,9 +41,10 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpGet("GetByIdAsync")]
-        public ServiceResponse<CategoryResponse> GetByIdAsync(int id, int propertyId, string userId)
+        public ServiceResponse<CategoryRequest> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<CategoryResponse>(_categoryService.FindByCondition(x => x.CategoryId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
+            var category = _categoryService.FindByCondition(x => x.CategoryId == id && x.PropertyId == propertyId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
+            _response.Data = _mapper.Map<CategoryRequest>(category);
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -52,8 +55,9 @@ namespace TempleVolunteerAPI.API
         {
             Category category = _mapper.Map<Category>(request);
             category = (Category)_categoryService.Create(category, request.PropertyId, request.CreatedBy);
+            _result = _categoryService.Update(category, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<CategoryRequest>>(ReturnCollection(request.PropertyId, request.CreatedBy));
-            _collResponse.Success = category != null ? true : false;
+            _collResponse.Success = _result;
 
             return _collResponse;
         }
@@ -61,23 +65,23 @@ namespace TempleVolunteerAPI.API
         [HttpPut("PutAsync")]
         public ServiceResponse<IList<CategoryRequest>> PutAsync([FromBody] CategoryRequest request)
         {
-            Category category = _categoryService.FindByCondition(x => x.CategoryId == request.CategoryId, request.PropertyId, request.UpdatedBy, WithDetails.No).FirstOrDefault();
+            Category category = _categoryService.FindByCondition(x => x.CategoryId == request.CategoryId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             category = _mapper.Map<Category>(request);
 
             _result = _categoryService.Update(category, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<CategoryRequest>>(ReturnCollection(request.PropertyId, request.UpdatedBy));
-            _collResponse.Success = _result ? true : false;
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public ServiceResponse<IList<CategoryRequest>> DeleteAsync(MiscRequest request)
+        public ServiceResponse<IList<CategoryRequest>> DeleteAsync(int categoryId, int propertyId, string userId)
         {
-            Category category = _categoryService.FindByCondition(x => x.CategoryId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.No).FirstOrDefault();
+            Category category = _categoryService.FindByCondition(x => x.CategoryId == categoryId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
 
-            _result = _categoryService.Delete(category, request.PropertyId, request.UserId);
-            _collResponse.Data = _mapper.Map<IList<CategoryRequest>>(ReturnCollection(request.PropertyId, request.UserId));
+            _result = _categoryService.Delete(category, propertyId, userId);
+            _collResponse.Data = _mapper.Map<IList<CategoryRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;

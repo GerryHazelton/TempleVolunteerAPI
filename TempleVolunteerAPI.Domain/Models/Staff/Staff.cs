@@ -10,6 +10,8 @@ namespace TempleVolunteerAPI.Domain
 
         [StringLength(25)]
         public string FirstName { get; set; }
+        [StringLength(25)]
+        public string? MiddleName { get; set; }
 
         [StringLength(25)]
         public string LastName { get; set; }

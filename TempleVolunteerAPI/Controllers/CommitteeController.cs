@@ -16,25 +16,25 @@ namespace TempleVolunteerAPI.API
     public class CommitteeController : ControllerBase
     {
         private readonly ICommitteeService _committeeService;
-        private readonly ICommitteeStaffService _committeeStaffService;
-        private readonly IAreaService _areaService;
         private readonly IAreaCommitteeService _areaCommitteeService;
         private readonly IStaffService _staffService;
+        private readonly ICommitteeStaffService _committeeStaffService;
+        private readonly IAreaService _areaService;
         private readonly IMapper _mapper;
         private ServiceResponse<IList<CommitteeRequest>> _collResponse;
-        private ServiceResponse<CommitteeResponse> _response;
+        private ServiceResponse<CommitteeRequest> _response;
         private bool _result;
 
-        public CommitteeController(ICommitteeService CommitteeService, IMapper mapper, ICommitteeStaffService committeeStaffService, IAreaService areaService, IAreaCommitteeService areaCommitteeService, IStaffService staffService)
+        public CommitteeController(ICommitteeService CommitteeService, IMapper mapper, IAreaCommitteeService areaCommitteeService, IStaffService staffService, ICommitteeStaffService committeeStaffService, IAreaService areaService)
         {
             _committeeService = CommitteeService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<CommitteeRequest>>();
-            _response = new ServiceResponse<CommitteeResponse>();
-            _areaService = areaService;
+            _response = new ServiceResponse<CommitteeRequest>();
             _areaCommitteeService = areaCommitteeService;
             _staffService = staffService;
             _committeeStaffService = committeeStaffService;
+            _areaService = areaService;
         }
 
         [HttpGet("GetAllAsync")]
@@ -47,9 +47,29 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpGet("GetByIdAsync")]
-        public ServiceResponse<CommitteeResponse> GetByIdAsync(int id, int propertyId, string userId)
+        public ServiceResponse<CommitteeRequest> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<CommitteeResponse>(_committeeService.FindByCondition(x=>x.CommitteeId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
+            var committee = _committeeService.FindByCondition(x => x.CommitteeId == id && x.PropertyId == propertyId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
+            _response.Data = _mapper.Map<CommitteeRequest>(committee);
+
+            if (committee.Areas.Count > 0)
+            {
+                _response.Data.AreaIds = new int[committee.Areas.Count];
+                for (int i = 0; i < committee.Areas.Count; i++)
+                {
+                    _response.Data.AreaIds[i] = committee.Areas.ToList()[i].AreaId;
+                }
+            }
+
+            if (committee.Staff.Count > 0)
+            {
+                _response.Data.StaffIds = new int[committee.Staff.Count];
+                for (int i = 0; i < committee.Staff.Count; i++)
+                {
+                    _response.Data.StaffIds[i] = committee.Staff.ToList()[i].StaffId;
+                }
+            }
+
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -118,12 +138,12 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpDelete("DeleteAsync")]
-        public ServiceResponse<IList<CommitteeRequest>> DeleteAsync(MiscRequest request)
+        public ServiceResponse<IList<CommitteeRequest>> DeleteAsync(int committeeId, int propertyId, string userId)
         {
-            Committee committee = _committeeService.FindByCondition(x => x.CommitteeId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.Yes).FirstOrDefault();
+            Committee committee = _committeeService.FindByCondition(x => x.CommitteeId == committeeId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
 
-            _result = _committeeService.Delete(committee, request.PropertyId, request.UserId);
-            _collResponse.Data = _mapper.Map<IList<CommitteeRequest>>(ReturnCollection(request.PropertyId, request.UserId));
+            _result = _committeeService.Delete(committee, propertyId, userId);
+            _collResponse.Data = _mapper.Map<IList<CommitteeRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
@@ -138,7 +158,7 @@ namespace TempleVolunteerAPI.API
             foreach (int areaId in areaIds)
             {
                 area = _areaService.FindByCondition(x => x.AreaId == areaId, propertyId, userId, WithDetails.No).FirstOrDefault();
-                addAreaCommittee = new AreaCommittee { Committee = committee, Area = area };
+                addAreaCommittee = new AreaCommittee { Area = area, Committee = committee };
                 areaCommittees.Add(addAreaCommittee);
             }
 
