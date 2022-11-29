@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TempleVolunteerAPI.Domain;
-using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 using static TempleVolunteerAPI.Common.EnumHelper;
 
@@ -103,8 +99,16 @@ namespace TempleVolunteerAPI.API
         {
             Committee committee = _committeeService.FindByCondition(x => x.CommitteeId == request.CommitteeId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             committee = _mapper.Map<Committee>(request);
-            committee.Areas.Clear();
-            committee.Staff.Clear();
+
+            if (committee.Areas != null && committee.Areas.Count > 0)
+            {
+                committee.Areas.Clear();
+            }
+
+            if (committee.Staff != null && committee.Staff.Count > 0)
+            {
+                committee.Staff.Clear();
+            }
 
             var areaCommittees = _areaCommitteeService.FindByCondition(x => x.CommitteeId == committee.CommitteeId, request.PropertyId, request.UpdatedBy, WithDetails.No).ToList();
 

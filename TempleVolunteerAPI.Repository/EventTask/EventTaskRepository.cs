@@ -18,7 +18,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<EventTask> GetAllEventTasks(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            var eventTasks = FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            return eventTasks.Where(x => x.PropertyId == propertyId);
         }
 
         public IQueryable<EventTask> GetEventTaskByMatch(Expression<Func<EventTask, bool>> match, int propertyId, string userId)

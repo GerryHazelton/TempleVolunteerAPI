@@ -156,10 +156,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     Note = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    CredentialFileName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    CredentialImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -330,6 +326,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     StaffId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
                     Address2 = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
@@ -609,7 +606,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: table => new
                 {
                     StaffId = table.Column<int>(type: "int", nullable: false),
-                    CredentialId = table.Column<int>(type: "int", nullable: false)
+                    CredentialId = table.Column<int>(type: "int", nullable: false),
+                    CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -729,11 +728,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "PropertyId", "Address", "Address2", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "FaxNumber", "IsActive", "IsHidden", "Name", "Note", "PhoneNumber", "PostalCode", "State", "UpdatedBy", "UpdatedDate", "Website" },
                 values: new object[,]
                 {
-                    { 1, "123 Main Street", "Suite 45", "Glendale", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(2837), "Glendale@Srf.com", "333-333-3333", true, false, "Glendale Temple", "Currently, there are no notes", "222-222-2222", "91001", "CA", null, null, "https://www.glendaletemple.org" },
-                    { 2, "456 Main Street", "Suite 65", "Encinitas", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(2841), "Encinitas@Srf.com", "666-666-6666", true, false, "Encinitas Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.encinitastemple.org" },
-                    { 3, "789 Main Street", "Suite 22", "Fullerton", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(2845), "Fullerton@Srf.com", "666-666-6666", true, false, "Fullterton Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.fullertontemple.org" },
-                    { 4, "222 South Street", "Suite 11", "San Diego", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(2854), "SanDiego@Srf.com", "666-666-6666", true, false, "San Diego Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.sandiegotemple.org" },
-                    { 5, "444 South Street", "Suite 33", "Hollywood Diego", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(2858), "Hollywood@Srf.com", "666-666-6666", true, false, "Hollywood Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.hollywoodtemple.org" }
+                    { 1, "123 Main Street", "Suite 45", "Glendale", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8018), "Glendale@Srf.com", "333-333-3333", true, false, "Glendale Temple", "Currently, there are no notes", "222-222-2222", "91001", "CA", null, null, "https://www.glendaletemple.org" },
+                    { 2, "456 Main Street", "Suite 65", "Encinitas", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8023), "Encinitas@Srf.com", "666-666-6666", true, false, "Encinitas Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.encinitastemple.org" },
+                    { 3, "789 Main Street", "Suite 22", "Fullerton", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8030), "Fullerton@Srf.com", "666-666-6666", true, false, "Fullterton Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.fullertontemple.org" },
+                    { 4, "222 South Street", "Suite 11", "San Diego", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8031), "SanDiego@Srf.com", "666-666-6666", true, false, "San Diego Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.sandiegotemple.org" },
+                    { 5, "444 South Street", "Suite 33", "Hollywood Diego", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8033), "Hollywood@Srf.com", "666-666-6666", true, false, "Hollywood Temple", "Currently, there are no notes", "555-555-5555", "92026", "CA", null, null, "https://www.hollywoodtemple.org" }
                 });
 
             migrationBuilder.InsertData(
@@ -741,11 +740,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "AreaId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "SupplyItemsAllowed", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3116), "This is the main temple area", true, false, "Main Temple", "There are no notes", 1, true, null, null },
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3131), "This is the kitchen area", true, false, "Kitchen", "There are no notes", 1, true, null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3143), "This is the bathroom area", true, false, "Bathroom", "There are no notes", 1, true, null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3155), "This is the sunday school room area", true, false, "Sunday School Room", "There are no notes", 1, true, null, null },
-                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3167), "This is the parking lot area", true, false, "Parking Lot", "There are no notes", 1, true, null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8323), "This is the main temple area", true, false, "Main Temple", "There are no notes", 1, true, null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8334), "This is the kitchen area", true, false, "Kitchen", "There are no notes", 1, true, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8343), "This is the bathroom area", true, false, "Bathroom", "There are no notes", 1, true, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8352), "This is the sunday school room area", true, false, "Sunday School Room", "There are no notes", 1, true, null, null },
+                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8360), "This is the parking lot area", true, false, "Parking Lot", "There are no notes", 1, true, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -753,28 +752,28 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "CategoryId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3184), "This is a garden tool category", true, false, "Garden Tool", "There are no notes", 1, null, null },
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3200), "This is cleaning liquid category", true, false, "Cleaning Liquid", "There are no notes", 1, null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3211), "This is gas powered tool category", true, false, "Gas Powered Tool", "There are no notes", 1, null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3222), "This is literature category", true, false, "Literature", "There are no notes", 1, null, null },
-                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3233), "This is cleaning appliance category", true, false, "Cleaning Appliance", "There are no notes", 1, null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8372), "This is a garden tool category", true, false, "Garden Tool", "There are no notes", 1, null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8382), "This is cleaning liquid category", true, false, "Cleaning Liquid", "There are no notes", 1, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8389), "This is gas powered tool category", true, false, "Gas Powered Tool", "There are no notes", 1, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8397), "This is literature category", true, false, "Literature", "There are no notes", 1, null, null },
+                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8410), "This is cleaning appliance category", true, false, "Cleaning Appliance", "There are no notes", 1, null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Committees",
                 columns: new[] { "CommitteeId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3255), "Flowers Committee", true, false, "Flowers", "There are no notes", 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8421), "Flowers Committee", true, false, "Flowers", "There are no notes", 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Credentials",
-                columns: new[] { "CredentialId", "CompletedDate", "CreatedBy", "CreatedDate", "CredentialFileName", "CredentialImage", "Description", "ExpireDate", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
+                columns: new[] { "CredentialId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3271), "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3273), null, null, "CRP Certification", null, true, false, "CPR", "There are no notes", 1, null, null },
-                    { 2, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3287), "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3289), null, null, "First Aid Certification", null, true, false, "First Aid", "There are no notes", 1, null, null },
-                    { 3, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3301), "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3303), null, null, "Drivers License", null, true, false, "Drivers License", "There are no notes", 1, null, null },
-                    { 4, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3314), "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3316), null, null, "Drivers License", null, true, false, "Passport", "There are no notes", 1, null, null },
-                    { 5, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3326), "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3328), null, null, "Fork Lift Certification", null, true, false, "Fork Lift Certification", "There are no notes", 1, null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8431), "CRP Certification", true, false, "CPR", "There are no notes", 1, null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8440), "First Aid Certification", true, false, "First Aid", "There are no notes", 1, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8449), "Drivers License", true, false, "Drivers License", "There are no notes", 1, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8457), "Drivers License", true, false, "Passport", "There are no notes", 1, null, null },
+                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8464), "Fork Lift Certification", true, false, "Fork Lift Certification", "There are no notes", 1, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -782,11 +781,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "DocumentId", "CreatedBy", "CreatedDate", "Description", "DocumentFileName", "DocumentImage", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3344), "A list of events for the year", null, null, true, false, "Annual Event List", "There are no notes", 1, null, null },
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3357), "India Night event announcement", null, null, true, false, "India Night Announcement", "There are no notes", 1, null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3369), "Masters Birthday event announcement", null, null, true, false, "Masters Birthday Announcement", "There are no notes", 1, null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3381), "All Day Meditation event announcement", null, null, true, false, "All Day Meditation Announcement", "There are no notes", 1, null, null },
-                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3392), "All Day Christmas Meditation event announcement", null, null, true, false, "All Day Christmas Meditation Announcement", "There are no notes", 1, null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8480), "A list of events for the year", null, null, true, false, "Annual Event List", "There are no notes", 1, null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8491), "India Night event announcement", null, null, true, false, "India Night Announcement", "There are no notes", 1, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8500), "Masters Birthday event announcement", null, null, true, false, "Masters Birthday Announcement", "There are no notes", 1, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8509), "All Day Meditation event announcement", null, null, true, false, "All Day Meditation Announcement", "There are no notes", 1, null, null },
+                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8517), "All Day Christmas Meditation event announcement", null, null, true, false, "All Day Christmas Meditation Announcement", "There are no notes", 1, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -794,11 +793,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "EventTaskId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3554), "Setting up tables", true, false, "Table setup", "There are no notes", 1, null, null },
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3572), "Setting up chairs", true, false, "Chairs setup", "There are no notes", 1, null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3583), "Cleaning toilets", true, false, "Toilets", "There are no notes", 1, null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3594), "Mopping floors", true, false, "Mop Floors", "There are no notes", 1, null, null },
-                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3605), "Cleaning windows", true, false, "Clean Windows", "There are no notes", 1, null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8661), "Setting up tables", true, false, "Table setup", "There are no notes", 1, null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8672), "Setting up chairs", true, false, "Chairs setup", "There are no notes", 1, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8679), "Cleaning toilets", true, false, "Toilets", "There are no notes", 1, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8686), "Mopping floors", true, false, "Mop Floors", "There are no notes", 1, null, null },
+                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8693), "Cleaning windows", true, false, "Clean Windows", "There are no notes", 1, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -806,11 +805,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "EventTypeId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3492), "Comemerative Service event", true, false, "Comemerative Service", "There are no notes", 1, null, null },
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3505), "Birthday Service event", true, false, "Birthday", "There are no notes", 1, null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3517), "Memorial Service event", true, false, "Memorial Service", "There are no notes", 1, null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3528), "Wedding Service event", true, false, "Wedding Service", "There are no notes", 1, null, null },
-                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3539), "Christening Service event", true, false, "Christening Service", "There are no notes", 1, null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8609), "Comemerative Service event", true, false, "Comemerative Service", "There are no notes", 1, null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8619), "Birthday Service event", true, false, "Birthday", "There are no notes", 1, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8628), "Memorial Service event", true, false, "Memorial Service", "There are no notes", 1, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8637), "Wedding Service event", true, false, "Wedding Service", "There are no notes", 1, null, null },
+                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8645), "Christening Service event", true, false, "Christening Service", "There are no notes", 1, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -818,11 +817,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "EventId", "AreaId", "CreatedBy", "CreatedDate", "Description", "EndDate", "Indefinite", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "StartDate", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3413), "Master's birthday celebration", new DateTime(2022, 11, 4, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3410), false, true, false, "Master's Birthday", "There are no notes", 1, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3408), null, null },
-                    { 2, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3430), "Krishna's birthday celebration", new DateTime(2022, 11, 4, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3428), false, true, false, "Krisha's Birthday", "There are no notes", 1, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3426), null, null },
-                    { 3, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3446), "Sri Yukteswar's birthday celebration", new DateTime(2022, 11, 4, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3444), false, true, false, "Sri Yukteswar's Birthday", "There are no notes", 1, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3442), null, null },
-                    { 4, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3461), "Mahavatar's birthday celebration", new DateTime(2022, 11, 4, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3459), false, true, false, "Mahatar Babaji's Birthday", "There are no notes", 1, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3457), null, null },
-                    { 5, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3476), "Jesus' birthday celebration", new DateTime(2022, 11, 4, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3474), false, true, false, "Jesus' Birthday", "There are no notes", 1, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3472), null, null }
+                    { 1, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8536), "Master's birthday celebration", new DateTime(2022, 11, 27, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8533), false, true, false, "Master's Birthday", "There are no notes", 1, new DateTime(2022, 11, 26, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8530), null, null },
+                    { 2, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8552), "Krishna's birthday celebration", new DateTime(2022, 11, 27, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8550), false, true, false, "Krisha's Birthday", "There are no notes", 1, new DateTime(2022, 11, 26, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8548), null, null },
+                    { 3, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8567), "Sri Yukteswar's birthday celebration", new DateTime(2022, 11, 27, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8564), false, true, false, "Sri Yukteswar's Birthday", "There are no notes", 1, new DateTime(2022, 11, 26, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8562), null, null },
+                    { 4, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8580), "Mahavatar's birthday celebration", new DateTime(2022, 11, 27, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8578), false, true, false, "Mahatar Babaji's Birthday", "There are no notes", 1, new DateTime(2022, 11, 26, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8576), null, null },
+                    { 5, null, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8594), "Jesus' birthday celebration", new DateTime(2022, 11, 27, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8593), false, true, false, "Jesus' Birthday", "There are no notes", 1, new DateTime(2022, 11, 26, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8590), null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -830,41 +829,41 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "MessageId", "CreatedBy", "CreatedDate", "From", "IsActive", "IsHidden", "MessageSent", "PropertyId", "StaffId", "Subject", "To", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3622), "gerryhazelton@gmail.com", true, false, "This is my message to Jane Doe", 1, 1, "Hello Jane", "janedoe@gmail.com", null, null },
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3636), "gerryhazelton@gmail.com", true, false, "This is my message to John Doe", 1, 1, "Hello John", "johndoe@gmail.com", null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3648), "gerryhazelton@gmail.com", true, false, "This is my message to Master", 1, 1, "Hello Master", "master@gmail.com", null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3660), "gerryhazelton@gmail.com", true, false, "This is my message to Dolores", 1, 1, "Hello Dolores", "dolores@gmail.com", null, null },
-                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3671), "gerryhazelton@gmail.com", true, false, "This is my message to Seannie", 1, 1, "Hello Seannie", "seannie@gmail.com", null, null }
+                    { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8705), "gerryhazelton@gmail.com", true, false, "This is my message to Jane Doe", 1, 1, "Hello Jane", "janedoe@gmail.com", null, null },
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8715), "gerryhazelton@gmail.com", true, false, "This is my message to John Doe", 1, 1, "Hello John", "johndoe@gmail.com", null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8723), "gerryhazelton@gmail.com", true, false, "This is my message to Master", 1, 1, "Hello Master", "master@gmail.com", null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8730), "gerryhazelton@gmail.com", true, false, "This is my message to Dolores", 1, 1, "Hello Dolores", "dolores@gmail.com", null, null },
+                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8738), "gerryhazelton@gmail.com", true, false, "This is my message to Seannie", 1, 1, "Hello Seannie", "seannie@gmail.com", null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "RoleId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
-                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3003), "Admin role has full prviliedges", true, false, "Admin", null, 1, null, null });
+                values: new object[] { 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8178), "Admin role has full prviliedges", true, false, "Admin", null, 1, null, null });
 
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "RoleId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3005), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 1, null, null },
-                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3008), "Admin role has full prviliedges", true, false, "Admin", null, 2, null, null },
-                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3011), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 2, null, null },
-                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3013), "Admin role has full prviliedges", true, false, "Admin", null, 3, null, null },
-                    { 6, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3016), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 3, null, null },
-                    { 7, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3018), "Admin role has full prviliedges", true, false, "Admin", null, 4, null, null },
-                    { 8, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3021), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 4, null, null },
-                    { 9, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3024), "Admin role has full prviliedges", true, false, "Admin", null, 5, null, null },
-                    { 10, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3026), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 5, null, null }
+                    { 2, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8179), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 1, null, null },
+                    { 3, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8180), "Admin role has full prviliedges", true, false, "Admin", null, 2, null, null },
+                    { 4, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8181), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 2, null, null },
+                    { 5, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8182), "Admin role has full prviliedges", true, false, "Admin", null, 3, null, null },
+                    { 6, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8183), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 3, null, null },
+                    { 7, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8184), "Admin role has full prviliedges", true, false, "Admin", null, 4, null, null },
+                    { 8, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8185), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 4, null, null },
+                    { 9, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8186), "Admin role has full prviliedges", true, false, "Admin", null, 5, null, null },
+                    { 10, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8187), "Volunteer has limited prviliedges", true, false, "Volunteer", null, 5, null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Staff",
-                columns: new[] { "StaffId", "AcceptTerms", "Address", "Address2", "CPR", "CanSendMessages", "CanViewDocuments", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "EmailConfirmed", "FirstAid", "FirstName", "Gender", "IsActive", "IsHidden", "IsLockedOut", "IsVerified", "Kriyaban", "LastName", "LessonStudent", "LoginAttempts", "Note", "Password", "PasswordReset", "PasswordSalt", "PhoneNumber", "PostalCode", "PropertyId", "RememberMe", "StaffFileName", "StaffImage", "State", "UpdatedBy", "UpdatedDate", "VerifiedDate" },
+                columns: new[] { "StaffId", "AcceptTerms", "Address", "Address2", "CPR", "CanSendMessages", "CanViewDocuments", "City", "Country", "CreatedBy", "CreatedDate", "EmailAddress", "EmailConfirmed", "FirstAid", "FirstName", "Gender", "IsActive", "IsHidden", "IsLockedOut", "IsVerified", "Kriyaban", "LastName", "LessonStudent", "LoginAttempts", "MiddleName", "Note", "Password", "PasswordReset", "PasswordSalt", "PhoneNumber", "PostalCode", "PropertyId", "RememberMe", "StaffFileName", "StaffImage", "State", "UpdatedBy", "UpdatedDate", "VerifiedDate" },
                 values: new object[,]
                 {
-                    { 1, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3065), "gerryhazelton@gmail.com", true, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "11111111", null, "371952==", "760-444-4444", "92009", 1, true, null, null, "CA", null, null, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3062) },
-                    { 2, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3074), "gerryhazelton@gmail.com", false, true, "Dolores", "Male", true, false, false, true, true, "Hazelton", true, 0, null, "11111111", null, "371952==", "760-444-4444", "92009", 2, true, null, null, "CA", null, null, new DateTime(2022, 11, 3, 16, 20, 2, 568, DateTimeKind.Local).AddTicks(3071) }
+                    { 1, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8272), "gerryhazelton@gmail.com", true, true, "Gerry", "Male", true, false, false, true, true, "Hazelton", true, 0, null, null, "11111111", null, "371952==", "760-444-4444", "92009", 1, true, null, null, "CA", null, null, new DateTime(2022, 11, 26, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8224) },
+                    { 2, true, "123 Main Street", "Apt. B", true, true, false, "Carlsbad", "US", "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8280), "gerryhazelton@gmail.com", false, true, "Dolores", "Male", true, false, false, true, true, "Hazelton", true, 0, null, null, "11111111", null, "371952==", "760-444-4444", "92009", 2, true, null, null, "CA", null, null, new DateTime(2022, 11, 26, 11, 22, 56, 473, DateTimeKind.Local).AddTicks(8277) }
                 });
 
             migrationBuilder.InsertData(
@@ -881,11 +880,11 @@ namespace TempleVolunteerAPI.Repository.Migrations
                 columns: new[] { "SupplyItemId", "BinNumber", "CategoryId", "CreatedBy", "CreatedDate", "Description", "IsActive", "IsHidden", "Name", "Note", "PropertyId", "Quantity", "SupplyItemFileName", "SupplyItemImage", "UpdatedBy", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, "23A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3687), "Flathead shovel", true, false, "Shovel", "No notes", 1, 5, null, null, null, null },
-                    { 2, "24A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3701), "Flimsy rake", true, false, "Rake", "No notes", 1, 2, null, null, null, null },
-                    { 3, "10C", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3714), "Gas driven", true, false, "Lawn Mower", "No notes", 1, 1, null, null, null, null },
-                    { 4, "13C", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3726), "Pick", true, false, "Pick", "No notes", 1, 1, null, null, null, null },
-                    { 5, "16B", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 3, 23, 20, 2, 568, DateTimeKind.Utc).AddTicks(3738), "Gas driven", true, false, "Leaf Blower", "No notes", 1, 1, null, null, null, null }
+                    { 1, "23A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8750), "Flathead shovel", true, false, "Shovel", "No notes", 1, 5, null, null, null, null },
+                    { 2, "24A", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8762), "Flimsy rake", true, false, "Rake", "No notes", 1, 2, null, null, null, null },
+                    { 3, "10C", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8770), "Gas driven", true, false, "Lawn Mower", "No notes", 1, 1, null, null, null, null },
+                    { 4, "13C", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8779), "Pick", true, false, "Pick", "No notes", 1, 1, null, null, null, null },
+                    { 5, "16B", 1, "gerryhazelton@gmail.com", new DateTime(2022, 11, 26, 19, 22, 56, 473, DateTimeKind.Utc).AddTicks(8788), "Gas driven", true, false, "Leaf Blower", "No notes", 1, 1, null, null, null, null }
                 });
 
             migrationBuilder.CreateIndex(

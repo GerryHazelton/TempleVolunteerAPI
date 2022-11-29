@@ -103,8 +103,16 @@ namespace TempleVolunteerAPI.API
         {
             Area area = _areaService.FindByCondition(x => x.AreaId == request.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             area = _mapper.Map<Area>(request);
-            area.SupplyItems.Clear();
-            area.EventTasks.Clear();
+            
+            if (area.SupplyItems != null && area.SupplyItems.Count > 0)
+            {
+                area.SupplyItems.Clear();
+            }
+
+            if (area.EventTasks != null && area.EventTasks.Count > 0)
+            {
+                area.EventTasks.Clear();
+            }
 
             var areaSupplyItems = _areaSupplyItemService.FindByCondition(x => x.AreaId == area.AreaId, request.PropertyId, request.UpdatedBy, WithDetails.No).ToList();
 

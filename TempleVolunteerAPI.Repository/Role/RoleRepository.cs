@@ -18,7 +18,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<Role> GetAllRoles(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            var roles = FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            return roles.Where(x => x.PropertyId == propertyId);
         }
 
         public IQueryable<Role> GetRoleByMatch(Expression<Func<Role, bool>> match, int propertyId, string userId)

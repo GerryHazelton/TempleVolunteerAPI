@@ -14,7 +14,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<SupplyItem> GetAllSupplyItems(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.Name);
+            var supplyItems = FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            return supplyItems.Where(x => x.PropertyId == propertyId);
         }
 
         public IQueryable<SupplyItem> GetSupplyItemByMatch(Expression<Func<SupplyItem, bool>> match, int propertyId, string userId)

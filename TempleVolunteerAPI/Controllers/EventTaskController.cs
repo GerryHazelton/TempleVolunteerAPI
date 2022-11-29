@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TempleVolunteerAPI.Domain;
-using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 using static TempleVolunteerAPI.Common.EnumHelper;
 
@@ -18,15 +14,15 @@ namespace TempleVolunteerAPI.API
         private readonly IEventTaskService _eventTaskService;
         private readonly IMapper _mapper;
         private ServiceResponse<IList<EventTaskRequest>> _collResponse;
-        private ServiceResponse<EventTaskResponse> _response;
+        private ServiceResponse<EventTaskRequest> _response;
         private bool _result;
 
-        public EventTaskController(IEventTaskService eventTaskService, IMapper mapper, ISupplyItemService supplyItemService)
+        public EventTaskController(IEventTaskService EventTaskService, IMapper mapper)
         {
-            _eventTaskService = eventTaskService;
+            _eventTaskService = EventTaskService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<EventTaskRequest>>();
-            _response = new ServiceResponse<EventTaskResponse>();
+            _response = new ServiceResponse<EventTaskRequest>();
         }
 
         [HttpGet("GetAllAsync")]
@@ -39,9 +35,10 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpGet("GetByIdAsync")]
-        public ServiceResponse<EventTaskResponse> GetByIdAsync(int id, int propertyId, string userId)
+        public ServiceResponse<EventTaskRequest> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<EventTaskResponse>(_eventTaskService.FindByCondition(x => x.EventTaskId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
+            var eventTask = _eventTaskService.FindByCondition(x => x.EventTaskId == id && x.PropertyId == propertyId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
+            _response.Data = _mapper.Map<EventTaskRequest>(eventTask);
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -52,8 +49,9 @@ namespace TempleVolunteerAPI.API
         {
             EventTask eventTask = _mapper.Map<EventTask>(request);
             eventTask = (EventTask)_eventTaskService.Create(eventTask, request.PropertyId, request.CreatedBy);
+            _result = _eventTaskService.Update(eventTask, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(ReturnCollection(request.PropertyId, request.CreatedBy));
-            _collResponse.Success = eventTask != null ? true : false;
+            _collResponse.Success = _result;
 
             return _collResponse;
         }
@@ -61,23 +59,23 @@ namespace TempleVolunteerAPI.API
         [HttpPut("PutAsync")]
         public ServiceResponse<IList<EventTaskRequest>> PutAsync([FromBody] EventTaskRequest request)
         {
-            EventTask eventTask = _eventTaskService.FindByCondition(x => x.EventTaskId == request.EventTaskId, request.PropertyId, request.UpdatedBy, WithDetails.No).FirstOrDefault();
+            EventTask eventTask = _eventTaskService.FindByCondition(x => x.EventTaskId == request.EventTaskId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             eventTask = _mapper.Map<EventTask>(request);
 
             _result = _eventTaskService.Update(eventTask, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(ReturnCollection(request.PropertyId, request.UpdatedBy));
-            _collResponse.Success = _result ? true : false;
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public ServiceResponse<IList<EventTaskRequest>> DeleteAsync(MiscRequest request)
+        public ServiceResponse<IList<EventTaskRequest>> DeleteAsync(int eventTaskId, int propertyId, string userId)
         {
-            EventTask eventTask = _eventTaskService.FindByCondition(x => x.EventTaskId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.No).FirstOrDefault();
+            EventTask eventTask = _eventTaskService.FindByCondition(x => x.EventTaskId == eventTaskId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
 
-            _result = _eventTaskService.Delete(eventTask, request.PropertyId, request.UserId);
-            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(ReturnCollection(request.PropertyId, request.UserId));
+            _result = _eventTaskService.Delete(eventTask, propertyId, userId);
+            _collResponse.Data = _mapper.Map<IList<EventTaskRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;

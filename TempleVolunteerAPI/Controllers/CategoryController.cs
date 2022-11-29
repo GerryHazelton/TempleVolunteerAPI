@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TempleVolunteerAPI.Domain;
-using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 using static TempleVolunteerAPI.Common.EnumHelper;
 
@@ -16,8 +12,6 @@ namespace TempleVolunteerAPI.API
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        private readonly ISupplyItemService _supplyItemService;
-        private readonly IEventTaskService _eventTaskService;
         private readonly IMapper _mapper;
         private ServiceResponse<IList<CategoryRequest>> _collResponse;
         private ServiceResponse<CategoryRequest> _response;

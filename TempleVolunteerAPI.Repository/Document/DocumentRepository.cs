@@ -18,7 +18,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<Document> GetAllDocuments(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            var documents = FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            return documents.Where(x => x.PropertyId == propertyId);
         }
 
         public IQueryable<Document> GetDocumentByMatch(Expression<Func<Document, bool>> match, int propertyId, string userId)

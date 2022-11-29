@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TempleVolunteerAPI.Domain;
-using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 using static TempleVolunteerAPI.Common.EnumHelper;
 

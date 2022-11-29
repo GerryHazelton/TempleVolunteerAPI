@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TempleVolunteerAPI.Domain;
-using TempleVolunteerAPI.Domain.DTO;
 using TempleVolunteerAPI.Service;
 using static TempleVolunteerAPI.Common.EnumHelper;
 
@@ -18,15 +14,15 @@ namespace TempleVolunteerAPI.API
         private readonly IRoleService _roleService;
         private readonly IMapper _mapper;
         private ServiceResponse<IList<RoleRequest>> _collResponse;
-        private ServiceResponse<RoleResponse> _response;
+        private ServiceResponse<RoleRequest> _response;
         private bool _result;
 
-        public RoleController(IRoleService roleService, IMapper mapper, ISupplyItemService supplyItemService)
+        public RoleController(IRoleService RoleService, IMapper mapper)
         {
-            _roleService = roleService;
+            _roleService = RoleService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<RoleRequest>>();
-            _response = new ServiceResponse<RoleResponse>();
+            _response = new ServiceResponse<RoleRequest>();
         }
 
         [HttpGet("GetAllAsync")]
@@ -39,9 +35,10 @@ namespace TempleVolunteerAPI.API
         }
 
         [HttpGet("GetByIdAsync")]
-        public ServiceResponse<RoleResponse> GetByIdAsync(int id, int propertyId, string userId)
+        public ServiceResponse<RoleRequest> GetByIdAsync(int id, int propertyId, string userId)
         {
-            _response.Data = _mapper.Map<RoleResponse>(_roleService.FindByCondition(x => x.RoleId == id && x.PropertyId == propertyId && x.CreatedBy == userId, propertyId, userId, WithDetails.No));
+            var role = _roleService.FindByCondition(x => x.RoleId == id && x.PropertyId == propertyId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
+            _response.Data = _mapper.Map<RoleRequest>(role);
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -52,8 +49,9 @@ namespace TempleVolunteerAPI.API
         {
             Role role = _mapper.Map<Role>(request);
             role = (Role)_roleService.Create(role, request.PropertyId, request.CreatedBy);
+            _result = _roleService.Update(role, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<RoleRequest>>(ReturnCollection(request.PropertyId, request.CreatedBy));
-            _collResponse.Success = role != null ? true : false;
+            _collResponse.Success = _result;
 
             return _collResponse;
         }
@@ -61,23 +59,23 @@ namespace TempleVolunteerAPI.API
         [HttpPut("PutAsync")]
         public ServiceResponse<IList<RoleRequest>> PutAsync([FromBody] RoleRequest request)
         {
-            Role role = _roleService.FindByCondition(x => x.RoleId == request.RoleId, request.PropertyId, request.UpdatedBy, WithDetails.No).FirstOrDefault();
+            Role role = _roleService.FindByCondition(x => x.RoleId == request.RoleId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             role = _mapper.Map<Role>(request);
 
             _result = _roleService.Update(role, request.PropertyId, request.CreatedBy);
             _collResponse.Data = _mapper.Map<IList<RoleRequest>>(ReturnCollection(request.PropertyId, request.UpdatedBy));
-            _collResponse.Success = _result ? true : false;
+            _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
         }
 
         [HttpDelete("DeleteAsync")]
-        public ServiceResponse<IList<RoleRequest>> DeleteAsync(MiscRequest request)
+        public ServiceResponse<IList<RoleRequest>> DeleteAsync(int roleId, int propertyId, string userId)
         {
-            Role role = _roleService.FindByCondition(x => x.RoleId == request.DeleteById, request.PropertyId, request.UserId, WithDetails.No).FirstOrDefault();
+            Role role = _roleService.FindByCondition(x => x.RoleId == roleId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
 
-            _result = _roleService.Delete(role, request.PropertyId, request.UserId);
-            _collResponse.Data = _mapper.Map<IList<RoleRequest>>(ReturnCollection(request.PropertyId, request.UserId));
+            _result = _roleService.Delete(role, propertyId, userId);
+            _collResponse.Data = _mapper.Map<IList<RoleRequest>>(ReturnCollection(propertyId, userId));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;

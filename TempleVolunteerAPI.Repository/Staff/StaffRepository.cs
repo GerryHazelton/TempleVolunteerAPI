@@ -195,7 +195,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<Staff> GetAllStaff(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.LastName).AsNoTracking();
+            var staff = FindAll(propertyId, userId).OrderBy(x => x.FirstName).AsNoTracking();
+            return staff.Where(x => x.PropertyId == propertyId);
         }
 
         public IQueryable<Staff> GetStaffByMatch(Expression<Func<Staff, bool>> match, int propertyId, string userId)

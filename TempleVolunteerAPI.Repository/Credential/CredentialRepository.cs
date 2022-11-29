@@ -18,7 +18,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<Credential> GetAllCredentials(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            var credentials = FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            return credentials.Where(x => x.PropertyId == propertyId);
         }
 
         public IQueryable<Credential> GetCredentialByMatch(Expression<Func<Credential, bool>> match, int propertyId, string userId)

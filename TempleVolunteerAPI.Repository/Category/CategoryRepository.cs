@@ -18,7 +18,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<Category> GetAllCategories(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            var categories = FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            return categories.Where(x => x.PropertyId == propertyId);
         }
 
         public IQueryable<Category> GetCategoryByMatch(Expression<Func<Category, bool>> match, int propertyId, string userId)

@@ -18,7 +18,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<Area> GetAllAreas(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            var areas = FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            return areas.Where(x => x.PropertyId == propertyId);
         }
         
         public IQueryable<Area> GetAreaByMatch(Expression<Func<Area, bool>> match, int propertyId, string userId)

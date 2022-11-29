@@ -18,7 +18,8 @@ namespace TempleVolunteerAPI.Repository
 
         public IQueryable<Committee> GetAllCommittees(int propertyId, string userId)
         {
-            return FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            var committees = FindAll(propertyId, userId).OrderBy(x => x.Name).AsNoTracking();
+            return committees.Where(x => x.PropertyId == propertyId);
         }
 
         public IQueryable<Committee> GetCommitteeByMatch(Expression<Func<Committee, bool>> match, int propertyId, string userId)
