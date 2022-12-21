@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using TempleVolunteerAPI.Common;
 using TempleVolunteerAPI.Domain;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Property = TempleVolunteerAPI.Domain.Property;
@@ -356,18 +358,19 @@ namespace TempleVolunteerAPI.Repository
                 hollywoodVolunteer
             );
 
-            Staff gerry = new Staff("gerryhazelton@gmail.com");
+            Staff gerry = new Staff();
             gerry.StaffId = 1;
             gerry.FirstName = "Gerry";
+            gerry.MiddleName = "Aloysius";
             gerry.LastName = "Hazelton";
-            gerry.Address = "123 Main Street";
-            gerry.Address2 = "Apt. B";
+            gerry.Address = "2141 Levante Street";
+            gerry.Address2 = "";
             gerry.City = "Carlsbad";
             gerry.State = "CA";
             gerry.PostalCode = "92009";
             gerry.Country = "US";
             gerry.EmailAddress = "gerryhazelton@gmail.com";
-            gerry.PhoneNumber = "760-444-4444";
+            gerry.PhoneNumber = "760-670-8026";
             gerry.Gender = "Male";
             gerry.FirstAid = true;
             gerry.CPR = true;
@@ -378,55 +381,100 @@ namespace TempleVolunteerAPI.Repository
             gerry.EmailConfirmed = true;
             gerry.IsVerified = true;
             gerry.IsActive = true;
-            gerry.VerifiedDate = DateTime.Now;
+            gerry.VerifiedDate = DateTime.UtcNow;
             gerry.RememberMe = true;
             gerry.IsLockedOut = false;
             gerry.LoginAttempts = 0;
-            gerry.Password = "11111111";
-            gerry.PasswordSalt = "371952==";
+
+            var salt = Helper.GetSecureSalt();
+            var passwordHash = Helper.HashUsingPbkdf2("11111111", salt);
+            gerry.Password = passwordHash;
+            gerry.PasswordSalt = Convert.ToBase64String(salt);
+
             gerry.PropertyId = 1;
             gerry.CreatedBy = "gerryhazelton@gmail.com";
             gerry.CreatedDate = DateTime.UtcNow;
 
-            Staff gerry2 = new Staff("gerryhazelton@gmail.com");
-            gerry2.StaffId = 2;
-            gerry2.FirstName = "Dolores";
-            gerry2.LastName = "Hazelton";
-            gerry2.Address = "123 Main Street";
-            gerry2.Address2 = "Apt. B";
-            gerry2.City = "Carlsbad";
-            gerry2.State = "CA";
-            gerry2.PostalCode = "92009";
-            gerry2.Country = "US";
-            gerry2.EmailAddress = "gerryhazelton@gmail.com";
-            gerry2.PhoneNumber = "760-444-4444";
-            gerry2.Gender = "Male";
-            gerry2.FirstAid = true;
-            gerry2.CPR = true;
-            gerry2.Kriyaban = true;
-            gerry2.LessonStudent = true;
-            gerry2.AcceptTerms = true;
-            gerry2.CanSendMessages = true;
-            gerry.EmailConfirmed = true;
-            gerry2.IsVerified = true;
-            gerry2.IsActive = true;
-            gerry2.VerifiedDate = DateTime.Now;
-            gerry2.RememberMe = true;
-            gerry2.IsLockedOut = false;
-            gerry2.LoginAttempts = 0;
-            gerry2.Password = "11111111";
-            gerry2.PasswordSalt = "371952==";
-            gerry2.PropertyId = 2;
-            gerry2.CreatedBy = "gerryhazelton@gmail.com";
-            gerry2.CreatedDate = DateTime.UtcNow;
+            Staff dolores = new Staff();
+            dolores.StaffId = 2;
+            dolores.FirstName = "Dolores";
+            dolores.MiddleName = "";
+            dolores.LastName = "Hazelton";
+            dolores.Address = "2141 Leavnte Street";
+            dolores.Address2 = "";
+            dolores.City = "Carlsbad";
+            dolores.State = "CA";
+            dolores.PostalCode = "92009";
+            dolores.Country = "US";
+            dolores.EmailAddress = "doloreshazelton@gmail.com";
+            dolores.PhoneNumber = "714-403-2333";
+            dolores.Gender = "Female";
+            dolores.FirstAid = true;
+            dolores.CPR = true;
+            dolores.Kriyaban = true;
+            dolores.LessonStudent = true;
+            dolores.AcceptTerms = true;
+            dolores.CanSendMessages = true;
+            dolores.EmailConfirmed = true;
+            dolores.IsVerified = true;
+            dolores.IsActive = true;
+            dolores.VerifiedDate = DateTime.UtcNow;
+            dolores.RememberMe = true;
+            dolores.IsLockedOut = false;
+            dolores.LoginAttempts = 0;
+
+            salt = Helper.GetSecureSalt();
+            passwordHash = Helper.HashUsingPbkdf2("11111111", salt);
+            dolores.Password = passwordHash;
+            dolores.PasswordSalt = Convert.ToBase64String(salt);
+            dolores.PropertyId = 1;
+            dolores.CreatedBy = "doloreshazelton@gmail.com";
+            dolores.CreatedDate = DateTime.UtcNow;
+
+            Staff seannie = new Staff("seanniegibson@gmail.com");
+            seannie.StaffId = 3;
+            seannie.FirstName = "Seannie";
+            seannie.MiddleName = "";
+            seannie.LastName = "Gibson";
+            seannie.Address = "924 Elyria Drive";
+            seannie.Address2 = "";
+            seannie.City = "Los Angeles";
+            seannie.State = "CA";
+            seannie.PostalCode = "90065";
+            seannie.Country = "US";
+            seannie.EmailAddress = "seanniegibson@gmail.com";
+            seannie.PhoneNumber = "323-394-5332";
+            seannie.Gender = "Female";
+            seannie.FirstAid = true;
+            seannie.CPR = true;
+            seannie.Kriyaban = true;
+            seannie.LessonStudent = true;
+            seannie.AcceptTerms = true;
+            seannie.CanSendMessages = true;
+            seannie.EmailConfirmed = true;
+            seannie.IsVerified = true;
+            seannie.IsActive = true;
+            seannie.VerifiedDate = DateTime.UtcNow;
+            seannie.RememberMe = true;
+            seannie.IsLockedOut = false;
+            seannie.LoginAttempts = 0;
+
+            salt = Helper.GetSecureSalt();
+            passwordHash = Helper.HashUsingPbkdf2("Master1952!", salt);
+            seannie.Password = passwordHash;
+            seannie.PasswordSalt = Convert.ToBase64String(salt);
+            seannie.PropertyId = 1;
+            seannie.CreatedBy = "seanniegibson@gmail.com";
+            seannie.CreatedDate = DateTime.UtcNow;
 
             modelBuilder.Entity<Staff>().HasData(
-                gerry, gerry2
+                gerry, dolores, seannie
             );
 
             modelBuilder.Entity<StaffRole>().HasData(
-                new StaffRole() { RoleId = 1, StaffId = 1 },
-                new StaffRole() { RoleId = 4, StaffId = 2 }
+                new StaffRole() { RoleId = 1, StaffId = 1, PropertyId = 1 },
+                new StaffRole() { RoleId = 4, StaffId = 2 , PropertyId = 1},
+                new StaffRole() { RoleId = 1, StaffId = 3, PropertyId = 1 }
             );
 
             modelBuilder.Entity<Area>().HasData(
@@ -757,8 +805,8 @@ namespace TempleVolunteerAPI.Repository
                     Name = "Master's Birthday",
                     Description = "Master's birthday celebration",
                     Note = "There are no notes",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(1),
+                    StartDate = DateTime.UtcNow,
+                    EndDate = DateTime.UtcNow.AddDays(1),
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
                     CreatedDate = DateTime.UtcNow,
@@ -774,8 +822,8 @@ namespace TempleVolunteerAPI.Repository
                     Name = "Krisha's Birthday",
                     Description = "Krishna's birthday celebration",
                     Note = "There are no notes",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(1),
+                    StartDate = DateTime.UtcNow,
+                    EndDate = DateTime.UtcNow.AddDays(1),
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
                     CreatedDate = DateTime.UtcNow,
@@ -791,8 +839,8 @@ namespace TempleVolunteerAPI.Repository
                     Name = "Sri Yukteswar's Birthday",
                     Description = "Sri Yukteswar's birthday celebration",
                     Note = "There are no notes",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(1),
+                    StartDate = DateTime.UtcNow,
+                    EndDate = DateTime.UtcNow.AddDays(1),
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
                     CreatedDate = DateTime.UtcNow,
@@ -808,8 +856,8 @@ namespace TempleVolunteerAPI.Repository
                     Name = "Mahatar Babaji's Birthday",
                     Description = "Mahavatar's birthday celebration",
                     Note = "There are no notes",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(1),
+                    StartDate = DateTime.UtcNow,
+                    EndDate = DateTime.UtcNow.AddDays(1),
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
                     CreatedDate = DateTime.UtcNow,
@@ -825,8 +873,8 @@ namespace TempleVolunteerAPI.Repository
                     Name = "Jesus' Birthday",
                     Description = "Jesus' birthday celebration",
                     Note = "There are no notes",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(1),
+                    StartDate = DateTime.UtcNow,
+                    EndDate = DateTime.UtcNow.AddDays(1),
                     PropertyId = 1,
                     CreatedBy = "gerryhazelton@gmail.com",
                     CreatedDate = DateTime.UtcNow,

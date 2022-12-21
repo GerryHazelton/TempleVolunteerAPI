@@ -42,7 +42,7 @@ namespace TempleVolunteerAPI.Service
             userRecord.RefreshTokens?.Add(new RefreshToken
             {
                 ExpiryDate = DateTime.UtcNow.AddDays(30),
-                CreateDate = DateTime.Now,
+                CreateDate = DateTime.UtcNow,
                 UserId = userId,
                 PropertyId = propertyId,
                 TokenHash = refreshTokenHashed,
@@ -100,7 +100,7 @@ namespace TempleVolunteerAPI.Service
                 return response;
             }
 
-            if (refreshToken.ExpiryDate < DateTime.Now)
+            if (refreshToken.ExpiryDate < DateTime.UtcNow)
             {
                 response.Success = false;
                 response.Message = "Refresh token has expired";

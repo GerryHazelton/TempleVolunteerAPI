@@ -7,6 +7,9 @@ using AutoMapper;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Linq.Expressions;
 using static TempleVolunteerAPI.Common.EnumHelper;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TempleVolunteerAPI.Repository
 {
@@ -35,6 +38,7 @@ namespace TempleVolunteerAPI.Repository
                 Staff originalStaff = await _context.Staff.FindAsync(update.StaffId);
 
                 if (!originalStaff.FirstName.ToLower().Trim().Equals(update.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", update.FirstName);
+                if (request.MiddleName != null && !originalStaff.MiddleName.ToLower().Trim().Equals(request.MiddleName.ToLower().Trim())) sbSql.AppendFormat("MiddleName = '{0}', ", request.MiddleName);
                 if (!originalStaff.LastName.ToLower().Trim().Equals(update.LastName.ToLower().Trim())) sbSql.AppendFormat("LastName = '{0}', ", update.LastName);
                 if (!originalStaff.Address.ToLower().Trim().Equals(update.Address.ToLower().Trim())) sbSql.AppendFormat("Address = '{0}', ", update.Address);
                 if (originalStaff.Address2 == null && originalStaff.Address2 != update.Address2) sbSql.AppendFormat("Address2 = '{0}', ", update.Address2);
@@ -105,11 +109,57 @@ namespace TempleVolunteerAPI.Repository
                 var originalStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
 
                 if (!originalStaff.FirstName.ToLower().Trim().Equals(request.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", request.FirstName);
+                
+                if (String.IsNullOrEmpty(request.MiddleName) && !String.IsNullOrEmpty(originalStaff.MiddleName))
+                {
+                    sbSql.AppendFormat("MiddleName = '{0}', ", DBNull.Value);
+                }
+
+                if (!String.IsNullOrEmpty(request.MiddleName) && String.IsNullOrEmpty(originalStaff.MiddleName))
+                {
+                    sbSql.AppendFormat("MiddleName = '{0}', ", request.MiddleName);
+                }
+
+                if (!String.IsNullOrEmpty(request.MiddleName) && !String.IsNullOrEmpty(originalStaff.MiddleName) && !originalStaff.MiddleName.ToLower().Trim().Equals(request.MiddleName.ToLower().Trim()))
+                {
+                    sbSql.AppendFormat("MiddleName = '{0}', ", request.MiddleName);
+                }
+                
                 if (!originalStaff.LastName.ToLower().Trim().Equals(request.LastName.ToLower().Trim())) sbSql.AppendFormat("LastName = '{0}', ", request.LastName);
                 if (!originalStaff.Address.ToLower().Trim().Equals(request.Address.ToLower().Trim())) sbSql.AppendFormat("Address = '{0}', ", request.Address);
-                if (!originalStaff.Address2.ToLower().Trim().Equals(request.Address2.ToLower().Trim())) sbSql.AppendFormat("Address2 = '{0}', ", request.Address2);
+
+                if (String.IsNullOrEmpty(request.Address2) && !String.IsNullOrEmpty(originalStaff.Address2))
+                {
+                    sbSql.AppendFormat("Address2 = '{0}', ", DBNull.Value);
+                }
+
+                if (!String.IsNullOrEmpty(request.Address2) && String.IsNullOrEmpty(originalStaff.Address2))
+                {
+                    sbSql.AppendFormat("Address2 = '{0}', ", request.Address2);
+                }
+
+                if (!String.IsNullOrEmpty(request.Address2) && !String.IsNullOrEmpty(originalStaff.Address2) && !originalStaff.Address2.ToLower().Trim().Equals(request.Address2.ToLower().Trim()))
+                {
+                    sbSql.AppendFormat("Address2 = '{0}', ", request.Address2);
+                }
+
                 if (!originalStaff.City.ToLower().Trim().Equals(request.City.ToLower().Trim())) sbSql.AppendFormat("City = '{0}', ", request.City);
-                if (!originalStaff.State.ToLower().Trim().Equals(request.State.ToLower().Trim())) sbSql.AppendFormat("State = '{0}', ", request.State);
+
+                if (String.IsNullOrEmpty(request.State) && !String.IsNullOrEmpty(originalStaff.State))
+                {
+                    sbSql.AppendFormat("State = '{0}', ", DBNull.Value);
+                }
+
+                if (!String.IsNullOrEmpty(request.State) && String.IsNullOrEmpty(originalStaff.State))
+                {
+                    sbSql.AppendFormat("State = '{0}', ", request.State);
+                }
+
+                if (!String.IsNullOrEmpty(request.State) && !String.IsNullOrEmpty(originalStaff.State) && !originalStaff.State.ToLower().Trim().Equals(request.State.ToLower().Trim()))
+                {
+                    sbSql.AppendFormat("State = '{0}', ", request.State);
+                }
+
                 if (!originalStaff.PostalCode.ToLower().Trim().Equals(request.PostalCode.ToLower().Trim())) sbSql.AppendFormat("PostalCode = '{0}', ", request.PostalCode);
                 if (!originalStaff.Country.ToLower().Trim().Equals(request.Country.ToLower().Trim())) sbSql.AppendFormat("Country = '{0}', ", request.Country);
                 if (!originalStaff.EmailAddress.ToLower().Trim().Equals(request.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", request.EmailAddress);
@@ -122,36 +172,51 @@ namespace TempleVolunteerAPI.Repository
 
                 sbSql.AppendFormat("UpdatedBy = '{0}', ", request.UpdatedBy);
                 sbSql.AppendFormat("UpdatedDate = '{0}', ", request.UpdatedDate);
+                SqlParameter imgParam = null;
+                SqlParameter fileNameParam = null;
 
-                if (!String.IsNullOrEmpty(request.StaffImageFileName) && !String.IsNullOrEmpty(originalStaff.StaffFileName))
+                if (request.RemovePhoto)
                 {
-                    if (!request.StaffImageFileName.Equals(originalStaff.StaffFileName))
-                    {
-                        sbSql.AppendFormat("StaffFileName = '{0}', ", request.StaffImageFileName);
-                    }
-                } else if (!String.IsNullOrEmpty(request.StaffImageFileName) && String.IsNullOrEmpty(originalStaff.StaffFileName))
-                {
-                    sbSql.AppendFormat("StaffFileName = '{0}', ", request.StaffImageFileName);
-                } else
-                {
-                    sbSql.AppendFormat("StaffFileName = '{0}', ", DBNull.Value);
-                }
+                    sbSql.Append("StaffFileName = @FileName, ");
+                    fileNameParam = new SqlParameter("FileName", SqlDbType.VarChar, 150);
+                    fileNameParam.Value = DBNull.Value;
 
-                if (request.StaffImage != null && originalStaff.StaffImage != null)
-                {
-                    if (!request.StaffImage.Equals(originalStaff.StaffImage))
-                    {
-                        sbSql.AppendFormat("StaffImage = '{0}', ", request.StaffImage);
-                    }
+                    sbSql.Append("StaffImage = @Img  ");
+                    imgParam = new SqlParameter("Img", SqlDbType.Image);
+                    imgParam.Value = DBNull.Value;
                 }
-                else if (request.StaffImage != null && originalStaff.StaffImage == null)
+                else
                 {
-                    sbSql.AppendFormat("StaffImage = '{0}', ", request.StaffImage);
+                    if (!String.IsNullOrEmpty(request.StaffFileName) && !String.IsNullOrEmpty(originalStaff.StaffFileName))
+                    {
+                        if (!request.StaffFileName.Equals(originalStaff.StaffFileName))
+                        {
+                            sbSql.Append("StaffFileName = @FileName, ");
+                            fileNameParam = new SqlParameter("FileName", SqlDbType.VarChar, 150);
+                            fileNameParam.Value = request.StaffFileName;
+
+                            sbSql.Append("StaffImage = @Img  ");
+                            imgParam = new SqlParameter("Img", SqlDbType.Image);
+                            imgParam.Value = request.StaffImage;
+                        }
+                    }
+                    else if (!String.IsNullOrEmpty(request.StaffFileName) && String.IsNullOrEmpty(originalStaff.StaffFileName))
+                    {
+                        sbSql.Append("StaffFileName = @FileName, ");
+                        fileNameParam = new SqlParameter("FileName", SqlDbType.VarChar, 150);
+                        fileNameParam.Value = request.StaffFileName;
+
+                        sbSql.Append("StaffImage = @Img  ");
+                        imgParam = new SqlParameter("Img", SqlDbType.Image);
+                        imgParam.Value = request.StaffImage;
+                    }
                 }
 
                 sbSql = new StringBuilder(sbSql.ToString().Substring(0, sbSql.ToString().Length - 2));
-                sbSql.AppendFormat("\nWHERE EmailAddress = '{0}' AND PropertyId = {1}", request.EmailAddress, request.PropertyId);
-                _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                sbSql.AppendFormat(" WHERE EmailAddress = '{0}' AND PropertyId = {1}", request.EmailAddress, request.PropertyId);
+
+                _context.Database.ExecuteSqlRaw(sbSql.ToString(), imgParam, fileNameParam);
+
                 Staff updatedStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
                 _myProfileRepositoryResponse.Entity = _mapper.Map<MyProfileRequest>(updatedStaff);
             }

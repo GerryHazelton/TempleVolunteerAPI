@@ -6,5 +6,6 @@
         public Staff? Staff { get; set; }
         public int RoleId { get; set; }
         public Role? Role { get; set; }
+        public int PropertyId { get; set; }
     }
 }

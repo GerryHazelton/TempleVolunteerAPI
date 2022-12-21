@@ -8,5 +8,6 @@
         public Credential? Credential { get; set; }
         public DateTime? CompletedDate { get; set; }
         public DateTime? ExpireDate { get; set; }
+        public int PropertyId { get; set; }
     }
 }

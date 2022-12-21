@@ -6,5 +6,6 @@
         public RefreshToken? RefreshToken { get; set; }
         public int StaffId { get; set; }
         public Staff? Staff { get; set; }
+        public int PropertyId { get; set; }
     }
 }

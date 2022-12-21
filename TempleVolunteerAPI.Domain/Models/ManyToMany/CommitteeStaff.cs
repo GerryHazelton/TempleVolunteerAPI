@@ -6,5 +6,6 @@
         public Staff? Staff { get; set; }
         public int CommitteeId { get; set; }
         public Committee? Committee { get; set; }
+        public int PropertyId { get; set; }
     }
 }

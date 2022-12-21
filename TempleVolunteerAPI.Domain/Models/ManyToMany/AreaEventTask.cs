@@ -6,5 +6,6 @@
         public Area? Area { get; set; }
         public int EventTaskId { get; set; }
         public EventTask? EventTask { get; set; }
+        public int PropertyId { get; set; }
     }
 }

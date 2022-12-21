@@ -54,7 +54,7 @@ namespace TempleVolunteerAPI.Domain
         [StringLength(150)]
         public string? StaffFileName { get; set; }
 
-        public string? StaffImage { get; set; }
+        public byte[]? StaffImage { get; set; }
         public bool AcceptTerms { get; set; }
 
         public string Password { get; set; }
