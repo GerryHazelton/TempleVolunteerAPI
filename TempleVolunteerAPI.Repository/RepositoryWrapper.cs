@@ -20,6 +20,7 @@ namespace TempleVolunteerAPI.Repository
         private IEventRepository _event;
         private IEventTaskRepository _eventTask;
         private IEventTypeRepository _eventType;
+        private IGeneralRepository _general;
         private IMessageRepository _message;
         private IPropertyRepository _property;
         private IRoleRepository _role;
@@ -195,6 +196,19 @@ namespace TempleVolunteerAPI.Repository
                 }
 
                 return _eventType;
+            }
+        }
+
+        public IGeneralRepository General
+        {
+            get
+            {
+                if (_general == null)
+                {
+                    _general = new GeneralRepository(_context);
+                }
+
+                return _general;
             }
         }
 

@@ -13,6 +13,7 @@ namespace TempleVolunteerAPI.Common
             EmailExists,
             ForgotPassword,
             RegisterEmail,
+            RegistrationApproved,
             ResetPassword,
             VerifyEmail
         }

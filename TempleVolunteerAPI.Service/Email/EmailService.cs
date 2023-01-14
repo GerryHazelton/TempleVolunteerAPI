@@ -47,14 +47,26 @@ namespace TempleVolunteerAPI.Service
 
                     case EmailTypeEnum.RegisterEmail:
                         {
-                            _message = new StringBuilder("<h4>Registration Email</h4>");
-                            _message.AppendFormat("Hello {0} - your temporary password is: <b>Master1952SRF!</b>. Please change your password once you have logged in.", request.FirstName);
+                            _message = new StringBuilder("<h4>Registration</h4>");
+                            _message.AppendFormat("Hello {0} - your registration has been submitted. You will receive an email once your registration as been approved.", request.FirstName);
                             _message.Append("<p></p>");
-                            _message.Append("Please click the link below to complete your registration: ");
-                            _message.AppendFormat("<a href={0}/Account/VerifyEmailAddress?emailAddress={1}&propertyId={2}> Complete Registration </a>", _uri, request.EmailAddress, request.PropertyId);
+                            _message.Append("Thank you.");
                             await Send(request.EmailAddress, "Temple Volunteer - Register", _message.ToString(), _fromEmail, request.PropertyId);
 
-                            return "Temple Volunteer - Registration Successful";
+                            return "Temple Volunteer - Registration Submittal Successful - Please Check Your Email";
+                        }
+                        break;
+
+                    case EmailTypeEnum.RegistrationApproved:
+                        {
+                            _message = new StringBuilder("<h4>Registration Approved</h4>");
+                            _message.AppendFormat("Hello {0} - your registrtion has been approved.", request.FirstName);
+                            _message.Append("<p></p>");
+                            _message.Append("Please click the link below to login: ");
+                            _message.AppendFormat("<a href={0}/Account/VerifyEmailAddress?emailAddress={1}&propertyId={2}> Complete Registration </a>", _uri, request.EmailAddress, request.PropertyId);
+                            await Send(request.EmailAddress, "Temple Volunteer - Registration Approved", _message.ToString(), _fromEmail, request.PropertyId);
+
+                            return "Temple Volunteer - Registration Approval Sent";
                         }
                         break;
 

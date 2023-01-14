@@ -22,9 +22,14 @@ namespace TempleVolunteerAPI.Service
             return staff;
         }
 
-        public void CustomUpdate(MyProfileRequest entity, string userId)
+        public void CustomMyProfileUpdate(MyProfileRequest entity)
         {
             _uow.Staff.CustomMyProfileUpdate(entity);
+        }
+
+        public void CustomStaffUpdate(Staff entity)
+        {
+            _uow.Staff.CustomStaffUpdate(entity);
         }
 
         public bool Delete(Staff entity, int propertyId, string userId)

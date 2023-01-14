@@ -12,16 +12,20 @@ namespace TempleVolunteerAPI.API
     public class StaffController : ControllerBase
     {
         private readonly IStaffService _staffService;
+        private readonly IGeneralService _generalService;
         private readonly IMapper _mapper;
         private ServiceResponse<IList<StaffRequest>> _collResponse;
+        private ServiceResponse<IList<StaffEmailCheckRequest>> _collEmailCheckResponse;
         private ServiceResponse<StaffRequest> _response;
         private bool _result;
 
-        public StaffController(IStaffService StaffService, IMapper mapper)
+        public StaffController(IStaffService staffService, IGeneralService generalService, IMapper mapper)
         {
-            _staffService = StaffService;
+            _staffService = staffService;
+            _generalService = generalService;
             _mapper = mapper;
             _collResponse = new ServiceResponse<IList<StaffRequest>>();
+            _collEmailCheckResponse = new ServiceResponse<IList<StaffEmailCheckRequest>>();
             _response = new ServiceResponse<StaffRequest>();
         }
 
@@ -32,6 +36,15 @@ namespace TempleVolunteerAPI.API
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
             return _collResponse;
+        }
+
+        [HttpGet("GetAllStaffEmailAsync")]
+        public ServiceResponse<IList<StaffEmailCheckRequest>> GetAllStaffEmailAsync(int propertyId, string userId)
+        {
+            _collEmailCheckResponse.Data = _mapper.Map<IList<StaffEmailCheckRequest>>(ReturnEmailCheckCollection(propertyId, userId));
+            _collEmailCheckResponse.Success = _collResponse.Data != null ? true : false;
+
+            return _collEmailCheckResponse;
         }
 
         [HttpGet("GetByIdAsync")]
@@ -62,7 +75,17 @@ namespace TempleVolunteerAPI.API
             Staff staff = _staffService.FindByCondition(x => x.StaffId == request.StaffId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             staff = _mapper.Map<Staff>(request);
 
-            _result = _staffService.Update(staff, request.PropertyId, request.CreatedBy);
+            if (request.RemovePhoto)
+            {
+                var general = _generalService.FindAll(request.PropertyId, request.EmailAddress);
+                var gender = general.Where(x => x.Gender == request.Gender).FirstOrDefault();
+
+                staff.StaffFileName = general.Where(x => x.Gender == request.Gender).FirstOrDefault().Gender == "Male" ? "Male.png" : "Female.png";
+                staff.StaffImage = general.Where(x => x.Gender == request.Gender).FirstOrDefault().MissingImage;
+
+            }
+
+            _staffService.CustomStaffUpdate(staff);
             _collResponse.Data = _mapper.Map<IList<StaffRequest>>(ReturnCollection(request.PropertyId, request.UpdatedBy));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
@@ -84,6 +107,26 @@ namespace TempleVolunteerAPI.API
         private IList<Staff> ReturnCollection(int propertyId, string userId)
         {
             return _staffService.FindAll(propertyId, userId).ToList();
+        }
+
+        private IList<StaffEmailCheckRequest> ReturnEmailCheckCollection(int propertyId, string userId)
+        {
+            List<StaffEmailCheckRequest> emailList = new List<StaffEmailCheckRequest>();
+            var list = _staffService.FindAll(propertyId, userId).ToList();
+
+            if (list.Count > 0)
+            {
+                foreach(Staff staff in list.ToList())
+                {
+                    emailList.Add(new StaffEmailCheckRequest {StaffId = staff.StaffId, FirstName = staff.FirstName, MiddleName = staff.MiddleName, LastName = staff.LastName, EmailAddress = staff.EmailAddress });
+                }
+
+                return emailList;
+            }
+            else
+            {
+                return emailList;
+            }
         }
     }
 }

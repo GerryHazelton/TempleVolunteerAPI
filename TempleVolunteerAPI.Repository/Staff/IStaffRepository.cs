@@ -15,6 +15,7 @@ namespace TempleVolunteerAPI.Repository
         bool UpdateStaff(Staff staff, int propertyId, string userId);
         bool DeleteStaff(Staff staff, int propertyId, string userId);
         void CustomMyProfileUpdate(MyProfileRequest request);
+        void CustomStaffUpdate(Staff request);
         void RecordLoginAttempts(string userId, int propertyId);
         void ResetLoginAttempts(string userId, int propertyId);
 

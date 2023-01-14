@@ -16,6 +16,7 @@ namespace TempleVolunteerAPI.API
         private readonly IEmailService _emailService;
         private readonly IMessageService _messageService;
         private readonly IStaffService _staffService;
+        private readonly IGeneralService _generalService;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
@@ -24,7 +25,8 @@ namespace TempleVolunteerAPI.API
 
         public AccountController(IAccountService accountService, 
             IEmailService emailService, 
-            IStaffService staffService, 
+            IStaffService staffService,
+            IGeneralService generalService,
             IConfiguration config, 
             IMapper mapper, 
             IMessageService messageHistory,
@@ -34,6 +36,7 @@ namespace TempleVolunteerAPI.API
             _accountService = accountService;
             _emailService = emailService;
             _staffService = staffService;
+            _generalService = generalService;
             _config = config;
             _mapper = mapper;
             _messageService = messageHistory;
@@ -46,6 +49,12 @@ namespace TempleVolunteerAPI.API
         public async Task<RegisterResponse> RegisterAsync([FromBody] RegisterRequest request)
         {
             Staff staff = _mapper.Map<Staff>(request);
+            var general = _generalService.FindAll(request.PropertyId, request.EmailAddress);
+            var gender = general.Where(x => x.Gender == request.Gender).FirstOrDefault();
+
+            staff.StaffFileName = general.Where(x=>x.Gender == request.Gender).FirstOrDefault().Gender == "Male" ? "Male.png" : "Female.png";
+            staff.StaffImage = general.Where(x => x.Gender == request.Gender).FirstOrDefault().MissingImage;
+
             RegisterResponse response = await _accountService.RegisterAsync(staff);
 
             return response;
@@ -62,6 +71,15 @@ namespace TempleVolunteerAPI.API
         [HttpPut("MyProfileAsync")]
         public async Task<MyProfileResponse> MyProfileAsync([FromBody] MyProfileRequest request)
         {
+            if (request.RemovePhoto)
+            {
+                var general = _generalService.FindAll(request.PropertyId, request.EmailAddress);
+                var gender = general.Where(x => x.Gender == request.Gender).FirstOrDefault();
+
+                request.StaffFileName = general.Where(x => x.Gender == request.Gender).FirstOrDefault().Gender == "Male" ? "Male.png" : "Female.png";
+                request.StaffImage = general.Where(x => x.Gender == request.Gender).FirstOrDefault().MissingImage;
+            }
+
             RepositoryResponse<MyProfileRequest> repositoryResponse = await _accountService.MyProfileAsync(request);
             MyProfileResponse response = new MyProfileResponse();
 
@@ -146,7 +164,6 @@ namespace TempleVolunteerAPI.API
 
             return _collResponse;
         }
-
 
         #region Helpers
         private void SetTokenCookie(string token)

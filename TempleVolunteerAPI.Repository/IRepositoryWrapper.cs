@@ -18,6 +18,7 @@ namespace TempleVolunteerAPI.Repository
         IEventRepository Events { get; }
         IEventTaskRepository EventTasks { get; }
         IEventTypeRepository EventTypes { get; }
+        IGeneralRepository General { get; }
         IMessageRepository Messages { get; }
         IPropertyRepository Properties { get; }
         IRoleRepository Roles { get; }
