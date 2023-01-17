@@ -373,10 +373,6 @@ namespace TempleVolunteerAPI.Repository
             gerry.EmailAddress = "gerryhazelton@gmail.com";
             gerry.PhoneNumber = "760-670-8026";
             gerry.Gender = "Male";
-            gerry.FirstAid = true;
-            gerry.CPR = true;
-            gerry.Kriyaban = true;
-            gerry.LessonStudent = true;
             gerry.AcceptTerms = true;
             gerry.CanSendMessages = true;
             gerry.EmailConfirmed = true;
@@ -410,10 +406,6 @@ namespace TempleVolunteerAPI.Repository
             dolores.EmailAddress = "doloreshazelton@gmail.com";
             dolores.PhoneNumber = "714-403-2333";
             dolores.Gender = "Female";
-            dolores.FirstAid = true;
-            dolores.CPR = true;
-            dolores.Kriyaban = true;
-            dolores.LessonStudent = true;
             dolores.AcceptTerms = true;
             dolores.CanSendMessages = true;
             dolores.EmailConfirmed = true;
@@ -446,10 +438,6 @@ namespace TempleVolunteerAPI.Repository
             seannie.EmailAddress = "seanniegibson@gmail.com";
             seannie.PhoneNumber = "323-394-5332";
             seannie.Gender = "Female";
-            seannie.FirstAid = true;
-            seannie.CPR = true;
-            seannie.Kriyaban = true;
-            seannie.LessonStudent = true;
             seannie.AcceptTerms = true;
             seannie.CanSendMessages = true;
             seannie.EmailConfirmed = true;

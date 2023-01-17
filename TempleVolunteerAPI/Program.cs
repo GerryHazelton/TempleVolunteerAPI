@@ -49,6 +49,7 @@ builder.Services.AddTransient(typeof(IEventService), typeof(EventService));
 builder.Services.AddTransient(typeof(IEventTaskService), typeof(EventTaskService));
 builder.Services.AddTransient(typeof(IEventTypeService), typeof(EventTypeService));
 builder.Services.AddTransient(typeof(IEventTypeAreaService), typeof(EventTypeAreaService));
+builder.Services.AddTransient(typeof(IEventEventTypeService), typeof(EventEventTypeService));
 builder.Services.AddTransient(typeof(IGeneralService), typeof(GeneralService));
 builder.Services.AddTransient(typeof(IMessageService), typeof(MessageService));
 builder.Services.AddTransient(typeof(IPropertyService), typeof(PropertyService));
@@ -75,6 +76,7 @@ builder.Services.AddTransient(typeof(IEventRepository), typeof(EventRepository))
 builder.Services.AddTransient(typeof(IEventTypeAreaRepository), typeof(EventTypeAreaRepository));
 builder.Services.AddTransient(typeof(IEventTaskRepository), typeof(EventTaskRepository));
 builder.Services.AddTransient(typeof(IEventTypeRepository), typeof(EventTypeRepository));
+builder.Services.AddTransient(typeof(IEventEventTypeRepository), typeof(EventEventTypeRepository));
 builder.Services.AddTransient(typeof(IGeneralRepository), typeof(GeneralRepository));
 builder.Services.AddTransient(typeof(IMessageRepository), typeof(MessageRepository));
 builder.Services.AddTransient(typeof(IPropertyRepository), typeof(PropertyRepository));

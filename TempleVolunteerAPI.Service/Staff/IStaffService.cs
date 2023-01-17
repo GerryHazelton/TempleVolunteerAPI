@@ -6,6 +6,6 @@ namespace TempleVolunteerAPI.Service
     public interface IStaffService : IServiceBase<Staff>
     {
         void CustomMyProfileUpdate(MyProfileRequest entity);
-        void CustomStaffUpdate(Staff entity);
+        void CustomStaffUpdate(Staff entity, int[] credentialIds);
     }
 }

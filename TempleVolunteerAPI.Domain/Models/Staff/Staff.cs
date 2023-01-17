@@ -40,10 +40,6 @@ namespace TempleVolunteerAPI.Domain
         [StringLength(25)]
         public string PhoneNumber { get; set; }
         public string Gender { get; set; }
-        public bool FirstAid { get; set; }
-        public bool CPR { get; set; }
-        public bool LessonStudent { get; set; }
-        public bool Kriyaban { get; set; }
 
         [StringLength(250)]
         public string? Note { get; set; }

@@ -10,6 +10,8 @@ using static TempleVolunteerAPI.Common.EnumHelper;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Diagnostics;
 
 namespace TempleVolunteerAPI.Repository
 {
@@ -51,10 +53,6 @@ namespace TempleVolunteerAPI.Repository
                 //if (!originalStaff.Role.Equals(update.Role)) sbSql.AppendFormat("Role = '{0}', ", update.Role);
                 if (!originalStaff.EmailAddress.ToLower().Trim().Equals(update.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", update.EmailAddress);
                 if (!originalStaff.PhoneNumber.ToLower().Trim().Equals(update.PhoneNumber.ToLower().Trim())) sbSql.AppendFormat("PhoneNumber = '{0}', ", update.PhoneNumber);
-                if (!originalStaff.FirstAid.Equals(update.FirstAid)) sbSql.AppendFormat("FirstAid = {0}, ", update.FirstAid == true ? 1 : 0);
-                if (!originalStaff.CPR.Equals(update.CPR)) sbSql.AppendFormat("CPR = {0}, ", update.CPR == true ? 1 : 0);
-                if (!originalStaff.Kriyaban.Equals(update.Kriyaban)) sbSql.AppendFormat("Kriyaban = {0}, ", update.Kriyaban == true ? 1 : 0);
-                if (!originalStaff.LessonStudent.Equals(update.LessonStudent)) sbSql.AppendFormat("LessonStudent = {0}, ", update.LessonStudent == true ? 1 : 0);
                 if (originalStaff.Note == null && originalStaff.Note != update.Note) sbSql.AppendFormat("Note = '{0}', ", update.Note);
                 if (originalStaff.Note != null && !originalStaff.Note.Equals(update.Note)) sbSql.AppendFormat("Note = '{0}', ", update.Note);
                 if (originalStaff.StaffFileName == null && originalStaff.StaffFileName != update.StaffFileName) sbSql.AppendFormat("StaffFileName = '{0}', ", update.StaffFileName);
@@ -94,7 +92,7 @@ namespace TempleVolunteerAPI.Repository
             }
             catch (Exception ex)
             {
-                _repositoryResponse.Error = ex;
+                throw;
             }
 
             return _repositoryResponse;
@@ -106,7 +104,7 @@ namespace TempleVolunteerAPI.Repository
             {
                 StringBuilder sbSql = new StringBuilder("UPDATE Staff\n");
                 sbSql.Append("SET ");
-                var originalStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
+                var originalStaff = GetStaffWithDetails(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress, WithDetails.Yes).FirstOrDefault();
 
                 if (!originalStaff.FirstName.ToLower().Trim().Equals(request.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", request.FirstName);
                 
@@ -165,10 +163,6 @@ namespace TempleVolunteerAPI.Repository
                 if (!originalStaff.EmailAddress.ToLower().Trim().Equals(request.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", request.EmailAddress);
                 if (!originalStaff.PhoneNumber.ToLower().Trim().Equals(request.PhoneNumber.ToLower().Trim())) sbSql.AppendFormat("PhoneNumber = '{0}', ", request.PhoneNumber);
                 if (!originalStaff.Gender.ToLower().Trim().Equals(request.Gender.ToLower().Trim())) sbSql.AppendFormat("Gender = '{0}', ", request.Gender);
-                if (!originalStaff.FirstAid.Equals(request.FirstAid)) sbSql.AppendFormat("FirstAid = {0}, ", request.FirstAid == true ? 1 : 0);
-                if (!originalStaff.CPR.Equals(request.CPR)) sbSql.AppendFormat("CPR = {0}, ", request.CPR == true ? 1 : 0);
-                if (!originalStaff.Kriyaban.Equals(request.Kriyaban)) sbSql.AppendFormat("Kriyaban = {0}, ", request.Kriyaban == true ? 1 : 0);
-                if (!originalStaff.LessonStudent.Equals(request.LessonStudent)) sbSql.AppendFormat("LessonStudent = {0}, ", request.LessonStudent == true ? 1 : 0);
 
                 sbSql.AppendFormat("UpdatedBy = '{0}', ", request.UpdatedBy);
                 sbSql.AppendFormat("UpdatedDate = '{0}', ", request.UpdatedDate);
@@ -201,25 +195,82 @@ namespace TempleVolunteerAPI.Repository
 
                 sbSql = new StringBuilder(sbSql.ToString().Substring(0, sbSql.ToString().Length - 2));
                 sbSql.AppendFormat(" WHERE EmailAddress = '{0}' AND PropertyId = {1}", request.EmailAddress, request.PropertyId);
-
                 _context.Database.ExecuteSqlRaw(sbSql.ToString(), imgParam, fileNameParam);
+
+                if (request.CredentialIds == null)
+                {
+                    request.CredentialIds = new int[0];
+                }
+
+                var origintalCredentialIds = originalStaff.Credentials.Select(x => x.CredentialId).ToArray();
+                Array.Sort(origintalCredentialIds);
+                Array.Sort(request.CredentialIds);
+
+                if (origintalCredentialIds.Length == 0 && request.CredentialIds.Length > 0)
+                {
+                    sbSql = new StringBuilder();
+                    foreach (int credId in request.CredentialIds)
+                    {
+                        sbSql.AppendFormat("INSERT INTO StaffCredentials (StaffId, CredentialId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, credId, originalStaff.PropertyId);
+                    }
+
+                    _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                }
+
+                if (origintalCredentialIds.Length > 0 && request.CredentialIds.Length == 0)
+                {
+                    sbSql = new StringBuilder();
+                    sbSql.AppendFormat("DELETE FROM StaffCredentials WHERE PropertyId={0} AND StaffId={1}", originalStaff.PropertyId, originalStaff.StaffId);
+                    _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                }
+
+                if ((origintalCredentialIds != null && origintalCredentialIds.Length > 0) && (request.CredentialIds != null && request.CredentialIds.Length > 0))
+                {
+                    bool equal = origintalCredentialIds.SequenceEqual(request.CredentialIds);
+                    if (!equal)
+                    {
+                        var clientDelta = request.CredentialIds.Except(request.CredentialIds.Where(o => origintalCredentialIds.Select(s => s).ToList().Contains(o))).ToList();
+                        sbSql = new StringBuilder();
+                        foreach (int credId in clientDelta)
+                        {
+                            sbSql.AppendFormat("INSERT INTO StaffCredentials (StaffId, CredentialId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, credId, originalStaff.PropertyId);
+                        }
+                        
+                        if (sbSql.Length > 0)
+                        {
+                            _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                        }
+
+                        var serverDelta = origintalCredentialIds.Except(origintalCredentialIds.Where(o => request.CredentialIds.Select(s => s).ToList().Contains(o))).ToList();
+                        sbSql = new StringBuilder();
+                        foreach (int credId in serverDelta)
+                        {
+                            sbSql.AppendFormat("DELETE StaffCredentials WHERE PropertyId={0} AND StaffId={1} AND CredentialId={2}", request.PropertyId, originalStaff.StaffId, credId);
+                        }
+
+                        if (sbSql.Length > 0)
+                        {
+                            _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                        }
+                    }
+                }
 
                 Staff updatedStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
                 _myProfileRepositoryResponse.Entity = _mapper.Map<MyProfileRequest>(updatedStaff);
             }
             catch (Exception ex)
             {
-                _myProfileRepositoryResponse.Error = ex;
+                throw;
             }
         }
 
-        public void CustomStaffUpdate(Staff request)
+        public void CustomStaffUpdate(Staff request, int[] credentialIds)
         {
             try
             {
                 StringBuilder sbSql = new StringBuilder("UPDATE Staff\n");
                 sbSql.Append("SET ");
-                var originalStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
+                var originalStaff = GetStaffWithDetails(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress, WithDetails.Yes).FirstOrDefault();
 
                 if (!originalStaff.FirstName.ToLower().Trim().Equals(request.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", request.FirstName);
 
@@ -278,10 +329,6 @@ namespace TempleVolunteerAPI.Repository
                 if (!originalStaff.EmailAddress.ToLower().Trim().Equals(request.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", request.EmailAddress);
                 if (!originalStaff.PhoneNumber.ToLower().Trim().Equals(request.PhoneNumber.ToLower().Trim())) sbSql.AppendFormat("PhoneNumber = '{0}', ", request.PhoneNumber);
                 if (!originalStaff.Gender.ToLower().Trim().Equals(request.Gender.ToLower().Trim())) sbSql.AppendFormat("Gender = '{0}', ", request.Gender);
-                if (!originalStaff.FirstAid.Equals(request.FirstAid)) sbSql.AppendFormat("FirstAid = {0}, ", request.FirstAid == true ? 1 : 0);
-                if (!originalStaff.CPR.Equals(request.CPR)) sbSql.AppendFormat("CPR = {0}, ", request.CPR == true ? 1 : 0);
-                if (!originalStaff.Kriyaban.Equals(request.Kriyaban)) sbSql.AppendFormat("Kriyaban = {0}, ", request.Kriyaban == true ? 1 : 0);
-                if (!originalStaff.LessonStudent.Equals(request.LessonStudent)) sbSql.AppendFormat("LessonStudent = {0}, ", request.LessonStudent == true ? 1 : 0);
                 if (!originalStaff.CanSendMessages.Equals(request.CanSendMessages)) sbSql.AppendFormat("CanSendMessages = {0}, ", request.CanSendMessages == true ? 1 : 0);
                 if (!originalStaff.CanViewDocuments.Equals(request.CanViewDocuments)) sbSql.AppendFormat("CanViewDocuments = {0}, ", request.CanViewDocuments == true ? 1 : 0);
                 //if (!originalStaff.IsActive.Equals(request.IsActive)) sbSql.AppendFormat("IsActive = {0}, ", request.IsActive == true ? 1 : 0);
@@ -338,12 +385,70 @@ namespace TempleVolunteerAPI.Repository
 
                 _context.Database.ExecuteSqlRaw(sbSql.ToString(), imgParam, fileNameParam);
 
+                if (credentialIds == null)
+                {
+                    credentialIds = new int[0];
+                }
+
+                var origintalCredentialIds = originalStaff.Credentials.Select(x => x.CredentialId).ToArray();
+                Array.Sort(origintalCredentialIds);
+                Array.Sort(credentialIds);
+
+                if (origintalCredentialIds.Length == 0 && credentialIds.Length > 0)
+                {
+                    sbSql = new StringBuilder();
+                    foreach (int credId in credentialIds)
+                    {
+                        sbSql.AppendFormat("INSERT INTO StaffCredentials (StaffId, CredentialId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, credId, originalStaff.PropertyId);
+                    }
+
+                    _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                }
+
+                if (origintalCredentialIds.Length > 0 && credentialIds.Length == 0)
+                {
+                    sbSql = new StringBuilder();
+                    sbSql.AppendFormat("DELETE FROM StaffCredentials WHERE PropertyId={0} AND StaffId={1}", originalStaff.PropertyId, originalStaff.StaffId);
+                    _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                }
+
+                if ((origintalCredentialIds != null && origintalCredentialIds.Length > 0) && (credentialIds != null && credentialIds.Length > 0))
+                {
+                    bool equal = origintalCredentialIds.SequenceEqual(credentialIds);
+                    if (!equal)
+                    {
+                        var clientDelta = credentialIds.Except(credentialIds.Where(o => origintalCredentialIds.Select(s => s).ToList().Contains(o))).ToList();
+                        sbSql = new StringBuilder();
+                        foreach (int credId in clientDelta)
+                        {
+                            sbSql.AppendFormat("INSERT INTO StaffCredentials (StaffId, CredentialId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, credId, originalStaff.PropertyId);
+                        }
+
+                        if (sbSql.Length > 0)
+                        {
+                            _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                        }
+
+                        var serverDelta = origintalCredentialIds.Except(origintalCredentialIds.Where(o => credentialIds.Select(s => s).ToList().Contains(o))).ToList();
+                        sbSql = new StringBuilder();
+                        foreach (int credId in serverDelta)
+                        {
+                            sbSql.AppendFormat("DELETE StaffCredentials WHERE PropertyId={0} AND StaffId={1} AND CredentialId={2}", request.PropertyId, originalStaff.StaffId, credId);
+                        }
+
+                        if (sbSql.Length > 0)
+                        {
+                            _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                        }
+                    }
+                }
+
                 Staff updatedStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
                 _myProfileRepositoryResponse.Entity = _mapper.Map<MyProfileRequest>(updatedStaff);
             }
             catch (Exception ex)
             {
-                _myProfileRepositoryResponse.Error = ex;
+                throw;
             }
         }
 

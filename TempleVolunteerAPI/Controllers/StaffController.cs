@@ -52,6 +52,16 @@ namespace TempleVolunteerAPI.API
         {
             var staff = _staffService.FindByCondition(x => x.StaffId == id && x.PropertyId == propertyId, propertyId, userId, WithDetails.Yes).FirstOrDefault();
             _response.Data = _mapper.Map<StaffRequest>(staff);
+
+            if (staff.Credentials.Count > 0)
+            {
+                _response.Data.CredentialIds = new int[staff.Credentials.Count];
+                for (int i = 0; i < staff.Credentials.Count; i++)
+                {
+                    _response.Data.CredentialIds[i] = staff.Credentials.ToList()[i].CredentialId;
+                }
+            }
+
             _response.Success = _response.Data != null ? true : false;
 
             return _response;
@@ -85,7 +95,12 @@ namespace TempleVolunteerAPI.API
 
             }
 
-            _staffService.CustomStaffUpdate(staff);
+            if (request.CredentialIds == null)
+            {
+                request.CredentialIds = new int[0];
+            }
+
+            _staffService.CustomStaffUpdate(staff, request.CredentialIds);
             _collResponse.Data = _mapper.Map<IList<StaffRequest>>(ReturnCollection(request.PropertyId, request.UpdatedBy));
             _collResponse.Success = _collResponse.Data != null ? true : false;
 
