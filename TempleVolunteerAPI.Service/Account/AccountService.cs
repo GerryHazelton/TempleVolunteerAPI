@@ -123,7 +123,7 @@ namespace TempleVolunteerAPI.Service
                 return response;
             }
 
-            if (staff != null && staff.IsVerified)
+            if (staff != null && staff.EmailConfirmed)
             {
                 response.Message = "Email successfully verified.";
                 response.Success = true;
@@ -138,8 +138,8 @@ namespace TempleVolunteerAPI.Service
                 return response;
             }
 
-            staff.VerifiedDate = DateTime.UtcNow;
-            staff.IsVerified = true;
+            staff.EmailConfirmedDate = DateTime.UtcNow;
+            staff.EmailConfirmed = true;
             staff.IsActive = true;
             staff.EmailConfirmed = true;
 

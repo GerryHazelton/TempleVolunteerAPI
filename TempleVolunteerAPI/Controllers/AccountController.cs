@@ -54,6 +54,7 @@ namespace TempleVolunteerAPI.API
 
             staff.StaffFileName = general.Where(x=>x.Gender == request.Gender).FirstOrDefault().Gender == "Male" ? "Male.png" : "Female.png";
             staff.StaffImage = general.Where(x => x.Gender == request.Gender).FirstOrDefault().MissingImage;
+            staff.NewRegistration = true;
 
             RegisterResponse response = await _accountService.RegisterAsync(staff);
 

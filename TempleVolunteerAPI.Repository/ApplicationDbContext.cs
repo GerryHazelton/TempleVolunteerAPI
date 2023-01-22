@@ -113,6 +113,9 @@ namespace TempleVolunteerAPI.Repository
             #endregion
 
             #region Add Data
+
+
+
             Property glendale = new Property
             {
                 PropertyId = 1,
@@ -376,9 +379,8 @@ namespace TempleVolunteerAPI.Repository
             gerry.AcceptTerms = true;
             gerry.CanSendMessages = true;
             gerry.EmailConfirmed = true;
-            gerry.IsVerified = true;
             gerry.IsActive = true;
-            gerry.VerifiedDate = DateTime.UtcNow;
+            gerry.EmailConfirmedDate = DateTime.UtcNow;
             gerry.RememberMe = true;
             gerry.IsLockedOut = false;
             gerry.LoginAttempts = 0;
@@ -391,6 +393,9 @@ namespace TempleVolunteerAPI.Repository
             gerry.PropertyId = 1;
             gerry.CreatedBy = "gerryhazelton@gmail.com";
             gerry.CreatedDate = DateTime.UtcNow;
+            gerry.EmailConfirmed = true;
+            gerry.EmailConfirmedDate = DateTime.Now;
+            gerry.NewRegistration = false;
 
             Staff dolores = new Staff();
             dolores.StaffId = 2;
@@ -409,9 +414,9 @@ namespace TempleVolunteerAPI.Repository
             dolores.AcceptTerms = true;
             dolores.CanSendMessages = true;
             dolores.EmailConfirmed = true;
-            dolores.IsVerified = true;
+            dolores.EmailConfirmed = true;
             dolores.IsActive = true;
-            dolores.VerifiedDate = DateTime.UtcNow;
+            dolores.EmailConfirmedDate = DateTime.UtcNow;
             dolores.RememberMe = true;
             dolores.IsLockedOut = false;
             dolores.LoginAttempts = 0;
@@ -423,6 +428,9 @@ namespace TempleVolunteerAPI.Repository
             dolores.PropertyId = 1;
             dolores.CreatedBy = "doloreshazelton@gmail.com";
             dolores.CreatedDate = DateTime.UtcNow;
+            dolores.EmailConfirmed = true;
+            dolores.EmailConfirmedDate = DateTime.Now;
+            dolores.NewRegistration = false;
 
             Staff seannie = new Staff("seanniegibson@gmail.com");
             seannie.StaffId = 3;
@@ -441,13 +449,15 @@ namespace TempleVolunteerAPI.Repository
             seannie.AcceptTerms = true;
             seannie.CanSendMessages = true;
             seannie.EmailConfirmed = true;
-            seannie.IsVerified = true;
+            seannie.EmailConfirmed = true;
             seannie.IsActive = true;
-            seannie.VerifiedDate = DateTime.UtcNow;
+            seannie.EmailConfirmedDate = DateTime.UtcNow;
             seannie.RememberMe = true;
             seannie.IsLockedOut = false;
             seannie.LoginAttempts = 0;
-
+            seannie.EmailConfirmed = true;
+            seannie.EmailConfirmedDate = DateTime.Now;
+            seannie.NewRegistration = false;
             salt = Helper.GetSecureSalt();
             passwordHash = Helper.HashUsingPbkdf2("Master1952!", salt);
             seannie.Password = passwordHash;

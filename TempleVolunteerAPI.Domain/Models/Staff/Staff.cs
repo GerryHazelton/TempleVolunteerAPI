@@ -56,15 +56,15 @@ namespace TempleVolunteerAPI.Domain
         public string Password { get; set; }
         public string PasswordSalt { get; set; }
         public bool EmailConfirmed { get; set; }
+        public DateTime? EmailConfirmedDate { get; set; }
         public bool RememberMe { get; set; }
         public bool IsLockedOut { get; set; }
         public int LoginAttempts { get; set; }
+        public bool NewRegistration { get; set; }
+        public bool NewRegistrationApproved { get; set; }
 
         [NotMapped]
         public bool UnlockUser { get; set; }
-
-        public DateTime? VerifiedDate { get; set; }
-        public bool IsVerified { get; set; }
         public DateTime? PasswordReset { get; set; }
 
         #region Dependencies

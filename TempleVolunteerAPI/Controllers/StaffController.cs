@@ -85,20 +85,25 @@ namespace TempleVolunteerAPI.API
             Staff staff = _staffService.FindByCondition(x => x.StaffId == request.StaffId, request.PropertyId, request.UpdatedBy, WithDetails.Yes).FirstOrDefault();
             staff = _mapper.Map<Staff>(request);
 
-            if (request.RemovePhoto)
+            if (request.NewRegistration != true)
             {
-                var general = _generalService.FindAll(request.PropertyId, request.EmailAddress);
-                var gender = general.Where(x => x.Gender == request.Gender).FirstOrDefault();
+                if (request.RemovePhoto)
+                {
+                    var general = _generalService.FindAll(request.PropertyId, request.EmailAddress);
+                    var gender = general.Where(x => x.Gender == request.Gender).FirstOrDefault();
 
-                staff.StaffFileName = general.Where(x => x.Gender == request.Gender).FirstOrDefault().Gender == "Male" ? "Male.png" : "Female.png";
-                staff.StaffImage = general.Where(x => x.Gender == request.Gender).FirstOrDefault().MissingImage;
+                    staff.StaffFileName = general.Where(x => x.Gender == request.Gender).FirstOrDefault().Gender == "Male" ? "Male.png" : "Female.png";
+                    staff.StaffImage = general.Where(x => x.Gender == request.Gender).FirstOrDefault().MissingImage;
 
+                }
+
+                if (request.CredentialIds == null)
+                {
+                    request.CredentialIds = new int[0];
+                }
             }
 
-            if (request.CredentialIds == null)
-            {
-                request.CredentialIds = new int[0];
-            }
+            staff.NewRegistrationApproved = (bool)request.Approve;
 
             _staffService.CustomStaffUpdate(staff, request.CredentialIds);
             _collResponse.Data = _mapper.Map<IList<StaffRequest>>(ReturnCollection(request.PropertyId, request.UpdatedBy));

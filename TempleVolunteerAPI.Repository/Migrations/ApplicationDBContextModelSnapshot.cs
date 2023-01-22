@@ -78,7 +78,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             AreaId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(7955),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5388),
                             Description = "This is the main temple area",
                             IsActive = true,
                             IsHidden = false,
@@ -91,7 +91,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             AreaId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(7966),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5400),
                             Description = "This is the kitchen area",
                             IsActive = true,
                             IsHidden = false,
@@ -104,7 +104,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             AreaId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(7975),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5408),
                             Description = "This is the bathroom area",
                             IsActive = true,
                             IsHidden = false,
@@ -117,7 +117,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             AreaId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(7984),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5415),
                             Description = "This is the sunday school room area",
                             IsActive = true,
                             IsHidden = false,
@@ -130,7 +130,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             AreaId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(7992),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5507),
                             Description = "This is the parking lot area",
                             IsActive = true,
                             IsHidden = false,
@@ -248,7 +248,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8011),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5530),
                             Description = "This is a garden tool category",
                             IsActive = true,
                             IsHidden = false,
@@ -260,7 +260,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CategoryId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8023),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5539),
                             Description = "This is cleaning liquid category",
                             IsActive = true,
                             IsHidden = false,
@@ -272,7 +272,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CategoryId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8031),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5546),
                             Description = "This is gas powered tool category",
                             IsActive = true,
                             IsHidden = false,
@@ -284,7 +284,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CategoryId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8039),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5553),
                             Description = "This is literature category",
                             IsActive = true,
                             IsHidden = false,
@@ -296,7 +296,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CategoryId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8148),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5561),
                             Description = "This is cleaning appliance category",
                             IsActive = true,
                             IsHidden = false,
@@ -359,7 +359,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CommitteeId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8165),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5578),
                             Description = "Flowers Committee",
                             IsActive = true,
                             IsHidden = false,
@@ -440,7 +440,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CredentialId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8182),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5592),
                             Description = "CRP Certification",
                             IsActive = true,
                             IsHidden = false,
@@ -452,7 +452,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CredentialId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8191),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5604),
                             Description = "First Aid Certification",
                             IsActive = true,
                             IsHidden = false,
@@ -464,7 +464,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CredentialId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8199),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5611),
                             Description = "Drivers License",
                             IsActive = true,
                             IsHidden = false,
@@ -476,7 +476,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CredentialId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8207),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5618),
                             Description = "Drivers License",
                             IsActive = true,
                             IsHidden = false,
@@ -488,7 +488,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             CredentialId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8214),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5624),
                             Description = "Fork Lift Certification",
                             IsActive = true,
                             IsHidden = false,
@@ -558,7 +558,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             DocumentId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8228),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5637),
                             Description = "A list of events for the year",
                             IsActive = true,
                             IsHidden = false,
@@ -570,7 +570,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             DocumentId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8237),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5646),
                             Description = "India Night event announcement",
                             IsActive = true,
                             IsHidden = false,
@@ -582,7 +582,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             DocumentId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8245),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5653),
                             Description = "Masters Birthday event announcement",
                             IsActive = true,
                             IsHidden = false,
@@ -594,7 +594,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             DocumentId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8254),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5661),
                             Description = "All Day Meditation event announcement",
                             IsActive = true,
                             IsHidden = false,
@@ -606,7 +606,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             DocumentId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8262),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5668),
                             Description = "All Day Christmas Meditation event announcement",
                             IsActive = true,
                             IsHidden = false,
@@ -736,76 +736,76 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8285),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5693),
                             Description = "Master's birthday celebration",
-                            EndDate = new DateTime(2023, 1, 15, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8279),
+                            EndDate = new DateTime(2023, 1, 23, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5685),
                             Indefinite = false,
                             IsActive = true,
                             IsHidden = false,
                             Name = "Master's Birthday",
                             Note = "There are no notes",
                             PropertyId = 1,
-                            StartDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8278)
+                            StartDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5684)
                         },
                         new
                         {
                             EventId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8299),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5706),
                             Description = "Krishna's birthday celebration",
-                            EndDate = new DateTime(2023, 1, 15, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8298),
+                            EndDate = new DateTime(2023, 1, 23, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5704),
                             Indefinite = false,
                             IsActive = true,
                             IsHidden = false,
                             Name = "Krisha's Birthday",
                             Note = "There are no notes",
                             PropertyId = 1,
-                            StartDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8297)
+                            StartDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5704)
                         },
                         new
                         {
                             EventId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8309),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5714),
                             Description = "Sri Yukteswar's birthday celebration",
-                            EndDate = new DateTime(2023, 1, 15, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8308),
+                            EndDate = new DateTime(2023, 1, 23, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5713),
                             Indefinite = false,
                             IsActive = true,
                             IsHidden = false,
                             Name = "Sri Yukteswar's Birthday",
                             Note = "There are no notes",
                             PropertyId = 1,
-                            StartDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8307)
+                            StartDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5713)
                         },
                         new
                         {
                             EventId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8318),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5723),
                             Description = "Mahavatar's birthday celebration",
-                            EndDate = new DateTime(2023, 1, 15, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8317),
+                            EndDate = new DateTime(2023, 1, 23, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5722),
                             Indefinite = false,
                             IsActive = true,
                             IsHidden = false,
                             Name = "Mahatar Babaji's Birthday",
                             Note = "There are no notes",
                             PropertyId = 1,
-                            StartDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8317)
+                            StartDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5722)
                         },
                         new
                         {
                             EventId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8328),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5732),
                             Description = "Jesus' birthday celebration",
-                            EndDate = new DateTime(2023, 1, 15, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8327),
+                            EndDate = new DateTime(2023, 1, 23, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5731),
                             Indefinite = false,
                             IsActive = true,
                             IsHidden = false,
                             Name = "Jesus' Birthday",
                             Note = "There are no notes",
                             PropertyId = 1,
-                            StartDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8327)
+                            StartDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(5731)
                         });
                 });
 
@@ -880,7 +880,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTaskId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8454),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6094),
                             Description = "Setting up tables",
                             IsActive = true,
                             IsHidden = false,
@@ -892,7 +892,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTaskId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8465),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6105),
                             Description = "Setting up chairs",
                             IsActive = true,
                             IsHidden = false,
@@ -904,7 +904,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTaskId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8472),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6112),
                             Description = "Cleaning toilets",
                             IsActive = true,
                             IsHidden = false,
@@ -916,7 +916,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTaskId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8480),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6119),
                             Description = "Mopping floors",
                             IsActive = true,
                             IsHidden = false,
@@ -928,7 +928,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTaskId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8488),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6125),
                             Description = "Cleaning windows",
                             IsActive = true,
                             IsHidden = false,
@@ -991,7 +991,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTypeId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8348),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6045),
                             Description = "Comemerative Service event",
                             IsActive = true,
                             IsHidden = false,
@@ -1003,7 +1003,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTypeId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8358),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6058),
                             Description = "Birthday Service event",
                             IsActive = true,
                             IsHidden = false,
@@ -1015,7 +1015,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTypeId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8365),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6066),
                             Description = "Memorial Service event",
                             IsActive = true,
                             IsHidden = false,
@@ -1027,7 +1027,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTypeId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8373),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6074),
                             Description = "Wedding Service event",
                             IsActive = true,
                             IsHidden = false,
@@ -1039,7 +1039,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             EventTypeId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8380),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6082),
                             Description = "Christening Service event",
                             IsActive = true,
                             IsHidden = false,
@@ -1155,7 +1155,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             MessageId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8504),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6143),
                             From = "gerryhazelton@gmail.com",
                             IsActive = true,
                             IsHidden = false,
@@ -1169,7 +1169,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             MessageId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8515),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6152),
                             From = "gerryhazelton@gmail.com",
                             IsActive = true,
                             IsHidden = false,
@@ -1183,7 +1183,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             MessageId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8523),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6160),
                             From = "gerryhazelton@gmail.com",
                             IsActive = true,
                             IsHidden = false,
@@ -1197,7 +1197,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             MessageId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8532),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6167),
                             From = "gerryhazelton@gmail.com",
                             IsActive = true,
                             IsHidden = false,
@@ -1211,7 +1211,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             MessageId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8540),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6175),
                             From = "gerryhazelton@gmail.com",
                             IsActive = true,
                             IsHidden = false,
@@ -1317,7 +1317,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Glendale",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1063),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6332),
                             EmailAddress = "Glendale@Srf.com",
                             FaxNumber = "333-333-3333",
                             IsActive = true,
@@ -1337,7 +1337,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Encinitas",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1068),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6338),
                             EmailAddress = "Encinitas@Srf.com",
                             FaxNumber = "666-666-6666",
                             IsActive = true,
@@ -1357,7 +1357,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Fullerton",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1070),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6340),
                             EmailAddress = "Fullerton@Srf.com",
                             FaxNumber = "666-666-6666",
                             IsActive = true,
@@ -1377,7 +1377,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "San Diego",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1073),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6342),
                             EmailAddress = "SanDiego@Srf.com",
                             FaxNumber = "666-666-6666",
                             IsActive = true,
@@ -1397,7 +1397,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Hollywood Diego",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1075),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6344),
                             EmailAddress = "Hollywood@Srf.com",
                             FaxNumber = "666-666-6666",
                             IsActive = true,
@@ -1537,7 +1537,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1313),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6500),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1548,7 +1548,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 2,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1315),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6501),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1559,7 +1559,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 3,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1316),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6502),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1570,7 +1570,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 4,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1317),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6503),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1581,7 +1581,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 5,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1319),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6504),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1592,7 +1592,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 6,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1320),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6505),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1603,7 +1603,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 7,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1321),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6506),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1614,7 +1614,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 8,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1323),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6508),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1625,7 +1625,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 9,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1324),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6509),
                             Description = "Admin role has full prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1636,7 +1636,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                         {
                             RoleId = 10,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1326),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 230, DateTimeKind.Utc).AddTicks(6510),
                             Description = "Volunteer has limited prviliedges",
                             IsActive = true,
                             IsHidden = false,
@@ -1695,6 +1695,9 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("EmailConfirmedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(25)
@@ -1713,9 +1716,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<bool>("IsLockedOut")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(25)
@@ -1727,6 +1727,12 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<string>("MiddleName")
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
+
+                    b.Property<bool>("NewRegistration")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("NewRegistrationApproved")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Note")
                         .HasMaxLength(250)
@@ -1776,9 +1782,6 @@ namespace TempleVolunteerAPI.Repository.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("VerifiedDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("StaffId");
 
                     b.HasIndex("PropertyId");
@@ -1797,26 +1800,27 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Carlsbad",
                             Country = "US",
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 724, DateTimeKind.Utc).AddTicks(5313),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 310, DateTimeKind.Utc).AddTicks(3252),
                             EmailAddress = "gerryhazelton@gmail.com",
                             EmailConfirmed = true,
+                            EmailConfirmedDate = new DateTime(2023, 1, 22, 6, 50, 5, 310, DateTimeKind.Local).AddTicks(3261),
                             FirstName = "Gerry",
                             Gender = "Male",
                             IsActive = true,
                             IsHidden = false,
                             IsLockedOut = false,
-                            IsVerified = true,
                             LastName = "Hazelton",
                             LoginAttempts = 0,
                             MiddleName = "Aloysius",
-                            Password = "afOH0t40hQ9PSlBMe+OQgPVF4Z8Toz42MqcetmoYCkY=",
-                            PasswordSalt = "GMqy3wF1l+n8c26JxL5C/gStQF7B7HzAgDqxyn0n/Wk=",
+                            NewRegistration = false,
+                            NewRegistrationApproved = false,
+                            Password = "Sqx98K8fnk0RFjJusMVIKvbn2YtbJ5DPbNd5iFl/95s=",
+                            PasswordSalt = "Y+GfC/XoFroldIj8so+bZtOSe/Qfi0ycfc8MTwRxAbk=",
                             PhoneNumber = "760-670-8026",
                             PostalCode = "92009",
                             PropertyId = 1,
                             RememberMe = true,
-                            State = "CA",
-                            VerifiedDate = new DateTime(2023, 1, 14, 19, 12, 13, 651, DateTimeKind.Utc).AddTicks(1363)
+                            State = "CA"
                         },
                         new
                         {
@@ -1829,26 +1833,27 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Carlsbad",
                             Country = "US",
                             CreatedBy = "doloreshazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 801, DateTimeKind.Utc).AddTicks(2835),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 389, DateTimeKind.Utc).AddTicks(6805),
                             EmailAddress = "doloreshazelton@gmail.com",
                             EmailConfirmed = true,
+                            EmailConfirmedDate = new DateTime(2023, 1, 22, 6, 50, 5, 389, DateTimeKind.Local).AddTicks(6815),
                             FirstName = "Dolores",
                             Gender = "Female",
                             IsActive = true,
                             IsHidden = false,
                             IsLockedOut = false,
-                            IsVerified = true,
                             LastName = "Hazelton",
                             LoginAttempts = 0,
                             MiddleName = "",
-                            Password = "JQcYEkFfhVolNSVi0TquYXzjzCYS7Fc+q9LSq4Kle2U=",
-                            PasswordSalt = "za5R2l4MbeGdeBvAG/5Jm0FEZcscJvaHquWYSo21kcA=",
+                            NewRegistration = false,
+                            NewRegistrationApproved = false,
+                            Password = "v/5xLF4G6kio4eaj2S3NeW8//G1nN1yZtHmCk0Cwucs=",
+                            PasswordSalt = "eFULwlavdpMt0K5Uz/fZiURSvc/LLzNDZ2+zhbFaSFE=",
                             PhoneNumber = "714-403-2333",
                             PostalCode = "92009",
                             PropertyId = 1,
                             RememberMe = true,
-                            State = "CA",
-                            VerifiedDate = new DateTime(2023, 1, 14, 19, 12, 13, 724, DateTimeKind.Utc).AddTicks(5325)
+                            State = "CA"
                         },
                         new
                         {
@@ -1861,26 +1866,27 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             City = "Los Angeles",
                             Country = "US",
                             CreatedBy = "seanniegibson@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(7657),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(4846),
                             EmailAddress = "seanniegibson@gmail.com",
                             EmailConfirmed = true,
+                            EmailConfirmedDate = new DateTime(2023, 1, 22, 6, 50, 5, 389, DateTimeKind.Local).AddTicks(6882),
                             FirstName = "Seannie",
                             Gender = "Female",
                             IsActive = true,
                             IsHidden = false,
                             IsLockedOut = false,
-                            IsVerified = true,
                             LastName = "Gibson",
                             LoginAttempts = 0,
                             MiddleName = "",
-                            Password = "YZUJoP16w1aE9i/BJh/j8qRqewnOozu9VfdOVZYhVis=",
-                            PasswordSalt = "TENutiEfoNnihSU0kfKx3g3KGMJIBvifRz9nUb8LpuI=",
+                            NewRegistration = false,
+                            NewRegistrationApproved = false,
+                            Password = "JWRxeODHacJDa2AY6Ijela+XgsO9SS5D+vv//ft6/AI=",
+                            PasswordSalt = "kRUxFyw3w1EofKawFTKto6QLSxV0IjEFekC/Qsl+bvQ=",
                             PhoneNumber = "323-394-5332",
                             PostalCode = "90065",
                             PropertyId = 1,
                             RememberMe = true,
-                            State = "CA",
-                            VerifiedDate = new DateTime(2023, 1, 14, 19, 12, 13, 801, DateTimeKind.Utc).AddTicks(2853)
+                            State = "CA"
                         });
                 });
 
@@ -2020,7 +2026,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "23A",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8558),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6191),
                             Description = "Flathead shovel",
                             IsActive = true,
                             IsHidden = false,
@@ -2035,7 +2041,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "24A",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8569),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6202),
                             Description = "Flimsy rake",
                             IsActive = true,
                             IsHidden = false,
@@ -2050,7 +2056,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "10C",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8578),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6210),
                             Description = "Gas driven",
                             IsActive = true,
                             IsHidden = false,
@@ -2065,7 +2071,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "13C",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8587),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6217),
                             Description = "Pick",
                             IsActive = true,
                             IsHidden = false,
@@ -2080,7 +2086,7 @@ namespace TempleVolunteerAPI.Repository.Migrations
                             BinNumber = "16B",
                             CategoryId = 1,
                             CreatedBy = "gerryhazelton@gmail.com",
-                            CreatedDate = new DateTime(2023, 1, 14, 19, 12, 13, 879, DateTimeKind.Utc).AddTicks(8598),
+                            CreatedDate = new DateTime(2023, 1, 22, 14, 50, 5, 468, DateTimeKind.Utc).AddTicks(6225),
                             Description = "Gas driven",
                             IsActive = true,
                             IsHidden = false,

@@ -20,7 +20,6 @@ namespace TempleVolunteerAPI.Domain
         public bool CPR { get; set; }
         public bool Kriyaban { get; set; }
         public bool LessonStudent { get; set; }
-        public bool IsVerified { get; set; }
         public bool AcceptedTerms { get; set; }
         public string? JwtToken { get; set; }
 

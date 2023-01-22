@@ -79,7 +79,7 @@ namespace TempleVolunteerAPI.Repository
 
                 if (!originalStaff.LoginAttempts.Equals(update.LoginAttempts)) sbSql.AppendFormat("LoginAttempts = {0}, ", update.LoginAttempts);
                 if (!originalStaff.IsActive.Equals(update.IsActive)) sbSql.AppendFormat("IsActive = {0}, ", update.IsActive);
-                if (!originalStaff.IsVerified.Equals(update.IsVerified)) sbSql.AppendFormat("IsVerified = {0}, ", update.IsVerified);
+                if (!originalStaff.EmailConfirmed.Equals(update.EmailConfirmed)) sbSql.AppendFormat("EmailConfirmed = {0}, ", update.EmailConfirmed);
 
                 if (sbSql.ToString().TrimEnd().Length == 16)
                 {
@@ -270,95 +270,121 @@ namespace TempleVolunteerAPI.Repository
             {
                 StringBuilder sbSql = new StringBuilder("UPDATE Staff\n");
                 sbSql.Append("SET ");
-                var originalStaff = GetStaffWithDetails(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress, WithDetails.Yes).FirstOrDefault();
-
-                if (!originalStaff.FirstName.ToLower().Trim().Equals(request.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", request.FirstName);
-
-                if (String.IsNullOrEmpty(request.MiddleName) && !String.IsNullOrEmpty(originalStaff.MiddleName))
+             
+                if (request.NewRegistration)
                 {
-                    sbSql.AppendFormat("MiddleName = '{0}', ", DBNull.Value);
+                    if (request.NewRegistrationApproved)
+                    {
+                        sbSql.AppendFormat("NewRegistration = 0, NewRegistrationApproved = 1, IsActive = 1 WHERE PropertyId={0} AND StaffId={1}", request.PropertyId, request.StaffId );
+                        _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                    }
+                    else
+                    {
+                        sbSql.AppendFormat("NewRegistration = 0, NewRegistrationApproved = 0, IsActive = 0 WHERE PropertyId={0} AND StaffId={1}", request.PropertyId, request.StaffId);
+                        _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                    }
                 }
-
-                if (!String.IsNullOrEmpty(request.MiddleName) && String.IsNullOrEmpty(originalStaff.MiddleName))
+                else
                 {
-                    sbSql.AppendFormat("MiddleName = '{0}', ", request.MiddleName);
-                }
+                    var originalStaff = GetStaffWithDetails(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId, request.PropertyId, request.EmailAddress, WithDetails.Yes).FirstOrDefault();
 
-                if (!String.IsNullOrEmpty(request.MiddleName) && !String.IsNullOrEmpty(originalStaff.MiddleName) && !originalStaff.MiddleName.ToLower().Trim().Equals(request.MiddleName.ToLower().Trim()))
-                {
-                    sbSql.AppendFormat("MiddleName = '{0}', ", request.MiddleName);
-                }
+                    if (!originalStaff.FirstName.ToLower().Trim().Equals(request.FirstName.ToLower().Trim())) sbSql.AppendFormat("FirstName = '{0}', ", request.FirstName);
 
-                if (!originalStaff.LastName.ToLower().Trim().Equals(request.LastName.ToLower().Trim())) sbSql.AppendFormat("LastName = '{0}', ", request.LastName);
-                if (!originalStaff.Address.ToLower().Trim().Equals(request.Address.ToLower().Trim())) sbSql.AppendFormat("Address = '{0}', ", request.Address);
+                    if (String.IsNullOrEmpty(request.MiddleName) && !String.IsNullOrEmpty(originalStaff.MiddleName))
+                    {
+                        sbSql.AppendFormat("MiddleName = '{0}', ", DBNull.Value);
+                    }
 
-                if (String.IsNullOrEmpty(request.Address2) && !String.IsNullOrEmpty(originalStaff.Address2))
-                {
-                    sbSql.AppendFormat("Address2 = '{0}', ", DBNull.Value);
-                }
+                    if (!String.IsNullOrEmpty(request.MiddleName) && String.IsNullOrEmpty(originalStaff.MiddleName))
+                    {
+                        sbSql.AppendFormat("MiddleName = '{0}', ", request.MiddleName);
+                    }
 
-                if (!String.IsNullOrEmpty(request.Address2) && String.IsNullOrEmpty(originalStaff.Address2))
-                {
-                    sbSql.AppendFormat("Address2 = '{0}', ", request.Address2);
-                }
+                    if (!String.IsNullOrEmpty(request.MiddleName) && !String.IsNullOrEmpty(originalStaff.MiddleName) && !originalStaff.MiddleName.ToLower().Trim().Equals(request.MiddleName.ToLower().Trim()))
+                    {
+                        sbSql.AppendFormat("MiddleName = '{0}', ", request.MiddleName);
+                    }
 
-                if (!String.IsNullOrEmpty(request.Address2) && !String.IsNullOrEmpty(originalStaff.Address2) && !originalStaff.Address2.ToLower().Trim().Equals(request.Address2.ToLower().Trim()))
-                {
-                    sbSql.AppendFormat("Address2 = '{0}', ", request.Address2);
-                }
+                    if (!originalStaff.LastName.ToLower().Trim().Equals(request.LastName.ToLower().Trim())) sbSql.AppendFormat("LastName = '{0}', ", request.LastName);
+                    if (!originalStaff.Address.ToLower().Trim().Equals(request.Address.ToLower().Trim())) sbSql.AppendFormat("Address = '{0}', ", request.Address);
 
-                if (!originalStaff.City.ToLower().Trim().Equals(request.City.ToLower().Trim())) sbSql.AppendFormat("City = '{0}', ", request.City);
+                    if (String.IsNullOrEmpty(request.Address2) && !String.IsNullOrEmpty(originalStaff.Address2))
+                    {
+                        sbSql.AppendFormat("Address2 = '{0}', ", DBNull.Value);
+                    }
 
-                if (String.IsNullOrEmpty(request.State) && !String.IsNullOrEmpty(originalStaff.State))
-                {
-                    sbSql.AppendFormat("State = '{0}', ", DBNull.Value);
-                }
+                    if (!String.IsNullOrEmpty(request.Address2) && String.IsNullOrEmpty(originalStaff.Address2))
+                    {
+                        sbSql.AppendFormat("Address2 = '{0}', ", request.Address2);
+                    }
 
-                if (!String.IsNullOrEmpty(request.State) && String.IsNullOrEmpty(originalStaff.State))
-                {
-                    sbSql.AppendFormat("State = '{0}', ", request.State);
-                }
+                    if (!String.IsNullOrEmpty(request.Address2) && !String.IsNullOrEmpty(originalStaff.Address2) && !originalStaff.Address2.ToLower().Trim().Equals(request.Address2.ToLower().Trim()))
+                    {
+                        sbSql.AppendFormat("Address2 = '{0}', ", request.Address2);
+                    }
 
-                if (!String.IsNullOrEmpty(request.State) && !String.IsNullOrEmpty(originalStaff.State) && !originalStaff.State.ToLower().Trim().Equals(request.State.ToLower().Trim()))
-                {
-                    sbSql.AppendFormat("State = '{0}', ", request.State);
-                }
+                    if (!originalStaff.City.ToLower().Trim().Equals(request.City.ToLower().Trim())) sbSql.AppendFormat("City = '{0}', ", request.City);
 
-                if (!originalStaff.PostalCode.ToLower().Trim().Equals(request.PostalCode.ToLower().Trim())) sbSql.AppendFormat("PostalCode = '{0}', ", request.PostalCode);
-                if (!originalStaff.Country.ToLower().Trim().Equals(request.Country.ToLower().Trim())) sbSql.AppendFormat("Country = '{0}', ", request.Country);
-                if (!originalStaff.EmailAddress.ToLower().Trim().Equals(request.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", request.EmailAddress);
-                if (!originalStaff.PhoneNumber.ToLower().Trim().Equals(request.PhoneNumber.ToLower().Trim())) sbSql.AppendFormat("PhoneNumber = '{0}', ", request.PhoneNumber);
-                if (!originalStaff.Gender.ToLower().Trim().Equals(request.Gender.ToLower().Trim())) sbSql.AppendFormat("Gender = '{0}', ", request.Gender);
-                if (!originalStaff.CanSendMessages.Equals(request.CanSendMessages)) sbSql.AppendFormat("CanSendMessages = {0}, ", request.CanSendMessages == true ? 1 : 0);
-                if (!originalStaff.CanViewDocuments.Equals(request.CanViewDocuments)) sbSql.AppendFormat("CanViewDocuments = {0}, ", request.CanViewDocuments == true ? 1 : 0);
-                //if (!originalStaff.IsActive.Equals(request.IsActive)) sbSql.AppendFormat("IsActive = {0}, ", request.IsActive == true ? 1 : 0);
-                //if (!originalStaff.IsLockedOut.Equals(request.IsLockedOut)) sbSql.AppendFormat("IsLockedOut = {0}, ", request.IsLockedOut == true ? 1 : 0);
-                //if (!originalStaff.LoginAttempts.Equals(request.IsLockedOut)) sbSql.AppendFormat("IsLockedOut = {0}, ", request.IsLockedOut == true ? 1 : 0);
+                    if (String.IsNullOrEmpty(request.State) && !String.IsNullOrEmpty(originalStaff.State))
+                    {
+                        sbSql.AppendFormat("State = '{0}', ", DBNull.Value);
+                    }
 
-                if (String.IsNullOrEmpty(request.Note) && !String.IsNullOrEmpty(originalStaff.Note))
-                {
-                    sbSql.AppendFormat("Note = '{0}', ", DBNull.Value);
-                }
+                    if (!String.IsNullOrEmpty(request.State) && String.IsNullOrEmpty(originalStaff.State))
+                    {
+                        sbSql.AppendFormat("State = '{0}', ", request.State);
+                    }
 
-                if (!String.IsNullOrEmpty(request.Note) && String.IsNullOrEmpty(originalStaff.Note))
-                {
-                    sbSql.AppendFormat("Note = '{0}', ", request.Note);
-                }
+                    if (!String.IsNullOrEmpty(request.State) && !String.IsNullOrEmpty(originalStaff.State) && !originalStaff.State.ToLower().Trim().Equals(request.State.ToLower().Trim()))
+                    {
+                        sbSql.AppendFormat("State = '{0}', ", request.State);
+                    }
 
-                if (!String.IsNullOrEmpty(request.Note) && !String.IsNullOrEmpty(originalStaff.Note) && !originalStaff.Note.ToLower().Trim().Equals(request.Note.ToLower().Trim()))
-                {
-                    sbSql.AppendFormat("Note = '{0}', ", request.Note);
-                }
+                    if (!originalStaff.PostalCode.ToLower().Trim().Equals(request.PostalCode.ToLower().Trim())) sbSql.AppendFormat("PostalCode = '{0}', ", request.PostalCode);
+                    if (!originalStaff.Country.ToLower().Trim().Equals(request.Country.ToLower().Trim())) sbSql.AppendFormat("Country = '{0}', ", request.Country);
+                    if (!originalStaff.EmailAddress.ToLower().Trim().Equals(request.EmailAddress.ToLower().Trim())) sbSql.AppendFormat("EmailAddress = '{0}', ", request.EmailAddress);
+                    if (!originalStaff.PhoneNumber.ToLower().Trim().Equals(request.PhoneNumber.ToLower().Trim())) sbSql.AppendFormat("PhoneNumber = '{0}', ", request.PhoneNumber);
+                    if (!originalStaff.Gender.ToLower().Trim().Equals(request.Gender.ToLower().Trim())) sbSql.AppendFormat("Gender = '{0}', ", request.Gender);
+                    if (!originalStaff.CanSendMessages.Equals(request.CanSendMessages)) sbSql.AppendFormat("CanSendMessages = {0}, ", request.CanSendMessages == true ? 1 : 0);
+                    if (!originalStaff.CanViewDocuments.Equals(request.CanViewDocuments)) sbSql.AppendFormat("CanViewDocuments = {0}, ", request.CanViewDocuments == true ? 1 : 0);
+                    //if (!originalStaff.IsActive.Equals(request.IsActive)) sbSql.AppendFormat("IsActive = {0}, ", request.IsActive == true ? 1 : 0);
+                    //if (!originalStaff.IsLockedOut.Equals(request.IsLockedOut)) sbSql.AppendFormat("IsLockedOut = {0}, ", request.IsLockedOut == true ? 1 : 0);
+                    //if (!originalStaff.LoginAttempts.Equals(request.IsLockedOut)) sbSql.AppendFormat("IsLockedOut = {0}, ", request.IsLockedOut == true ? 1 : 0);
 
+                    if (String.IsNullOrEmpty(request.Note) && !String.IsNullOrEmpty(originalStaff.Note))
+                    {
+                        sbSql.AppendFormat("Note = '{0}', ", DBNull.Value);
+                    }
 
-                sbSql.AppendFormat("UpdatedBy = '{0}', ", request.UpdatedBy);
-                sbSql.AppendFormat("UpdatedDate = '{0}', ", request.UpdatedDate);
-                SqlParameter imgParam = null;
-                SqlParameter fileNameParam = null;
+                    if (!String.IsNullOrEmpty(request.Note) && String.IsNullOrEmpty(originalStaff.Note))
+                    {
+                        sbSql.AppendFormat("Note = '{0}', ", request.Note);
+                    }
 
-                if (!String.IsNullOrEmpty(request.StaffFileName) && !String.IsNullOrEmpty(originalStaff.StaffFileName))
-                {
-                    if (!request.StaffFileName.Equals(originalStaff.StaffFileName))
+                    if (!String.IsNullOrEmpty(request.Note) && !String.IsNullOrEmpty(originalStaff.Note) && !originalStaff.Note.ToLower().Trim().Equals(request.Note.ToLower().Trim()))
+                    {
+                        sbSql.AppendFormat("Note = '{0}', ", request.Note);
+                    }
+
+                    sbSql.AppendFormat("UpdatedBy = '{0}', ", request.UpdatedBy);
+                    sbSql.AppendFormat("UpdatedDate = '{0}', ", request.UpdatedDate);
+                    SqlParameter imgParam = null;
+                    SqlParameter fileNameParam = null;
+
+                    if (!String.IsNullOrEmpty(request.StaffFileName) && !String.IsNullOrEmpty(originalStaff.StaffFileName))
+                    {
+                        if (!request.StaffFileName.Equals(originalStaff.StaffFileName))
+                        {
+                            sbSql.Append("StaffFileName = @FileName, ");
+                            fileNameParam = new SqlParameter("FileName", SqlDbType.VarChar, 150);
+                            fileNameParam.Value = request.StaffFileName;
+
+                            sbSql.Append("StaffImage = @Img  ");
+                            imgParam = new SqlParameter("Img", SqlDbType.Image);
+                            imgParam.Value = request.StaffImage;
+                        }
+                    }
+                    else if (!String.IsNullOrEmpty(request.StaffFileName) && String.IsNullOrEmpty(originalStaff.StaffFileName))
                     {
                         sbSql.Append("StaffFileName = @FileName, ");
                         fileNameParam = new SqlParameter("FileName", SqlDbType.VarChar, 150);
@@ -368,82 +394,72 @@ namespace TempleVolunteerAPI.Repository
                         imgParam = new SqlParameter("Img", SqlDbType.Image);
                         imgParam.Value = request.StaffImage;
                     }
-                }
-                else if (!String.IsNullOrEmpty(request.StaffFileName) && String.IsNullOrEmpty(originalStaff.StaffFileName))
-                {
-                    sbSql.Append("StaffFileName = @FileName, ");
-                    fileNameParam = new SqlParameter("FileName", SqlDbType.VarChar, 150);
-                    fileNameParam.Value = request.StaffFileName;
 
-                    sbSql.Append("StaffImage = @Img  ");
-                    imgParam = new SqlParameter("Img", SqlDbType.Image);
-                    imgParam.Value = request.StaffImage;
-                }
+                    sbSql = new StringBuilder(sbSql.ToString().Substring(0, sbSql.ToString().Length - 2));
+                    sbSql.AppendFormat(" WHERE EmailAddress = '{0}' AND PropertyId = {1}", request.EmailAddress, request.PropertyId);
 
-                sbSql = new StringBuilder(sbSql.ToString().Substring(0, sbSql.ToString().Length - 2));
-                sbSql.AppendFormat(" WHERE EmailAddress = '{0}' AND PropertyId = {1}", request.EmailAddress, request.PropertyId);
+                    _context.Database.ExecuteSqlRaw(sbSql.ToString(), imgParam, fileNameParam);
 
-                _context.Database.ExecuteSqlRaw(sbSql.ToString(), imgParam, fileNameParam);
-
-                if (credentialIds == null)
-                {
-                    credentialIds = new int[0];
-                }
-
-                var origintalCredentialIds = originalStaff.Credentials.Select(x => x.CredentialId).ToArray();
-                Array.Sort(origintalCredentialIds);
-                Array.Sort(credentialIds);
-
-                if (origintalCredentialIds.Length == 0 && credentialIds.Length > 0)
-                {
-                    sbSql = new StringBuilder();
-                    foreach (int credId in credentialIds)
+                    if (credentialIds == null)
                     {
-                        sbSql.AppendFormat("INSERT INTO StaffCredentials (StaffId, CredentialId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, credId, originalStaff.PropertyId);
+                        credentialIds = new int[0];
                     }
 
-                    _context.Database.ExecuteSqlRaw(sbSql.ToString());
-                }
+                    var origintalCredentialIds = originalStaff.Credentials.Select(x => x.CredentialId).ToArray();
+                    Array.Sort(origintalCredentialIds);
+                    Array.Sort(credentialIds);
 
-                if (origintalCredentialIds.Length > 0 && credentialIds.Length == 0)
-                {
-                    sbSql = new StringBuilder();
-                    sbSql.AppendFormat("DELETE FROM StaffCredentials WHERE PropertyId={0} AND StaffId={1}", originalStaff.PropertyId, originalStaff.StaffId);
-                    _context.Database.ExecuteSqlRaw(sbSql.ToString());
-                }
-
-                if ((origintalCredentialIds != null && origintalCredentialIds.Length > 0) && (credentialIds != null && credentialIds.Length > 0))
-                {
-                    bool equal = origintalCredentialIds.SequenceEqual(credentialIds);
-                    if (!equal)
+                    if (origintalCredentialIds.Length == 0 && credentialIds.Length > 0)
                     {
-                        var clientDelta = credentialIds.Except(credentialIds.Where(o => origintalCredentialIds.Select(s => s).ToList().Contains(o))).ToList();
                         sbSql = new StringBuilder();
-                        foreach (int credId in clientDelta)
+                        foreach (int credId in credentialIds)
                         {
                             sbSql.AppendFormat("INSERT INTO StaffCredentials (StaffId, CredentialId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, credId, originalStaff.PropertyId);
                         }
 
-                        if (sbSql.Length > 0)
-                        {
-                            _context.Database.ExecuteSqlRaw(sbSql.ToString());
-                        }
+                        _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                    }
 
-                        var serverDelta = origintalCredentialIds.Except(origintalCredentialIds.Where(o => credentialIds.Select(s => s).ToList().Contains(o))).ToList();
+                    if (origintalCredentialIds.Length > 0 && credentialIds.Length == 0)
+                    {
                         sbSql = new StringBuilder();
-                        foreach (int credId in serverDelta)
-                        {
-                            sbSql.AppendFormat("DELETE StaffCredentials WHERE PropertyId={0} AND StaffId={1} AND CredentialId={2}", request.PropertyId, originalStaff.StaffId, credId);
-                        }
+                        sbSql.AppendFormat("DELETE FROM StaffCredentials WHERE PropertyId={0} AND StaffId={1}", originalStaff.PropertyId, originalStaff.StaffId);
+                        _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                    }
 
-                        if (sbSql.Length > 0)
+                    if ((origintalCredentialIds != null && origintalCredentialIds.Length > 0) && (credentialIds != null && credentialIds.Length > 0))
+                    {
+                        bool equal = origintalCredentialIds.SequenceEqual(credentialIds);
+                        if (!equal)
                         {
-                            _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                            var clientDelta = credentialIds.Except(credentialIds.Where(o => origintalCredentialIds.Select(s => s).ToList().Contains(o))).ToList();
+                            sbSql = new StringBuilder();
+                            foreach (int credId in clientDelta)
+                            {
+                                sbSql.AppendFormat("INSERT INTO StaffCredentials (StaffId, CredentialId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, credId, originalStaff.PropertyId);
+                            }
+
+                            if (sbSql.Length > 0)
+                            {
+                                _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                            }
+
+                            var serverDelta = origintalCredentialIds.Except(origintalCredentialIds.Where(o => credentialIds.Select(s => s).ToList().Contains(o))).ToList();
+                            sbSql = new StringBuilder();
+                            foreach (int credId in serverDelta)
+                            {
+                                sbSql.AppendFormat("DELETE StaffCredentials WHERE PropertyId={0} AND StaffId={1} AND CredentialId={2}", request.PropertyId, originalStaff.StaffId, credId);
+                            }
+
+                            if (sbSql.Length > 0)
+                            {
+                                _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                            }
                         }
                     }
                 }
 
-                Staff updatedStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
+                Staff updatedStaff = _context.Staff.First(x => x.StaffId == request.StaffId && x.PropertyId == request.PropertyId);
                 _myProfileRepositoryResponse.Entity = _mapper.Map<MyProfileRequest>(updatedStaff);
             }
             catch (Exception ex)
