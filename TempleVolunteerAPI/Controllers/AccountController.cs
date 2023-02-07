@@ -57,6 +57,7 @@ namespace TempleVolunteerAPI.API
             staff.NewRegistration = true;
 
             RegisterResponse response = await _accountService.RegisterAsync(staff);
+            
 
             return response;
         }

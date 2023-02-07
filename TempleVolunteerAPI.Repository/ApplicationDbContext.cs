@@ -32,6 +32,7 @@ namespace TempleVolunteerAPI.Repository
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<SupplyItem> SupplyItems { get; set; }
         public virtual DbSet<General> General { get; set; }
+        public virtual DbSet<TemporaryPassword> TemporaryPassword { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,6 +11,7 @@ namespace TempleVolunteerAPI.Repository
     {
         private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
+        private IAccountRepository _account;
         private IAreaRepository _area;
         private ICategoryRepository _category;
         private ICommitteeRepository _committee;
@@ -43,6 +44,19 @@ namespace TempleVolunteerAPI.Repository
             _mapper = mapper;
         }
 
+        public IAccountRepository Account
+        {
+            get
+            {
+                if (_account == null)
+                {
+                    _account = new AccountRepository(_context);
+                }
+                
+                return _account;
+            }
+        }
+
         public IAreaRepository Area
         {
             get
@@ -51,7 +65,7 @@ namespace TempleVolunteerAPI.Repository
                 {
                     _area = new AreaRepository(_context);
                 }
-                
+
                 return _area;
             }
         }

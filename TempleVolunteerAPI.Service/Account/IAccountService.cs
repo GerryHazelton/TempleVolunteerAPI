@@ -19,5 +19,8 @@ namespace TempleVolunteerAPI.Service
         Task<ServiceResponse<Staff>> ResetPasswordAsync(ResetPasswordRequest request);
         Task RecordLoginAttempts(string userId, int propertyId);
         Task ResetLoginAttempts(string userId, int propertyId);
+        void AddTemporaryPassword(int staffId, string password);
+        string GetTemporaryPassword(int staffId);
+        void DeleteTemporaryPassword(int staffId);
     }
 }

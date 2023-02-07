@@ -9,6 +9,7 @@ namespace TempleVolunteerAPI.Repository
 {
     public interface IRepositoryWrapper
     {
+        IAccountRepository Account { get; }
         IAreaRepository Areas { get; }
         ICategoryRepository Categories { get; }
         ICommitteeRepository Committees { get; }

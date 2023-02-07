@@ -254,9 +254,6 @@ namespace TempleVolunteerAPI.Repository
                         }
                     }
                 }
-
-                Staff updatedStaff = _context.Staff.First(x => x.EmailAddress == request.EmailAddress && x.PropertyId == request.PropertyId);
-                _myProfileRepositoryResponse.Entity = _mapper.Map<MyProfileRequest>(updatedStaff);
             }
             catch (Exception ex)
             {
@@ -264,25 +261,23 @@ namespace TempleVolunteerAPI.Repository
             }
         }
 
-        public void CustomStaffUpdate(Staff request, int[] credentialIds)
+        public void CustomStaffUpdate(Staff request, int[] credentialIds, int[] roleIds)
         {
             try
             {
+                if (request.NewRegistration && !request.NewRegistrationApproved)
+                {
+                    return;
+                }
+
                 StringBuilder sbSql = new StringBuilder("UPDATE Staff\n");
                 sbSql.Append("SET ");
              
-                if (request.NewRegistration)
+                if (request.NewRegistration && request.NewRegistrationApproved)
                 {
-                    if (request.NewRegistrationApproved)
-                    {
-                        sbSql.AppendFormat("NewRegistration = 0, NewRegistrationApproved = 1, IsActive = 1 WHERE PropertyId={0} AND StaffId={1}", request.PropertyId, request.StaffId );
-                        _context.Database.ExecuteSqlRaw(sbSql.ToString());
-                    }
-                    else
-                    {
-                        sbSql.AppendFormat("NewRegistration = 0, NewRegistrationApproved = 0, IsActive = 0 WHERE PropertyId={0} AND StaffId={1}", request.PropertyId, request.StaffId);
-                        _context.Database.ExecuteSqlRaw(sbSql.ToString());
-                    }
+                    sbSql.AppendFormat("NewRegistration = 0, NewRegistrationApproved = 1, IsActive = 1 WHERE PropertyId={0} AND StaffId={1}", request.PropertyId, request.StaffId );
+                    _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                    return;
                 }
                 else
                 {
@@ -457,10 +452,65 @@ namespace TempleVolunteerAPI.Repository
                             }
                         }
                     }
-                }
 
-                Staff updatedStaff = _context.Staff.First(x => x.StaffId == request.StaffId && x.PropertyId == request.PropertyId);
-                _myProfileRepositoryResponse.Entity = _mapper.Map<MyProfileRequest>(updatedStaff);
+                    if (roleIds == null)
+                    {
+                        roleIds = new int[0];
+                    }
+
+                    var origintalRoleIds = originalStaff.Roles.Select(x => x.RoleId).ToArray();
+                    Array.Sort(origintalRoleIds);
+                    Array.Sort(roleIds);
+
+                    if (origintalRoleIds.Length == 0 && roleIds.Length > 0)
+                    {
+                        sbSql = new StringBuilder();
+                        foreach (int roleId in roleIds)
+                        {
+                            sbSql.AppendFormat("INSERT INTO StaffRoles (StaffId, RoleId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, roleId, originalStaff.PropertyId);
+                        }
+
+                        _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                    }
+
+                    if (origintalRoleIds.Length > 0 && roleIds.Length == 0)
+                    {
+                        sbSql = new StringBuilder();
+                        sbSql.AppendFormat("DELETE FROM StaffRoles WHERE PropertyId={0} AND StaffId={1}", originalStaff.PropertyId, originalStaff.StaffId);
+                        _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                    }
+
+                    if ((origintalRoleIds != null && origintalRoleIds.Length > 0) && (roleIds != null && roleIds.Length > 0))
+                    {
+                        bool equal = origintalRoleIds.SequenceEqual(roleIds);
+                        if (!equal)
+                        {
+                            var clientDelta = roleIds.Except(roleIds.Where(o => origintalRoleIds.Select(s => s).ToList().Contains(o))).ToList();
+                            sbSql = new StringBuilder();
+                            foreach (int roleId in clientDelta)
+                            {
+                                sbSql.AppendFormat("INSERT INTO StaffRoles (StaffId, roleId, PropertyId) VALUES({0}, {1}, {2})", originalStaff.StaffId, roleId, originalStaff.PropertyId);
+                            }
+
+                            if (sbSql.Length > 0)
+                            {
+                                _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                            }
+
+                            var serverDelta = origintalRoleIds.Except(origintalRoleIds.Where(o => roleIds.Select(s => s).ToList().Contains(o))).ToList();
+                            sbSql = new StringBuilder();
+                            foreach (int roleId in serverDelta)
+                            {
+                                sbSql.AppendFormat("DELETE StaffRoles WHERE PropertyId={0} AND StaffId={1} AND RoleId={2}", request.PropertyId, originalStaff.StaffId, roleId);
+                            }
+
+                            if (sbSql.Length > 0)
+                            {
+                                _context.Database.ExecuteSqlRaw(sbSql.ToString());
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
